@@ -55,7 +55,7 @@ lab72ocm0 ocm1(.address_a(AVL_ADDR), .address_b(charIdx), .byteena_a(AVL_BYTE_EN
 
 
 
-logic /*Reset_h, vssig, */ blank, sync, VGA_Clk, shape_on, IVn;
+logic blank, sync, VGA_Clk, shape_on;
 logic [9:0] drawxsig, drawysig, charIdx;
 logic [6:0] xpos, ypos, charcode, curcharshapex, curcharshapey, shape_sizex, shape_sizey;
 logic [3:0] yaddr, FRED, BRED, FBLU, BBLU, FGRN, BGRN, FGD_IDX, BKG_IDX;
