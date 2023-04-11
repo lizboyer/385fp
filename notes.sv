@@ -44,3 +44,16 @@ Red Duck Meter:
 	R:167
 	G:59
 	B:43
+Important info fixed function graphics:
+
+Vertical coordinates (VGA coords):
+- Sky background: 0 to 360
+- Dirt background: 460 to 480
+- Three bottom boxes (shots, ducks, score): 410 to 450
+
+Horizontal coordinates (VGA coords):
+- Shots box: 40 to 120
+- Ducks box: 160 to 480
+- Score box: 520 to 620
+
+
