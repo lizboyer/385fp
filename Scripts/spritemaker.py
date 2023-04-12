@@ -19,9 +19,9 @@ with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprite
 # numfiles = [21,3,3] #how many files are in each folder
 
 
-folder = np.array = ["Dog"]
+folder = np.array = ["Dogs"]
 numfolders = 1  #number of folders
-numfiles = [21] #how many files are in each folder
+numfiles = [4] #how many files are in each folder
 hexa = 0
 hexb = 0
 
