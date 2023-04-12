@@ -1,0 +1,41 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst lab71_2.usb_gpx -pg 1 -lvl 4 -y 930
+preplace inst lab71_2.sdram -pg 1 -lvl 4 -y 30
+preplace inst lab71_2.leds_pio -pg 1 -lvl 4 -y 830
+preplace inst lab71_2.sdram_pll -pg 1 -lvl 3 -y 130
+preplace inst lab71_2.hex_digits_pio -pg 1 -lvl 4 -y 1230
+preplace inst lab71_2.nios2_gen2_0.cpu -pg 1
+preplace inst lab71_2.keycode -pg 1 -lvl 4 -y 630
+preplace inst lab71_2.nios2_gen2_0.clock_bridge -pg 1
+preplace inst lab71_2.clk_0 -pg 1 -lvl 1 -y 220
+preplace inst lab71_2.timer_0 -pg 1 -lvl 4 -y 230
+preplace inst lab71_2.nios2_gen2_0.reset_bridge -pg 1
+preplace inst lab71_2.key -pg 1 -lvl 4 -y 530
+preplace inst lab71_2.nios2_gen2_0 -pg 1 -lvl 2 -y 200
+preplace inst lab71_2.sysid_qsys_0 -pg 1 -lvl 4 -y 450
+preplace inst lab71_2.VGA_text_mode_controller_0 -pg 1 -lvl 4 -y 730
+preplace inst lab71_2 -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst lab71_2.usb_irq -pg 1 -lvl 4 -y 1030
+preplace inst lab71_2.usb_rst -pg 1 -lvl 4 -y 1130
+preplace inst lab71_2.spi_0 -pg 1 -lvl 4 -y 330
+preplace inst lab71_2.jtag_uart_0 -pg 1 -lvl 4 -y 130
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.sdram_wire,(SLAVE)sdram.wire) 1 0 4 NJ 100 NJ 100 NJ 100 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)leds_pio.external_connection,(SLAVE)lab71_2.leds) 1 0 4 NJ 860 NJ 860 NJ 860 NJ
+preplace netloc FAN_OUT<net_container>lab71_2</net_container>(MASTER)nios2_gen2_0.irq,(SLAVE)jtag_uart_0.irq,(SLAVE)spi_0.irq,(SLAVE)timer_0.irq) 1 2 2 NJ 290 1020
+preplace netloc INTERCONNECT<net_container>lab71_2</net_container>(SLAVE)key.s1,(SLAVE)spi_0.spi_control_port,(SLAVE)sdram_pll.pll_slave,(SLAVE)timer_0.s1,(SLAVE)usb_rst.s1,(MASTER)nios2_gen2_0.instruction_master,(SLAVE)nios2_gen2_0.debug_mem_slave,(SLAVE)usb_irq.s1,(MASTER)nios2_gen2_0.data_master,(SLAVE)sysid_qsys_0.control_slave,(SLAVE)sdram.s1,(SLAVE)jtag_uart_0.avalon_jtag_slave,(SLAVE)keycode.s1,(SLAVE)usb_gpx.s1,(SLAVE)hex_digits_pio.s1,(SLAVE)leds_pio.s1,(SLAVE)VGA_text_mode_controller_0.avalon_mm_slave) 1 1 3 400 160 760 240 1040
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.vga_port,(SLAVE)VGA_text_mode_controller_0.VGA_port) 1 0 4 NJ 780 NJ 780 NJ 780 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.clk,(SLAVE)clk_0.clk_in) 1 0 1 NJ
+preplace netloc FAN_OUT<net_container>lab71_2</net_container>(SLAVE)key.clk,(SLAVE)jtag_uart_0.clk,(SLAVE)timer_0.clk,(SLAVE)sdram_pll.inclk_interface,(SLAVE)VGA_text_mode_controller_0.CLK,(SLAVE)hex_digits_pio.clk,(SLAVE)leds_pio.clk,(SLAVE)usb_gpx.clk,(SLAVE)keycode.clk,(SLAVE)usb_irq.clk,(MASTER)clk_0.clk,(SLAVE)sysid_qsys_0.clk,(SLAVE)nios2_gen2_0.clk,(SLAVE)usb_rst.clk,(SLAVE)spi_0.clk) 1 1 3 360 120 800 120 1060
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)usb_irq.external_connection,(SLAVE)lab71_2.usb_irq) 1 0 4 NJ 1060 NJ 1060 NJ 1060 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)keycode.external_connection,(SLAVE)lab71_2.keycode) 1 0 4 NJ 660 NJ 660 NJ 660 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.usb_gpx,(SLAVE)usb_gpx.external_connection) 1 0 4 NJ 960 NJ 960 NJ 960 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.reset,(SLAVE)clk_0.clk_in_reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)key.external_connection,(SLAVE)lab71_2.key_external_connection) 1 0 4 NJ 560 NJ 560 NJ 560 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)usb_rst.external_connection,(SLAVE)lab71_2.usb_rst) 1 0 4 NJ 1160 NJ 1160 NJ 1160 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)hex_digits_pio.external_connection,(SLAVE)lab71_2.hex_digits) 1 0 4 NJ 1260 NJ 1260 NJ 1260 NJ
+preplace netloc EXPORT<net_container>lab71_2</net_container>(SLAVE)lab71_2.spi0,(SLAVE)spi_0.external) 1 0 4 NJ 360 NJ 360 NJ 360 NJ
+preplace netloc INTERCONNECT<net_container>lab71_2</net_container>(SLAVE)sysid_qsys_0.reset,(SLAVE)sdram_pll.inclk_interface_reset,(SLAVE)keycode.reset,(SLAVE)leds_pio.reset,(SLAVE)nios2_gen2_0.reset,(SLAVE)sdram.reset,(SLAVE)usb_rst.reset,(MASTER)clk_0.clk_reset,(SLAVE)VGA_text_mode_controller_0.RESET,(SLAVE)key.reset,(SLAVE)usb_gpx.reset,(SLAVE)timer_0.reset,(SLAVE)jtag_uart_0.reset,(SLAVE)usb_irq.reset,(SLAVE)hex_digits_pio.reset,(MASTER)nios2_gen2_0.debug_reset_request,(SLAVE)spi_0.reset) 1 1 3 380 140 780 220 1080
+preplace netloc POINT_TO_POINT<net_container>lab71_2</net_container>(SLAVE)sdram.clk,(MASTER)sdram_pll.c0) 1 3 1 1020
+levelinfo -pg 1 0 150 1290
+levelinfo -hier lab71_2 160 190 520 830 1120 1270
