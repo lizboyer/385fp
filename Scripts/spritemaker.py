@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 import sys
 
 ##CLEAR SPRITE FILE
-with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385finalproject/Sprites/sprites.sv', 'w') as spritefile:
+with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'w') as spritefile:
     spritefile.write(" \n")
     spritefile.close
 
 ##WRITE MODULE DECLARATION
-with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385finalproject/Sprites/sprites.sv', 'a') as spritefile:
+with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'a') as spritefile:
     spritefile.write("\n module font_rom ( input [10:0]	addr, \n output [7:0]	data \n); \n \n	parameter ADDR_WIDTH = 11; \n   parameter DATA_WIDTH =  8; \n	logic [ADDR_WIDTH-1:0] addr_reg; \n				 \n	// ROM definition				 \n	parameter [0:2**ADDR_WIDTH-1][DATA_WIDTH-1:0] ROM = \n")
     spritefile.close
 
@@ -29,7 +29,7 @@ for i in range(numfolders): #looping through general asset folders (DOG, DUCK, B
      hexa = hexa+1
      for j in range(numfiles[i]): #looping through numbered asset files (ASSETDOGn) (THIS HAS TO CHANGE FOR DOG, DUCK, BACKGROUND)
         hexb = hexb+1
-        image = plt.imread('/Users/liz/Library/CloudStorage/OneDrive-Personal/Desktop/After Glitch/Desktop/385finalproject/Assets/{}/Assets{}{}.png'.format(folder[i],folder[i],j))
+        image = plt.imread('/Users/liz/Library/CloudStorage/OneDrive-Personal/Desktop/After Glitch/Desktop/385fp/Assets/{}/Assets{}{}.png'.format(folder[i],folder[i],j))
 
         x,y,z = image.shape
         np.set_printoptions(threshold=sys.maxsize, linewidth = y*4)
@@ -46,12 +46,15 @@ for i in range(numfolders): #looping through general asset folders (DOG, DUCK, B
                 bw[k][l] = sum
 
         ##COLORMAP GENERATOR
-        colormap = np.zeros((x,y))
+        # colormap = np.zeros((x,y))
+        
+        colormap = [ [0]* (len(image[g])) for g in range(len(image))] #creates temp of size colortext
+        temp = [ [0]* (len(colormap[k])) for i in range(len(colormap))] #creates temp of size colortext
 
         for n in range(len(bw)):
             for o in range(len(bw[n])):
                     if (bw[n][o]) < 0.00001:  #BLACK
-                        colormap[n][j] = 0
+                        colormap[n][o] = 0
                     if (bw[n][o]) > 0.99 and (bw[n][o]) < 1.001: #WHITE
                         colormap[n][o] = 1
                     # if (image[i][j]) == 0: #GREEN
@@ -74,15 +77,32 @@ for i in range(numfolders): #looping through general asset folders (DOG, DUCK, B
                     #      image[i][j] == 10
                     # if (image[i][j]) == 0: #RED
                     #      image[i][j] == 11
+                    colormap[n][o] = str(colormap[n][o])
+
+
+            temp[n] = ', '.join(colormap[n])
+            temp[n].replace("[","{")
+            temp[n].replace("]","}")
+
         ##APPEND EACH SPRITE
         print(colormap)
-        colormapstr = np.array2string(colormap)
-        with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385finalproject/Sprites/sprites.sv', 'a') as spritefile:
-            spritefile.write(colormapstr)
+        # colormapstr = np.array2string(colormap)
+        with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'a') as spritefile:
+            spritefile.write("{")
+            for c in range(len(temp)):
+                spritefile.write("{")
+                spritefile.write("{}".format(temp[c]))
+                spritefile.write("}")
+                if c == len(temp) - 1:
+                    spritefile.write("\n")
+                else:
+                    spritefile.write(",\n")
+            spritefile.write("};\n")
             spritefile.write("\n \n //code {} \n" .format(hex(hexb * (hexa))))
             spritefile.close
+        
 
 ##APPEND ENDMODULE
-with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385finalproject/Sprites/sprites.sv', 'a') as spritefile:
-    spritefile.write("}; \n \n	assign data = ROM[addr]; \n \n endmodule  ")
+with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'a') as spritefile:
+    spritefile.write(" \n \n	assign data = ROM[addr]; \n \n endmodule  ")
     spritefile.close
