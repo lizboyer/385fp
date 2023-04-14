@@ -10,12 +10,13 @@ X->
 [ 31  30-24][  23 -  16][ 15  14-8 ][  7 - 0   ]
 [IV1][CODE1][FGN1][BKG1][IV0][CODE0][FGN0][BGN0]
 
+X->
+[31-0]
+[Code0]
+
 Palette Format:
 [31-28][27-24][ 23-20][19-16][ 15-12][11-8][ 7-4  ][ 3-0 ]
 [unused][Red1][Green1][Blue1][unused][Red0][Green0][Blue0]
-
-CODEn = Glyph code from IBM codepage 437
-
 
 VSYNC signal = bit which flips on every Vsync (time for new frame), used to synchronize software
 BKG_R/G/B = Background color, flipped with foreground when IVn bit is set
@@ -77,38 +78,37 @@ font_rom	fr1(.addr(fontAddr), .data(chardata));
 // Read and write from AVL interface to register block, note that READ waitstate = 1, so this should be in always_ff
 always_ff @(posedge CLK) begin
 
-//if(AVL_WRITE && AVL_CS && AVL_ADDR[11])	
-//	begin
-//		case(AVL_BYTE_EN)
-//				4'b1111: palette[AVL_ADDR[2:0]] <= AVL_WRITEDATA; //Write full 32-bits.
-//				4'b1100: palette[AVL_ADDR[2:0]][31:16] <= AVL_WRITEDATA[31:16]; //Write the two upper bytes.
-//				4'b0011: palette[AVL_ADDR[2:0]][15:0] <= AVL_WRITEDATA[15:0]; //Write the two lower bytes.
-//				4'b1000: palette[AVL_ADDR[2:0]][31:24] <= AVL_WRITEDATA[31:24]; //Write byte 3 only.
-//				4'b0100: palette[AVL_ADDR[2:0]][23:16] <= AVL_WRITEDATA[23:16]; //Write byte 2 only.
-//				4'b0010: palette[AVL_ADDR[2:0]][15:8] <= AVL_WRITEDATA[15:8]; //Write byte 1 only.
-//				4'b0001: palette[AVL_ADDR[2:0]][7:0] <= AVL_WRITEDATA[7:0]; //Write byte 0 only.
-//		endcase
-//	end
-//		
-//if(AVL_READ && AVL_CS && AVL_ADDR[11])				
-//	begin
-//		 AVL_READDATA <= palette[AVL_ADDR[2:0]];
-//	end
+if(AVL_WRITE && AVL_CS && AVL_ADDR[11])	
+	begin
+		case(AVL_BYTE_EN)
+				4'b1111: palette[AVL_ADDR[2:0]] <= AVL_WRITEDATA; //Write full 32-bits.
+				4'b1100: palette[AVL_ADDR[2:0]][31:16] <= AVL_WRITEDATA[31:16]; //Write the two upper bytes.
+				4'b0011: palette[AVL_ADDR[2:0]][15:0] <= AVL_WRITEDATA[15:0]; //Write the two lower bytes.
+				4'b1000: palette[AVL_ADDR[2:0]][31:24] <= AVL_WRITEDATA[31:24]; //Write byte 3 only.
+				4'b0100: palette[AVL_ADDR[2:0]][23:16] <= AVL_WRITEDATA[23:16]; //Write byte 2 only.
+				4'b0010: palette[AVL_ADDR[2:0]][15:8] <= AVL_WRITEDATA[15:8]; //Write byte 1 only.
+				4'b0001: palette[AVL_ADDR[2:0]][7:0] <= AVL_WRITEDATA[7:0]; //Write byte 0 only.
+		endcase
+	end
+		
+if(AVL_READ && AVL_CS && AVL_ADDR[11])				
+	begin
+		 AVL_READDATA <= palette[AVL_ADDR[2:0]];
+	end
+
+end
+
+
+//handle drawing (may either be combinational or sequential - or both).
+
+always_comb begin
 //
-//end
-//
-//
-////handle drawing (may either be combinational or sequential - or both).
-//
-//always_comb begin
-//
-////vram index based on draw x draw y
-//
-//	
-//	xpos = drawxsig[9:3]; //used to be xpos = drawxsig/8;
-//
-//	ypos = drawysig[9:4]; //used to be ypos = drawysig/16;
-//	yaddr = drawysig[3:0];
+//vram index based on draw x draw y
+
+	xpos = drawxsig[9:3]; //used to be xpos = drawxsig/8;
+
+	ypos = drawysig[9:4]; //used to be ypos = drawysig/16;
+	yaddr = drawysig[3:0];
 //
 //
 //
