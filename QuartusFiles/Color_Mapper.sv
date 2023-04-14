@@ -14,32 +14,25 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] CursorX, CursorY, DrawX, DrawY, Cursor_size, 
-                                        DogX, DogY
-                                    [11:0] DogColor, BackgroundColor
-                       output logic [3:0]  Red, Green, Blue );
-    
-    logic cursor_on, dog_on, bg_on;
-	 
- /* Old Ball: Generated square box by checking if the current pixel is within a square of length
-    2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
-	 
-    if ((DrawX >= BallX - Ball_size) &&
-       (DrawX <= BallX + Ball_size) &&
-       (DrawY >= BallY - Ball_size) &&
-       (DrawY <= BallY + Ball_size))
+module  color_mapper ( input        [9:0] MouseX, MouseY, DogX, DogY, DrawX, DrawY, Mouse_size, DogSizeX, DogSizeY,
+                                    BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY,
 
-     New Ball: Generates (pixelated) circle by using the standard circle formula.  Note that while 
-     this single line is quite powerful descriptively, it causes the synthesis tool to use up three
-     of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
-	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
+                        input [80:0][110:0][4:0] Dogs0, 
+                        input [86:0][110:0][4:0] Dogs1, 
+                        input [80:0][110:0][4:0] Dogs2, 
+                        input [86:0][110:0][4:0] Dogs3, 
+                        input [480:0][512:0][4:0] Bgs0,
+
+                        output logic [3:0]  Red, Green, Blue );
+    
+    logic mouse_on, dog_on, bg_on;
 	  
     int DistX, DistY, Size;
-	assign DistX = DrawX - CursorX;
-    assign DistY = DrawY - CursorY;
-    assign Size = Cursor_size;
+	assign DistX = DrawX - MouseX;
+    assign DistY = DrawY - MouseY;
+    assign Size = Mouse_size;
 	  
-    //Whether or not to draw cursor
+    //Whether or not to draw mouse
     always_comb
     begin:Ball_on_proc
         if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
@@ -51,23 +44,42 @@ module  color_mapper ( input        [9:0] CursorX, CursorY, DrawX, DrawY, Cursor
     //Whether or not to draw dog
     // always_comb
     // begin:Dog_on_proc
-    //     if ( /*draw is on the dog*/ ) 
+        //  if((((DrawX+initialx) >= DogX) && ((DrawX+initialx) <= DogX +DogSizeX) && (DrawY >= DogY) &&(DrawY <= DogY +DogSizeY))&&(hero_text[DrawY-DogY][(DrawX+initialx)-DogX]!=0))
     //         dog_on = /*pixel from dog sprite*/;
     //     else 
     //         dog_on = 12'b000000000000;
     //  end 
 
+    //whether or not to draw background
     always_comb
     begin:Bg_on_proc
-        if ( /*draw is on the bg*/ ) 
-            bg_on = /*pixel from bg sprite*/;
+        if ((DrawX >= BackgroundX) && (DrawX <= BackgroundX + BackgroundSizeX) && (DrawY >= BackgroundY) && (DrawY <= BackgroundY + BackgroundSizeY)) 
+            bg_on = 1'b1;
+            temp = Bgs0[DrawY-BackgroundY][DrawX-BackgroundX];  //where in the background it is drawing
         else 
-            bg_on = 12'b000000000000;
+            bg_on = 1'b0;
      end 
-       
+
+    always_comb
+    begin:Color_conversion
+        case(temp)
+            4'b0000: value =  12'b000000000000; //1
+            4'b0001: value =  12'b111111111111; // 2
+            4'b0010: value =  12'b000100110000; // 3
+            4'b0011: value =  12'b111101110110; // 4
+            4'b0100: value =  12'b100101000001; // 5
+            4'b0101: value =  12'b010000100000; // 6
+            4'b0110: value =  12'b111111011010; // 7
+            4'b0111: value =  12'b100111010100; // 8
+            4'b1000: value =  12'b001001010001; // 9
+            4'b1001: value =  12'b100111000010; // 10
+            4'b1010: value =  12'b101000110010; // 11
+        endcase
+    end
+
     always_comb
     begin:RGB_Display
-        if ((ball_on == 12'b111111111111)) 
+        if ((ball_on == 1'b1)) 
         begin 
             Red = 4'hf;
             Green = 4'hf;
@@ -75,16 +87,22 @@ module  color_mapper ( input        [9:0] CursorX, CursorY, DrawX, DrawY, Cursor
         end      
         // if ((dog_on == 1'b1)) 
         // begin 
-        //     Red = dog_on[11:8]
-        //     Green = dog_on[7:4]
-        //     Blue = dog_on[3:0]
+        //     Red = value[11:8]
+        //     Green = value[7:4]
+        //     Blue = value[3:0]
         // end    
-        else 
+        if ((bg_on == 1'b1)) 
         begin 
-            Red = bg_on[11:8]
-            Green = bg_on[7:4]
-            Blue = bg_on[3:0]
-        end      
+            Red = value[11:8];
+            Green = value[7:4];
+            Blue = value[3:0];
+        end  
+        else
+        begin
+            Red = 4'h0;
+            Green = 4'h0;
+            Blue = 4'h0;
+        end    
     end 
     
 endmodule
