@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  cursor ( input Reset, frame_clk, blank,
+module  ball ( input Reset, frame_clk, blank,
 					input [7:0] keycode,
 					input signed [7:0] MouseX, MouseY, MouseButtons, 
                output [9:0]  BallX, BallY, BallS, LEDR );

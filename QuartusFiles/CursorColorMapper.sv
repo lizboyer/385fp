@@ -15,7 +15,7 @@
 
 module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, 
 							  input blank,
-                       output logic [7:0]  Red, Green, Blue );
+                       output logic [3:0]  Red, Green, Blue );
     
     logic ball_on;
 	 
@@ -53,9 +53,9 @@ module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Bal
 		begin
         if ((ball_on == 1'b1)) 
         begin 
-            Red = 8'hff; 				//color changed to white to more closely match color of game cursor...original orange color commented out.
-            Green = 8'hff/*55*/;
-            Blue = 8'hff/*00*/;
+            Red = 4'hf; 				//color changed to white to more closely match color of game cursor...original orange color commented out.
+            Green = 4'hf/*55*/;
+            Blue = 4'hf/*00*/;
         end       
 //        else 
 //        begin 
@@ -66,9 +66,9 @@ module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Bal
 		end
 		else 
 		begin
-			Red = 8'h00;
-         Green = 8'h00;
-         Blue = 8'h00;
+			Red = 4'h0;
+         Green = 4'h0;
+         Blue = 4'h0;
 		end
 			
     end 

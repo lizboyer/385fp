@@ -1,12 +1,11 @@
  
 
  module sprite_rom ( input CLK, 
- input DogX,
- output [79:0][109:0][3:0] Dogs0, 
- output [85:0][109:0][3:0] Dogs1, 
- output [79:0][109:0][3:0] Dogs2, 
- output [85:0][109:0][3:0] Dogs3, 
- output [479:0][511:0][3:0] Bgs0 
+  output [80:0][110:0][4:0] Dogs0, 
+ output [86:0][110:0][4:0] Dogs1, 
+ output [80:0][110:0][4:0] Dogs2, 
+ output [86:0][110:0][4:0] Dogs3, 
+ output [480:0][512:0][4:0] Bgs0 
 ); 
 always_comb
 begin 

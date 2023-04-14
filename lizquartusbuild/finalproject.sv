@@ -59,6 +59,8 @@ module finalproject (
 
 );
 
+logic Reset_h, vssig, blank, sync, VGA_Clk;
+
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -67,15 +69,17 @@ module finalproject (
 	logic [1:0] signs;
 	logic [1:0] hundreds;
 	logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
-	logic [7:0] Red, Blue, Green;
+	logic [3:0] Red, Blue, Green;
 	logic [7:0] keycode;
-	logic signed [7:0] MouseX, MouseY, MouseButtons; //added mouse signals
+	logic signed [7:0] MouseX, MouseY, MouseButtons;
+   logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
 
-    logic [80:0][110:0][4:0] Dogs0, 
-    logic [86:0][110:0][4:0] Dogs1, 
-    logic [80:0][110:0][4:0] Dogs2, 
-    logic [86:0][110:0][4:0] Dogs3, 
-    logic [480:0][512:0][4:0] Bgs0 
+
+    logic [79:0][109:0][3:0] Dogs0;
+    logic [85:0][109:0][3:0] Dogs1; 
+    logic [79:0][109:0][3:0] Dogs2; 
+    logic [85:0][109:0][3:0] Dogs3; 
+    logic [479:0][511:0][3:0] Bgs0;
 
 //=======================================================
 //  Structural coding
@@ -180,10 +184,10 @@ module finalproject (
 	 );
 
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
-    mouse mouse1 (.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .MouseX(mousexsig), .MouseY(mouseysig), .MouseS(mousesizesig));
-	color_mapper cm1(.Dog0, .Dogs1, .Dogs3, .Bgs0 .DogX, .DogY, .DogsSizeX, .DogsSizeY, .BackgroundX, .BackgroundY, .BackgroundSizeX, .BackgroundSizeY, .MouseX(mousexsig), .MouseY(mouseysig), .DrawX(drawxsig), .DrawY(drawysig), .Mouse_size(mousesizesig), .Red, .Green, .Blue); 
+    cursor cursor1 (.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig));
+	color_mapper cm1(.Dogs0, .Dogs1, .Dogs3, .Bgs0, .DogX, .DogY, .DogSizeX, .DogSizeY, .BackgroundX, .BackgroundY, .BackgroundSizeX, .BackgroundSizeY, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank); 
     sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
-	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
+//	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
 
 // vga_text_avl_interface vga0()
 
