@@ -14,7 +14,7 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DogX, DogY, DrawX, DrawY, Ball_size, DogSizeX, DogSizeY,
+module  color_mapper ( input        [9:0] MouseX, MouseY, DogX, DogY, DrawX, DrawY, Mouse_size, DogSizeX, DogSizeY,
                                     BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY,
 
                         input [80:0][110:0][4:0] Dogs0, 
@@ -25,8 +25,30 @@ module  color_mapper ( input        [9:0] BallX, BallY, DogX, DogY, DrawX, DrawY
 
                         output logic [3:0]  Red, Green, Blue );
     
-    logic dog_on, bg_on;
-	 cursor_color_mapper ccm1(.BallX, .BallY, .DrawX, .DrawY, .Ball_size, .blank, .Red, .Green, .Blue);
+    logic mouse_on, dog_on, bg_on;
+	  
+    int DistX, DistY, Size;
+	assign DistX = DrawX - MouseX;
+    assign DistY = DrawY - MouseY;
+    assign Size = Mouse_size;
+	  
+    //Whether or not to draw mouse
+    always_comb
+    begin:Ball_on_proc
+        if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
+            ball_on = 12'b111111111111;
+        else 
+            ball_on = 12'b000000000000;
+     end 
+
+    //Whether or not to draw dog
+    // always_comb
+    // begin:Dog_on_proc
+        //  if((((DrawX+initialx) >= DogX) && ((DrawX+initialx) <= DogX +DogSizeX) && (DrawY >= DogY) &&(DrawY <= DogY +DogSizeY))&&(hero_text[DrawY-DogY][(DrawX+initialx)-DogX]!=0))
+    //         dog_on = /*pixel from dog sprite*/;
+    //     else 
+    //         dog_on = 12'b000000000000;
+    //  end 
 
     //whether or not to draw background
     always_comb
@@ -57,21 +79,18 @@ module  color_mapper ( input        [9:0] BallX, BallY, DogX, DogY, DrawX, DrawY
 
     always_comb
     begin:RGB_Display
-	 
-//        if ((ball_on == 1'b1)) 
-//        begin 
-//            Red = 4'hf;
-//            Green = 4'hf;
-//            Blue = 4'hf;
-//        end      
+        if ((ball_on == 1'b1)) 
+        begin 
+            Red = 4'hf;
+            Green = 4'hf;
+            Blue = 4'hf;
+        end      
         // if ((dog_on == 1'b1)) 
         // begin 
         //     Red = value[11:8]
         //     Green = value[7:4]
         //     Blue = value[3:0]
         // end    
-		if(blank)
-		begin
         if ((bg_on == 1'b1)) 
         begin 
             Red = value[11:8];
@@ -83,15 +102,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DogX, DogY, DrawX, DrawY
             Red = 4'h0;
             Green = 4'h0;
             Blue = 4'h0;
-        end
-		end
-		else
-		begin
-			Red = 4'h0;
-         Green = 4'h0;
-         Blue = 4'h0;
-      end
-			
+        end    
     end 
     
 endmodule

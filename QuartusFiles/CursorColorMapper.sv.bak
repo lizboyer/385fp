@@ -13,7 +13,7 @@
 //-------------------------------------------------------------------------
 
 
-module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, 
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, 
 							  input blank,
                        output logic [7:0]  Red, Green, Blue );
     
@@ -57,12 +57,12 @@ module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Bal
             Green = 8'hff/*55*/;
             Blue = 8'hff/*00*/;
         end       
-//        else 
-//        begin 
-//            Red = 8'h00; 
-//            Green = 8'h00;
-//            Blue = 8'h7f - DrawX[9:3];
-//        end   
+        else 
+        begin 
+            Red = 8'h00; 
+            Green = 8'h00;
+            Blue = 8'h7f - DrawX[9:3];
+        end   
 		end
 		else 
 		begin

@@ -66,7 +66,10 @@ module finalproject (
 	logic [3:0] hex_num_4, hex_num_3, hex_num_1, hex_num_0; //4 bit input hex digits
 	logic [1:0] signs;
 	logic [1:0] hundreds;
+	logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
+	logic [7:0] Red, Blue, Green;
 	logic [7:0] keycode;
+	logic signed [7:0] MouseX, MouseY, MouseButtons; //added mouse signals
 
     logic [80:0][110:0][4:0] Dogs0, 
     logic [86:0][110:0][4:0] Dogs1, 
@@ -161,12 +164,18 @@ module finalproject (
 		.leds_export({hundreds, signs, LEDR}),
 		.keycode_export(keycode),
 		
-		//VGA
-		.vga_port_red (VGA_R),
-		.vga_port_green (VGA_G),
-		.vga_port_blue (VGA_B),
-		.vga_port_hs (VGA_HS),
-		.vga_port_vs (VGA_VS)
+//		//VGA
+//		.vga_port_red (VGA_R),
+//		.vga_port_green (VGA_G),
+//		.vga_port_blue (VGA_B),
+//		.vga_port_hs (VGA_HS),
+//		.vga_port_vs (VGA_VS)
+
+		//MOUSE
+		
+		.mouse_x_ext_export(MouseX),
+		.mouse_y_ext_export(MouseY),
+		.mouse_buttons_ext_export(MouseButtons)
 		
 	 );
 
