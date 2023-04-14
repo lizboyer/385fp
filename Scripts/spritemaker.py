@@ -57,13 +57,13 @@ for i in range(numfolders): #looping through general asset folders (DOG, DUCK, B
 
         ##COLORMAP GENERATOR
         # colormap = np.zeros((x,y))
-        ysize = print(len(bw))
-        xsize = print(len(bw[k]))
-        z = 4
+        ysize = y-1
+        xsize = x-1
+        z = 3
 
         with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'a') as spritefile:
             if i == numfolders - 1:
-                spritefile.write(" output [{}:0][{}:0][{}:0] {}{} \n); \nalways_comb\nbegin" .format(x,y,z,folder[i],j))
+                spritefile.write(" output [{}:0][{}:0][{}:0] {}{} \n); \nalways_comb\nbegin" .format(xsize,ysize,z,folder[i],j))
             else:
                 spritefile.write(" output [{}:0][{}:0][{}:0] {}{}, \n" .format(x,y,z,folder[i],j))
             spritefile.close
