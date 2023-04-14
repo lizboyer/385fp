@@ -173,18 +173,8 @@ module finalproject (
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
     mouse mouse1 (.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .MouseX(mousexsig), .MouseY(mouseysig), .MouseS(mousesizesig));
 	color_mapper cm1(.Dog0, .Dogs1, .Dogs3, .Bgs0 .DogX, .DogY, .DogsSizeX, .DogsSizeY, .BackgroundX, .BackgroundY, .BackgroundSizeX, .BackgroundSizeY, .MouseX(mousexsig), .MouseY(mouseysig), .DrawX(drawxsig), .DrawY(drawysig), .Mouse_size(mousesizesig), .Red, .Green, .Blue); 
-    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0)
-
-module  color_mapper ( input        [9:0] CursorX, CursorY, DogX, DogY, DrawX, DrawY, Cursor_size, DogSizeX, DogSizeY,
-                                    BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY,
-
-                        input [80:0][110:0][4:0] Dogs0, 
-                        input [86:0][110:0][4:0] Dogs1, 
-                        input [80:0][110:0][4:0] Dogs2, 
-                        input [86:0][110:0][4:0] Dogs3, 
-                        input [480:0][512:0][4:0] Bgs0,
-
-                        output logic [3:0]  Red, Green, Blue );
+    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
+	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
 
 // vga_text_avl_interface vga0()
 

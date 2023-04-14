@@ -1,6 +1,5 @@
-module  mouse ( input Reset, frame_clk,
-					input [7:0] keycode,
-               output [9:0]  MouseX, MouseY, MouseS );
+module  dog ( input Reset, frame_clk
+);
     
     logic [9:0] Mouse_X_Pos, Mouse_X_Motion, Mouse_Y_Pos, Mouse_Y_Motion, Mouse_Size;
 	 logic Aflag, Wflag, Sflag, Dflag;
