@@ -59,7 +59,7 @@ for i in range(numfolders): #looping through general asset folders (DOG, DUCK, B
         # colormap = np.zeros((x,y))
         ysize = print(len(bw))
         xsize = print(len(bw[k]))
-        z = 4
+        z = 3
 
         with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/Sprites/sprites.sv', 'a') as spritefile:
             if i == numfolders - 1:
