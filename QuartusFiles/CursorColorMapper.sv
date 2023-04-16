@@ -17,7 +17,7 @@ module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Bal
 							  input blank,
                        output logic [3:0]  Red, Green, Blue );
     
-    logic ball_on;
+    
 	 
  /* Old Ball: Generated square box by checking if the current pixel is within a square of length
     2*Ball_Size, centered at (BallX, BallY).  Note that this requires unsigned comparisons.
@@ -31,7 +31,7 @@ module  cursor_color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Bal
      this single line is quite powerful descriptively, it causes the synthesis tool to use up three
      of the 12 available multipliers on the chip!  Since the multiplicants are required to be signed,
 	  we have to first cast them from logic to int (signed by default) before they are multiplied). */
-	  
+	 logic ball_on;
     int DistX, DistY, Size, DistXabs, DistYabs;
 	 assign DistX = DrawX - BallX;
     assign DistY = DrawY - BallY;

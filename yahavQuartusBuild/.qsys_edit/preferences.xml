@@ -8,9 +8,6 @@
   </columns>
  </systemtable>
  <library
-   expandedCategories="Project,Library,Library/Processors and Peripherals/Peripherals,Library/Basic Functions,Library/Processors and Peripherals" />
+   expandedCategories="Library/Processors and Peripherals,Project,Library,Library/Processors and Peripherals/Peripherals,Library/Basic Functions" />
  <window width="1938" height="1158" x="-9" y="-9" />
- <generation
-   simulation="VERILOG"
-   path="C:/Users/yahav/OneDrive/Desktop/Quartus-lite-18.1.0.625-windows/finalproject/_PROJECT_NAME_" />
 </preferences>

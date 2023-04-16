@@ -75,11 +75,11 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
    logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
 
 
-    logic [79:0][109:0][3:0] Dogs0;
-    logic [85:0][109:0][3:0] Dogs1; 
-    logic [79:0][109:0][3:0] Dogs2; 
-    logic [85:0][109:0][3:0] Dogs3; 
-    logic [479:0][511:0][3:0] Bgs0;
+//    logic [79:0][109:0][3:0] Dogs0;
+//    logic [85:0][109:0][3:0] Dogs1; 
+//    logic [79:0][109:0][3:0] Dogs2; 
+//    logic [85:0][109:0][3:0] Dogs3; 
+//    logic [479:0][511:0][3:0] Bgs0;
 
 //=======================================================
 //  Structural coding
@@ -123,6 +123,9 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	
 	
 	assign {Reset_h}=~ (KEY[0]); 
+	assign VGA_R = Red;
+	assign VGA_B = Blue;
+	assign VGA_G = Green;
 
 	//assign signs = 2'b00;
 	//assign hex_num_4 = 4'h4;
@@ -141,7 +144,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		.key_external_connection_export    (KEY),    		   //key_external_connection.export
 
 		//SDRAM
-		.clk_sdram_clk(DRAM_CLK),            				   //clk_sdram.clk
+		.sdram_clk_clk(DRAM_CLK),            				   //clk_sdram.clk
 	   .sdram_wire_addr(DRAM_ADDR),               			   //sdram_wire.addr
 		.sdram_wire_ba(DRAM_BA),                			   //.ba
 		.sdram_wire_cas_n(DRAM_CAS_N),              		   //.cas_n
@@ -184,12 +187,11 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	 );
 
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
-    cursor cursor1 (.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig));
-	color_mapper cm1(.Dogs0, .Dogs1, .Dogs3, .Bgs0, .DogX, .DogY, .DogSizeX, .DogSizeY, .BackgroundX, .BackgroundY, .BackgroundSizeX, .BackgroundSizeY, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank); 
-    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
+    cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
+	color_mapper cm1(.vga_clk(VGA_Clk), .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank); 
+//    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
 //	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
-
-// vga_text_avl_interface vga0()
+//	bgs0_example bg1(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank(blank), .red(Red), .green(Green), .blue(Blue));
 
 
 endmodule
