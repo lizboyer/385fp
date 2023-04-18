@@ -15,28 +15,35 @@
 //nColor is the color of the pixel at that coordinate
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-							  input blank, vga_clk,
+					   input blank, vga_clk,
 
-                        output logic [3:0]  Red, Green, Blue );
+                       output logic [3:0]  Red, Green, Blue );
     
+//internal signals
     logic dog_on, bg_on, ball_on;
-	 logic [3:0] temp;
-	 logic [11:0] value;
-//	 cursor_color_mapper ccm1(.BallX, .BallY, .DrawX, .DrawY, .Ball_size, .blank, .Red, .Green, .Blue);
 
-	 int DistX, DistY, Size, DistXabs, DistYabs;
-	 assign DistX = DrawX - BallX;
+	//ball internal signals
+	int DistX, DistY, Size, DistXabs, DistYabs;
+	assign DistX = DrawX - BallX;
     assign DistY = DrawY - BallY;
-	 assign DistXabs = DistX[31] ? -DistX : DistX;
-	 assign DistYabs = DistY[31] ? -DistY : DistY;
-    assign Size = Ball_size;
+	assign DistXabs = DistX[31] ? -DistX : DistX;
+	assign DistYabs = DistY[31] ? -DistY : DistY;
+	assign Size = Ball_size;
 	  
-	 logic [17:0] rom_address;
-	 logic [3:0] rom_q;
+	//background internal signals
+	logic [17:0] bg_rom_address;
+	logic [3:0] bg_rom_q;
+	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
 
-	 logic [3:0] palette_red, palette_green, palette_blue;
+	//dog internal signals
+	logic [13:0] dog_rom_address;
+	logic [3:0] dog_rom_q;
+	logic [3:0] dog_palette_red, dog_palette_green, dog_palette_blue;
 
-	 assign rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
+
+	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
+	assign dog_rom_address = ((DrawX * 110) / 640) + (((DrawY * 86) / 480) * 110);
+
     always_comb
     begin:Ball_on_proc
         if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
@@ -44,121 +51,76 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
         else 
             ball_on = 1'b0;
      end 
-//
-//	      always_comb
-//    begin:Bg_on_proc
-//        if ((DrawX >= BackgroundX) && (DrawX <= BackgroundX + BackgroundSizeX) && (DrawY >= BackgroundY) && (DrawY <= BackgroundY + BackgroundSizeY)) 
-//        begin
-//				bg_on = 1'b1;
-//            temp = Bgs0[DrawY-BackgroundY][DrawX-BackgroundX];  //where in the background it is drawing
-//		  end
-//        else 
-//				temp = 4'b1111;
-//            bg_on = 1'b0;
-//     end 
-	  
 
-//    always_comb
-//    begin:Color_conversion
-//        case(temp)
-//            4'b0000: value =  12'b000000000000; //1
-//            4'b0001: value =  12'b111111111111; // 2
-//            4'b0010: value =  12'b000100110000; // 3
-//            4'b0011: value =  12'b111101110110; // 4
-//            4'b0100: value =  12'b100101000001; // 5
-//            4'b0101: value =  12'b010000100000; // 6
-//            4'b0110: value =  12'b111111011010; // 7
-//            4'b0111: value =  12'b100111010100; // 8
-//            4'b1000: value =  12'b001001010001; // 9
-//            4'b1001: value =  12'b100111000010; // 10
-//            4'b1010: value =  12'b101000110010; // 11
-//				default: value =  12'b001110101000;
-//        endcase
-//    end
-//	 
+	always_comb
+	begin:Dog_on_proc
+    	if ((DrawX >= DogX) && (DrawX <= DogX + DogSizeX) && (DrawY >= DogY) && (DrawY <= DogY + DogSizeY)) 
+    	begin
+			dog_on = 1'b1;
+		end
+    	else 
+        	dog_on = 1'b0;
+    end 
+	  
+ 
     always_ff @ (posedge vga_clk)
     begin:RGB_Display2
 		if(blank) //added blank signal
-		begin
-        if ((ball_on == 1'b1)) 
-        begin 
-            Red <= 4'hf; 				//color changed to white to more closely match color of game cursor...original orange color commented out.
-            Green <= 4'hf/*55*/;
-            Blue <= 4'hf/*00*/;
-        end
-		
-//        if ((bg_on == 1'b1)) 
-//        begin 
-//            Red = value[11:8];
-//            Green = value[7:4];
-//            Blue = value[3:0];
-//        end  		  
-        else 
-		  begin
-				Red <= palette_red;
-				Green <= palette_green;
-				Blue <= palette_blue;
-		  end 
-		end
+			begin
+			if ((ball_on == 1'b1)) 
+			begin 
+				Red <= 4'hf; 				//color changed to white to more closely match color of game cursor...original orange color commented out.
+				Green <= 4'hf/*55*/;
+				Blue <= 4'hf/*00*/;
+			end
+			
+		if ((dog_on == 1'b1)) 
+		begin 
+				Red <= dog_palette_red;
+				Green <= dog_palette_green;
+				Blue <= dog_palette_blue;
+		end  		  
+			else 
+			begin
+				Red <= bg_palette_red;
+				Green <= bg_palette_green;
+				Blue <= bg_palette_blue;
+			end 
+			end
 		else 
 		begin
 			Red <= 4'h0;
-         Green <= 4'h0;
-         Blue <= 4'h0;
+        	Green <= 4'h0;
+        	Blue <= 4'h0;
 		end
 			
     end 
 
-	 bgs0_rom bgs0_rom (
+	bgs0_rom bgs0_rom (
 	.clock   (vga_clk),
 	.address (rom_address),
-	.q       (rom_q)
+	.q       (bg_rom_q)
 	);
 
 	bgs0_palette bgs0_palette (
-	.index (rom_q),
-	.red   (palette_red),
-	.green (palette_green),
-	.blue  (palette_blue)
+	.index (bg_rom_q),
+	.red   (bg_palette_red),
+	.green (bg_palette_green),
+	.blue  (bg_palette_blue)
 	);
 
+	AssetsDog_rom AssetsDogs0_rom (
+		.clock   (vga_clk),
+		.address (rom_address),	//need four of these
+		.q       (dog_rom_q)	//need four of these
+	);
 
+	AssetsDog_palette AssetsDogs0_palette (
+		.index (dog_rom_q),
+		.red   (dog_palette_red),
+		.green (dog_palette_green),
+		.blue  (dog_palette_blue)
+	);
 
-    //whether or not to draw background
-
-
-
-//    always_comb
-//    begin:RGB_Display
-//	 
-////        if ((ball_on == 1'b1)) 
-////        begin 
-////            Red = 4'hf;
-////            Green = 4'hf;
-////            Blue = 4'hf;
-////        end      
-//        // if ((dog_on == 1'b1)) 
-//        // begin 
-//        //     Red = value[11:8]
-//        //     Green = value[7:4]
-//        //     Blue = value[3:0]
-//        // end    
-//		if(blank)
-//		
-//        else
-//        begin
-//            Red = 4'h0;
-//            Green = 4'h0;
-//            Blue = 4'h0;
-//        end
-//		end
-//		else
-//		begin
-//			Red = 4'h0;
-//         Green = 4'h0;
-//         Blue = 4'h0;
-//      end
-//			
-//    end 
     
 endmodule

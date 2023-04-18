@@ -1,4 +1,4 @@
-module AssetsDogs_palette (
+module AssetsDogs0_palette (
 	input logic [3:0] index,
 	output logic [3:0] red, green, blue
 );
