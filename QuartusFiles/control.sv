@@ -1,5 +1,5 @@
 module dog_control (input  logic Clk, Reset, Anim_Clk,  /*Run*/
-				input logic [9:0] Dog_X_pos_in, Dog_Y_pos_in,
+				input logic [9:0] Dog_X_pos_in, Dog_Y_pos_in, //should this be an input, or just an internal signal set to 0 at the beginning?
                 output logic [9:0] Dog_X_pos_out, Dog_Y_pos_out,
 				output logic [4:0] Frame
 					 );
@@ -9,6 +9,7 @@ module dog_control (input  logic Clk, Reset, Anim_Clk,  /*Run*/
 	 // Note that the length implies a max of 8 states, so you will need to bump this up for 8-bits
     enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sleep1, Sleep2, Surprised1, Jump1, Jump2, Walk1, H}   curr_state, next_state; 
 	logic [3:0] Step_size;
+	
 
 	//updates flip flop, current state is the only one
     always_ff @ (posedge ANIM_Clk)  

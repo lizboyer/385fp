@@ -191,7 +191,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk;
 	color_mapper cm1(.vga_clk(VGA_Clk), ,frame(Frame).BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h), .LEDR); 
 	dog_control cont1 (.Clk, .Reset, .ANIM_Clk, .Dog_X_pos_in, .Dog_X_pos_out, .Dog_Y_pos_in, .Dog_Y_pos_out, .Frame);
 
-//    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
+//  sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
 //	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
 //	bgs0_example bg1(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank(blank), .red(Red), .green(Green), .blue(Blue));
 
