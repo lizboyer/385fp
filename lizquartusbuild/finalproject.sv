@@ -168,7 +168,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		
 		//LEDs and HEX
 		.hex_digits_export({hex_num_4, hex_num_3, hex_num_1, hex_num_0}),
-		.leds_export({hundreds, signs, LEDR}),
+//		.leds_export({hundreds, signs, LEDR}),
 		.keycode_export(keycode),
 		
 //		//VGA
@@ -188,7 +188,7 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
     cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
-	color_mapper cm1(.vga_clk(VGA_Clk), .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank); 
+	color_mapper cm1(.vga_clk(VGA_Clk), .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h), .LEDR); 
 //    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
 //	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
 //	bgs0_example bg1(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank(blank), .red(Red), .green(Green), .blue(Blue));
