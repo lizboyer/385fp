@@ -53,6 +53,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      end 
 
 	always_comb
+	
 	begin:Dog_on_proc
     	if ((DrawX >= DogX) && (DrawX <= DogX + DogSizeX) && (DrawY >= DogY) && (DrawY <= DogY + DogSizeY)) 
     	begin

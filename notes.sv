@@ -56,4 +56,8 @@ Horizontal coordinates (VGA coords):
 - Ducks box: 160 to 480
 - Score box: 520 to 620
 
+//dog starts at ~ 11, 318, 
+//walks until ~ 72, 318, sniffs
+//walks again until ~ 142, 318
+//big *** eyes and jumps behind grass
 
