@@ -14,8 +14,10 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X_pos_out, Dog_Y_pos_out,
 					   input blank, vga_clk,
+					   input logic [4:0] Frame
+
 
                        output logic [3:0]  Red, Green, Blue );
     
@@ -55,7 +57,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	always_comb
 	
 	begin:Dog_on_proc
-    	if ((DrawX >= DogX) && (DrawX <= DogX + DogSizeX) && (DrawY >= DogY) && (DrawY <= DogY + DogSizeY)) 
+    	if ((DrawX >= Dog_X_pos_out) && (DrawX <= DogX + DogSizeX) && (DrawY >= Dog_Y_pos_out) && (DrawY <= Dog_Y_pos_out + DogSizeY)) 
     	begin
 			dog_on = 1'b1;
 		end
@@ -77,9 +79,12 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			
 		if ((dog_on == 1'b1)) 
 		begin 
-				Red <= dog_palette_red;
-				Green <= dog_palette_green;
-				Blue <= dog_palette_blue;
+			if((dog_palette_red != 4'h6) && (dog_palette_blue != 4'hA) && (dog_palette_green != 4'hF))	//if not the transparent color
+				begin
+					Red <= dog_palette_red;
+					Green <= dog_palette_green;
+					Blue <= dog_palette_blue;
+				end
 		end  		  
 			else 
 			begin
@@ -110,10 +115,11 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	.blue  (bg_palette_blue)
 	);
 
-	AssetsDog_rom AssetsDogs0_rom (
+	AssetsDogs_rom AssetsDogs0_rom (
 		.clock   (vga_clk),
-		.address (rom_address),	//need four of these
-		.q       (dog_rom_q)	//need four of these
+		.Frame   (frame)
+		.address (rom_address),	
+		.q       (dog_rom_q)	
 	);
 
 	AssetsDog_palette AssetsDogs0_palette (

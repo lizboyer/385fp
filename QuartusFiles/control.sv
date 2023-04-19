@@ -1,5 +1,6 @@
-module dog_control (input  logic Clk, Reset, /*Run*/
-                output logic [8:0] Dog_X_pos, Dog_Y_pos,
+module dog_control (input  logic Clk, Reset, Anim_Clk,  /*Run*/
+				input logic [9:0] Dog_X_pos_in, Dog_Y_pos_in,
+                output logic [9:0] Dog_X_pos_out, Dog_Y_pos_out,
 				output logic [4:0] Frame
 					 );
 
@@ -10,7 +11,7 @@ module dog_control (input  logic Clk, Reset, /*Run*/
 	logic [3:0] Step_size;
 
 	//updates flip flop, current state is the only one
-    always_ff @ (posedge Clk)  
+    always_ff @ (posedge ANIM_Clk)  
     begin
         if (Reset)
             curr_state <= R;
@@ -57,68 +58,69 @@ module dog_control (input  logic Clk, Reset, /*Run*/
         case (curr_state) 
 	   	   R: 
 	         begin
-                LocationX = 11;
-				LocationY = 318;
 				Frame = 5'b00000;
 		      end
 
 	   	   Walk1: 
 		      begin
-				Dog_X_pos = Dox_X_pos + Step_size
+				Dog_X_pos_out = Dox_X_pos_in + Step_size
 				Frame = 5'b00001;
 		      end
 
 	   	   Walk2: 
 		      begin
-				Dog_X_pos = Dox_X_pos + Step_size
+				Dog_X_pos_out = Dox_X_pos_in + Step_size
 				Frame = 5'b00010;
 		      end
 
 	   	   Walk3: 
 		      begin
-				Dog_X_pos = Dox_X_pos + Step_size
+				Dog_X_pos_out = Dox_X_pos_in + Step_size
 				Frame = 5'b00011;
 		      end
 
 	   	   Walk4: 
 		      begin
-				Dog_X_pos = Dox_X_pos + Step_size
+				Dog_X_pos_out = Dox_X_pos_in + Step_size
 				Frame = 5'b00011;
 		      end
 
 		   Sleep1:
 		   	  begin
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00100;
 			  end
 		   Sleep2:
 		   	  begin
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00101;
 			  end
 			Surprised1:
 		   	  begin
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00110;
 			  end
 			Jump1:
 		   	  begin
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00111;
 				//jump equation
 			  end
 			Jump2:
 		   	  begin
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b01000;
 				//jump equation
 			  end
 	   	   H: 
 		      begin
-                LocationX = 0;
-				LocationY = 0;
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00000;
 		      end	
 
 	   	   default:  //default case, can also have default assignments for Ld_A and Ld_B before case
 		      begin 
-                LocationX = 0;
-				LocationY = 0;
+				Dog_X_pos_out = Dox_X_pos_in
 				Frame = 5'b00000;
 		      end
         endcase

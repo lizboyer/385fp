@@ -59,7 +59,7 @@ module finalproject (
 
 );
 
-logic Reset_h, vssig, blank, sync, VGA_Clk;
+logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk;
 
 //=======================================================
 //  REG/WIRE declarations
@@ -69,11 +69,11 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 	logic [1:0] signs;
 	logic [1:0] hundreds;
 	logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
-	logic [3:0] Red, Blue, Green;
+	logic [3:0] Red, Blue, Green, Frame;
 	logic [7:0] keycode;
 	logic signed [7:0] MouseX, MouseY, MouseButtons;
-   logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
-
+	logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
+	logic [9:0] Dog_X_pos_in, Dog_Y_pos_in, Dog_X_pos_out, Dog_Y_pos_out;
 
 //    logic [79:0][109:0][3:0] Dogs0;
 //    logic [85:0][109:0][3:0] Dogs1; 
@@ -186,9 +186,11 @@ logic Reset_h, vssig, blank, sync, VGA_Clk;
 		
 	 );
 
-	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
+	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .clk_10Hz(ANIM_Clk) .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
     cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
-	color_mapper cm1(.vga_clk(VGA_Clk), .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h), .LEDR); 
+	color_mapper cm1(.vga_clk(VGA_Clk), ,frame(Frame).BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h), .LEDR); 
+	dog_control cont1 (.Clk, .Reset, .ANIM_Clk, .Dog_X_pos_in, .Dog_X_pos_out, .Dog_Y_pos_in, .Dog_Y_pos_out, .Frame);
+
 //    sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
 //	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
 //	bgs0_example bg1(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank(blank), .red(Red), .green(Green), .blue(Blue));

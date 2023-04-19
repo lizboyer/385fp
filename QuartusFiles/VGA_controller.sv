@@ -27,6 +27,7 @@ module  vga_controller ( input        Clk,       // 50 MHz clock
                          output logic hs,        // Horizontal sync pulse.  Active low
 								              vs,        // Vertical sync pulse.  Active low
 												  pixel_clk, // 25 MHz pixel clock output
+                                                  clk_10Hz,
 												  blank,     // Blanking interval indicator.  Active low.
 												  sync,      // Composite Sync signal.  Active low.  We don't use it in this lab,
 												             //   but the video DAC on the DE2 board requires an input for it.
@@ -40,7 +41,8 @@ module  vga_controller ( input        Clk,       // 50 MHz clock
 	 
 	 // horizontal pixel and vertical line counters
     logic [9:0] hc, vc;
-    logic clkdiv;
+    logic clkdiv, clk_10Hz;
+    logic [27:0] counter;
     
 	 // signal indicates if ok to display color for a pixel
 	 logic display;
@@ -56,6 +58,25 @@ module  vga_controller ( input        Clk,       // 50 MHz clock
         else 
             clkdiv <= ~ (clkdiv);
     end
+
+    always_ff@(posedge Clk or posedge Reset)
+begin
+    if (Reset)
+        begin
+            clk_10Hz <= 0;
+            counter <= 0;
+        end
+    else
+        begin
+            counter <= counter + 1;
+            if ( counter == 2_500_000)
+                begin
+                    counter <= 0;
+                    clk_10Hz <= ~clk_10Hz;
+                end
+        end
+end
+endmodule 
    
 	//Runs the horizontal counter  when it resets vertical counter is incremented
    always_ff @ (posedge clkdiv or posedge Reset )
