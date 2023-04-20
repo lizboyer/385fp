@@ -1,42 +1,47 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
-				// input logic [9:0] Dog_X, Dog_Y, //should this be an input, or just an internal signal set to 0 at the beginning?
                 output logic [9:0] Dog_X, Dog_Y,
-				output logic [4:0] Frame
+				output logic [4:0] Frame,
+				output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
 					 );
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
-    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sleep1, Sleep2, Surprised1, Jump1, Jump2, H}   curr_state, next_state; 
-	logic [3:0] Step_size;
+    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, H}   curr_state, next_state; 
+	logic [3:0] Step_size = 4'b0100;
 	
 	// logic [9:0] Dog_X, Dog_Y; //should this be an input, or just an internal signal set to 0 at the beginning?
 
 	//updates flip flop, current state is the only one
-    always_ff @ (posedge ANIM_Clk)  
+     always_ff @ (posedge ANIM_Clk)  
     begin
         if (Reset)
-            curr_state <= R;
+		  begin
+         curr_state <= R;
 			end_walk <= 0;
 			end_sniff <= 0;
 			startjump <= 0;
 			end_surprised <= 0;
 			go_to_jump_2 <= 0;
 			end_jump_2 <= 0;
+		  end
         else 
-            curr_state <= next_state;
+		  begin
+         curr_state <= next_state;
 			end_walk <= end_walk + 4'b0001;
 			end_sniff <= end_sniff + 4'b0001;
 			startjump <= startjump + 4'b0001;
 			end_surprised <= end_surprised + 4'b0001;
 			go_to_jump_2 <= go_to_jump_2 + 4'b0001;
 			end_jump_2 <= end_jump_2 + 4'b0001;
+		  end
     end
 
     // Assign outputs based on state
 	always_comb
     begin
-	 
-		assign Step_size = 4'b0100;	//step size of 4 pixels
+		Dog_X = 0;
+		Dog_Y = 0;
+	
 
 		next_state  = curr_state;	//required because I haven't enumerated all possibilities below
         unique case (curr_state) 
@@ -44,36 +49,28 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
             R :    if (Reset)
                        next_state = Walk1;
             Walk1:    next_state = Walk2;
-
             Walk2:    next_state = Walk3;
-
 			Walk3:    next_state = Walk4;
-
 			Walk4:	   if(end_walk == 4)
-						next_state = Sleep1;
+						next_state = Sniff1;
 					else
 						next_state = Walk1;
-
 			Sniff1:	   next_state = Sniff2;
-
-			Sniff2:    if(end_sniff == 3 && startjump = 1)	//if ready to be surprised
-						next_state = Surprised1;
-					   if(end_sniff == 3 && startjump = 0)	//if have to walk forward more
-						next_state = Walk1;	
-					   else							//sniff again
-						next_state = Sniff1;
-
+			Sniff2:    if(end_sniff == 3)
+						  begin 
+							 if(startjump == 1)	//if ready to be surprised
+								 next_state = Surprised1;
+							 if(startjump == 0)
+								 next_state = Walk1;
+						  end
+						  else							//sniff again
+							 next_state = Sniff1;
 			Surprised1:    if(end_surprised == 2)
 								next_state = Jump1;
-
 			Jump1:	   if(go_to_jump_2 == 5)
 							next_state = Jump2;
-
 			Jump2:   	if(end_jump_2 == 5)
-							next_state = Walk1;
-
-			Walk1:	   if(waitcount1 == 5)
-						next_state = H;
+							next_state = H;
             H :    if(Reset)	//holds, was ~Run
 						next_state = R;
 							  
@@ -95,25 +92,25 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
 
 	   	   Walk1: 
 		      begin
-				Dog_X = Dox_X + Step_size
+				Dog_X = Dog_X + Step_size;
 				Frame = 5'b00001;
 		      end
 
 	   	   Walk2: 
 		      begin
-				Dog_X = Dox_X + Step_size
+				Dog_X = Dog_X + Step_size;
 				Frame = 5'b00010;
 		      end
 
 	   	   Walk3: 
 		      begin
-				Dog_X = Dox_X + Step_size
+				Dog_X = Dog_X + Step_size;
 				Frame = 5'b00011;
 		      end
 
 	   	   Walk4: 
 		      begin
-				Dog_X = Dox_X + Step_size
+				Dog_X = Dog_X + Step_size;
 				Frame = 5'b00011;
 		      end
 
@@ -131,27 +128,23 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
 			  end
 			Jump1:
 		   	  begin
-				Dog_X = Dox_X_pos_in
+				Dog_X = Dog_X;
 				Frame = 5'b00111;
 				//jump equation
 			  end
 			Jump2:
 		   	  begin
-				Dog_X = Dox_X_pos_in
+				Dog_X = Dog_X;
 				Frame = 5'b01000;
 				//jump equation
 			  end
 	   	   H: 
 		      begin
-				Dog_X = Dox_X_pos_in
+				Dog_X = Dog_X;
 				Frame = 5'b00000;
 		      end	
 
-	   	   default:  //default case, can also have default assignments for Ld_A and Ld_B before case
-		      begin 
-				Dog_X = Dox_X_pos_in
-				Frame = 5'b00000;
-		      end
+	   	   default: ;
         endcase
     end
 
