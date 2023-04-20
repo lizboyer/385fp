@@ -3,6 +3,7 @@ module AssetsDogs_rom (
 	input logic [4:0] frame,
 	input logic [13:0] address,
 	output logic [3:0] q
+	output logic [5:0] DogSizeX, DogSizeY;
 );
 
 // logic [3:0] memory [0:9459] /* synthesis ram_init_file = "./AssetsDogs0/AssetsDogs0.mif" */;

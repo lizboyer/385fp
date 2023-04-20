@@ -57,7 +57,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	always_comb
 	
 	begin:Dog_on_proc
-    	if ((DrawX >= Dog_X_pos_out) && (DrawX <= DogX + DogSizeX) && (DrawY >= Dog_Y_pos_out) && (DrawY <= Dog_Y_pos_out + DogSizeY)) 
+    	if ((DrawX >= Dog_X) && (DrawX <= DogX + DogSizeX) && (DrawY >= Dog_Y) && (DrawY <= Dog_Y + DogSizeY)) 
     	begin
 			dog_on = 1'b1;
 		end
@@ -72,7 +72,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			begin
 			if ((ball_on == 1'b1)) 
 			begin 
-				Red <= 4'hf; 				//color changed to white to more closely match color of game cursor...original orange color commented out.
+				Red <= 4'hf; 		//color changed to white to more closely match color of game cursor...original orange color commented out.
 				Green <= 4'hf/*55*/;
 				Blue <= 4'hf/*00*/;
 			end
@@ -115,14 +115,14 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	.blue  (bg_palette_blue)
 	);
 
-	AssetsDogs_rom AssetsDogs0_rom (
+	AssetsDogs_rom AssetsDogs_rom (
 		.clock   (vga_clk),
 		.Frame   (frame)
 		.address (rom_address),	
 		.q       (dog_rom_q)	
 	);
 
-	AssetsDog_palette AssetsDogs0_palette (
+	AssetsDog_palette AssetsDogs_palette (
 		.index (dog_rom_q),
 		.red   (dog_palette_red),
 		.green (dog_palette_green),

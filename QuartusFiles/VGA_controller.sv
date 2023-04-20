@@ -60,22 +60,22 @@ module  vga_controller ( input        Clk,       // 50 MHz clock
     end
 
     always_ff@(posedge Clk or posedge Reset)
-begin
-    if (Reset)
-        begin
-            clk_10Hz <= 0;
-            counter <= 0;
-        end
-    else
-        begin
-            counter <= counter + 1;
-            if ( counter == 2_500_000)
-                begin
-                    counter <= 0;
-                    clk_10Hz <= ~clk_10Hz;
-                end
-        end
-end
+    begin
+        if (Reset)
+            begin
+                clk_10Hz <= 0;
+                counter <= 0;
+            end
+        else
+            begin
+                counter <= counter + 1;
+                if ( counter == 2_500_000)
+                    begin
+                        counter <= 0;
+                        clk_10Hz <= ~clk_10Hz;
+                    end
+            end
+    end
 endmodule 
    
 	//Runs the horizontal counter  when it resets vertical counter is incremented
