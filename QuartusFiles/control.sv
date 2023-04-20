@@ -16,8 +16,20 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
     begin
         if (Reset)
             curr_state <= R;
+			end_walk <= 0;
+			end_sniff <= 0;
+			startjump <= 0;
+			end_surprised <= 0;
+			go_to_jump_2 <= 0;
+			end_jump_2 <= 0;
         else 
             curr_state <= next_state;
+			end_walk <= end_walk + 4'b0001;
+			end_sniff <= end_sniff + 4'b0001;
+			startjump <= startjump + 4'b0001;
+			end_surprised <= end_surprised + 4'b0001;
+			go_to_jump_2 <= go_to_jump_2 + 4'b0001;
+			end_jump_2 <= end_jump_2 + 4'b0001;
     end
 
     // Assign outputs based on state
@@ -32,25 +44,34 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk,  /*Run*/
             R :    if (Reset)
                        next_state = Walk1;
             Walk1:    next_state = Walk2;
+
             Walk2:    next_state = Walk3;
+
 			Walk3:    next_state = Walk4;
+
 			Walk4:	   if(end_walk == 4)
 						next_state = Sleep1;
 					else
 						next_state = Walk1;
+
 			Sniff1:	   next_state = Sniff2;
+
 			Sniff2:    if(end_sniff == 3 && startjump = 1)	//if ready to be surprised
 						next_state = Surprised1;
 					   if(end_sniff == 3 && startjump = 0)	//if have to walk forward more
 						next_state = Walk1;	
 					   else							//sniff again
 						next_state = Sniff1;
+
 			Surprised1:    if(end_surprised == 2)
 								next_state = Jump1;
+
 			Jump1:	   if(go_to_jump_2 == 5)
 							next_state = Jump2;
+
 			Jump2:   	if(end_jump_2 == 5)
 							next_state = Walk1;
+
 			Walk1:	   if(waitcount1 == 5)
 						next_state = H;
             H :    if(Reset)	//holds, was ~Run
