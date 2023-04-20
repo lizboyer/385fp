@@ -104,7 +104,7 @@ module  cursor ( input Reset, frame_clk, blank,
 				Ball_X_Motion <= MouseX; //load mouse displacements directly into ball displacement... what happens? 
 				Ball_Y_Motion <= MouseY;
 				
-			if(Ball_Y_Pos < 470 && Ball_Y_Pos > 10 && Ball_X_Pos < 630 && Ball_X_Pos > 10) //check if ball is within screen bounds
+			if(Ball_Y_Pos < 480 && Ball_Y_Pos > 0 && Ball_X_Pos < 640 && Ball_X_Pos > 0) //check if ball is within screen bounds
 			begin
 				Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 				Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
