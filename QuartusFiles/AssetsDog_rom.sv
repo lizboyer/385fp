@@ -150,5 +150,8 @@ always_ff @ (posedge clock) begin
 end
 
 endmodule
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> fa1942eb108f517910dcff18551b08acf2e30bfb
