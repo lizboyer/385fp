@@ -24,7 +24,8 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
-    logic dog_on, bg_on, ball_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa;
+	 logic [1:0] count = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX;
 	//ball internal signals
 	int DistX, DistY, Size, DistXabs, DistYabs;
@@ -34,10 +35,10 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign DistYabs = DistY[31] ? -DistY : DistY;
 	assign Size = Ball_size;
 	  
-//	//background internal signals
-//	logic [17:0] bg_rom_address;
-//	logic [3:0] bg_rom_q;
-//	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
+	//background internal signals
+	logic [17:0] bg_rom_address;
+	logic [3:0] bg_rom_q;
+	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
 
 	//dog internal signals
 	logic [13:0] dog_rom_address;
@@ -48,10 +49,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign dog_distX = DrawX - Dog_X;
 	assign dog_distY = DrawY - Dog_Y;
 
-//
-//	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
+
+	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 	assign dog_rom_address = (dog_distX + dog_distY * 110);
-//assign dog_rom_address = ((DrawX * 110) / 110) + (((DrawY * 86) / 86) * 110);
 
     always_comb
     begin:Ball_on_proc
@@ -72,30 +72,70 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
         	dog_on = 1'b0;
     end 
 	  
- 
+	 always_comb
+	 begin:Shot_Square_on_proc
+			if(DrawX >= 102 && DrawX < 111 && DrawY >= 418 && DrawY < 431)
+				square_on3 = (count == 0) ? 1'b1 : 1'b0;
+			else
+				square_on3 = 1'b0;
+			if(DrawX >= 85 && DrawX < 94 && DrawY >= 418 && DrawY < 431)
+				square_on2 = (count <= 1) ? 1'b1 : 1'b0;
+			else
+				square_on2 = 1'b0;
+			if(DrawX >= 68 && DrawX < 77 && DrawY >= 418 && DrawY < 431)
+				square_on1 = (count <= 2) ? 1'b1 : 1'b0;
+			else 
+				square_on1 = 1'b0;
+		end
+		assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
+	 always_ff @ (posedge vga_clk)
+	 begin: Draw_bullets
+		 if(Reset == 1'b1)
+				count <= 2'b00;
+		 if(MouseButtons == 8'b00000010)
+				aaa <= 1'b1;
+		 else 
+				aaa <= 1'b0;
+		 aaa_delayed <= aaa;
+		 if(count_enable == 1'b1 && count < 2'b11) 
+			count <= count + 2'b01;
+		 else 
+			count <= count;
+	 end
     always_ff @ (posedge vga_clk)
     begin:RGB_Display2
 		if(blank) //added blank signal
 			begin
 				if ((ball_on == 1'b1)) 
 				begin 
-					Red <= 4'hf; 		//color changed to white to more closely match color of game cursor...original orange color commented out.
-					Green <= 4'hf/*55*/;
-					Blue <= 4'hf/*00*/;
+					Red <= 4'hF; 		//color changed to white to more closely match color of game cursor...original orange color commented out.
+					Green <= 4'hF/*55*/;
+					Blue <= 4'hF/*00*/;
 				end
-				
-				if ((dog_on == 1'b1)) 
-				begin 
+				else
+				begin
+					if ((dog_on == 1'b1)) 
+					begin 
 						Red <= dog_palette_red;
 						Green <= dog_palette_green;
 						Blue <= dog_palette_blue;
-				end  		  
-				else //draw bg
-				begin
-					Red <= 4'hF/*bg_palette_red*/;
-					Green <= 4'hF /*bg_palette_green*/;
-					Blue <= 4'hF /*bg_palette_blue*/;
-				end 
+					end  		  
+					else //draw bg
+					begin
+						if(square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1)
+						begin
+							Red <= 4'hA;
+							Green <= 4'hA;
+							Blue <= 4'hA;
+						end
+						else 
+						begin
+							Red <= bg_palette_red;
+							Green <= bg_palette_green;
+							Blue <= bg_palette_blue;
+						end 
+					end
+				end
 			end
 		else //blanking
 		begin
@@ -106,18 +146,18 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			
     end 
 
-//	bgs0_rom bgs0_rom (
-//	.clock   (vga_clk),
-//	.address (rom_address),
-//	.q       (bg_rom_q)
-//	);
-//
-//	bgs0_palette bgs0_palette (
-//	.index (bg_rom_q),
-//	.red   (bg_palette_red),
-//	.green (bg_palette_green),
-//	.blue  (bg_palette_blue)
-//	);
+	bgs0_rom bgs0_rom (
+	.clock   (vga_clk),
+	.address (bg_rom_address),
+	.q       (bg_rom_q)
+	);
+
+	bgs0_palette bgs0_palette (
+	.index (bg_rom_q),
+	.red   (bg_palette_red),
+	.green (bg_palette_green),
+	.blue  (bg_palette_blue)
+	);
 
 logic negedge_vga_clk;
 assign negedge_vga_clk = ~vga_clk;
