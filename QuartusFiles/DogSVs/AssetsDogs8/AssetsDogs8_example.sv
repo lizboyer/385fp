@@ -1,4 +1,4 @@
-module AssetsDogs8_example (
+module AssetsDogs9_example (
 	input logic [9:0] DrawX, DrawY,
 	input logic vga_clk, blank,
 	output logic [3:0] red, green, blue
@@ -23,13 +23,13 @@ always_ff @ (posedge vga_clk) begin
 	end
 end
 
-AssetsDogs8_rom AssetsDogs8_rom (
+AssetsDogs9_rom AssetsDogs9_rom (
 	.clock   (vga_clk),
 	.address (rom_address),
 	.q       (rom_q)
 );
 
-AssetsDogs8_palette AssetsDogs8_palette (
+AssetsDogs9_palette AssetsDogs9_palette (
 	.index (rom_q),
 	.red   (palette_red),
 	.green (palette_green),
