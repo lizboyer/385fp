@@ -8,7 +8,7 @@ with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/D
     dogmifnew = dogmif.read()
     dogmif.close
 
-if file == 'AssetsDogs2.mif' or file == 'AssetsDogs3.mif' or file == 'AssetsDogs7.mif':
+if file == 'AssetsDogs2.mif' or file == 'AssetsDogs3.mif' or file == 'AssetsDogs6.mif':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -28,7 +28,7 @@ if file == 'AssetsDogs5.mif':
     dogmifnew = dogmifnew.replace('temp2;','3;')
     dogmifnew = dogmifnew.replace('temp3;','2;')
 
-if file == 'AssetsDogs8.mif':
+if file == 'AssetsDogs7.mif':
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
@@ -39,12 +39,16 @@ if file == 'AssetsDogs8.mif':
     dogmifnew = dogmifnew.replace('temp3;','4;')
     dogmifnew = dogmifnew.replace('temp4;','2;')
 
-if file == 'AssetsDogs9.mif':
+if file == 'AssetsDogs8.mif':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
+    dogmifnew = dogmifnew.replace('4;','temp4;')
+
 
     dogmifnew = dogmifnew.replace('temp2;','3;')
     dogmifnew = dogmifnew.replace('temp3;','4;')
+    dogmifnew = dogmifnew.replace('temp4;','0;')
+
 
 with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/DogSVs/{}/{}'.format(folder,file), 'w') as dogmif:
     dogmif.write(dogmifnew)
