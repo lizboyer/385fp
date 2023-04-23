@@ -1,0 +1,22 @@
+module Randomization( input logic Clk, 
+	 output logic [3:0] Dog_rand_X,
+	 output logic [3:0] Duck_start_rand_X,
+	 output logic [2:0] Duck_color_rand,
+	 output logic [2:0] Duck_direction_rand
+);
+							 
+							 
+logic [10:0] count = 10'd0;
+
+always_ff @ (posedge Clk)
+begin
+	count <= count + 1'b1;
+end
+
+always_comb 
+begin
+	Dog_rand_X = count[3:0]; //count % 16
+	//how to effectively (and differently) randomize other stuff?
+	
+end
+			

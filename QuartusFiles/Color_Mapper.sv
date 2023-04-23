@@ -16,7 +16,7 @@
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y,
 					   input logic [4:0] Frame,
-						input blank, vga_clk, Reset, jump2Signal,
+						input blank, vga_clk, Reset, jump2Signal, resetSignal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
 
@@ -65,7 +65,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	always_comb
 	
 	begin:Dog_on_proc
-    	if (dog_distX < 110 && dog_distY < 86 && (dog_palette_red != 4'h6) && (dog_palette_blue != 4'hA) && (dog_palette_green != 4'hF)) 
+    	if (dog_distX < 110 && dog_distY < 86 && ~((dog_palette_red == 4'h6) && (dog_palette_blue == 4'hF) && (dog_palette_green == 4'hA)) && (resetSignal == 1'b0)) 
     	begin
 			if(jump2Signal == 1'b1)
 				begin

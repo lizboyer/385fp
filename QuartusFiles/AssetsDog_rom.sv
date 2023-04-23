@@ -172,7 +172,7 @@ module AssetsDogs6_rom (
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs7/AssetsDog6.mif" */;
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs6/AssetsDogs6.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
@@ -186,7 +186,7 @@ module AssetsDogs7_rom (
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs8/AssetsDogs7.mif" */;
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs7/AssetsDogs7.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
@@ -200,7 +200,7 @@ module AssetsDogs8_rom (
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs9/AssetsDogs8.mif" */;
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs8/AssetsDogs8.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];

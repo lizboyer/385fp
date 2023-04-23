@@ -59,7 +59,7 @@ module finalproject (
 
 );
 
-logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal;
+logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal, resetSignal;
 //
 //assign LEDR = ANIM_Clk;
 //=======================================================
@@ -75,7 +75,8 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal;
 	logic [7:0] keycode;
 	logic signed [7:0] MouseX, MouseY, MouseButtons;
 	logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
-	logic [9:0] Dog_X, Dog_Y;
+	logic [9:0] Dog_X, Dog_Y, Dog_rand_X, Duck_start_rand_X;
+	logic [1:0] Duck_color_rand, Duck_direction_rand;
 
 //    logic [79:0][109:0][3:0] Dogs0;
 //    logic [85:0][109:0][3:0] Dogs1; 
@@ -191,12 +192,9 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal;
 
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .clk_10Hz(ANIM_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
     cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
-	color_mapper cm1(.vga_clk(VGA_Clk), .Frame, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h)/*, .LEDR*/, .Dog_X, .Dog_Y, .jump2Signal); 
-	dog_control cont1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Frame, .Run, .LEDR, .jump2Signal);
-//	AssetsDogs0_example aaa(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank, .red(Red), .green(Green), .blue(Blue));
-//  sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
-//	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));
-//	bgs0_example bg1(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank(blank), .red(Red), .green(Green), .blue(Blue));
+	color_mapper cm1(.vga_clk(VGA_Clk), .Frame, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h)/*, .LEDR*/, .Dog_X, .Dog_Y, .jump2Signal, .resetSignal); 
+	dog_control cont1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Frame, .Run, .LEDR, .jump2Signal, .resetSignal);
+	Randomization rand1(.Clk(MAX10_CLK1_50), .ANIM_Clk, .Dog_rand_X, .Duck_start_rand_X, .Duck_color_rand, .Duck_direction_rand);
 
 
 endmodule

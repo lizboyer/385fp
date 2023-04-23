@@ -1,6 +1,6 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
                 output logic [9:0] Dog_X, Dog_Y, LEDR,
-					 output logic jump2Signal,
+					 output logic jump2Signal, resetSignal,
 				output logic [4:0] Frame,
 				output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
 					 );
@@ -70,6 +70,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     begin
 		Dog_X = 0;
 		Dog_Y = 0;
+		resetSignal = 1'b0;
 		jump2Signal = 1'b0;
 	
 
@@ -123,6 +124,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 //big *** eyes and jumps behind grass
 	//492, 518, -> 580, 500 -> 650,630
 				Frame = 5'b00000;
+				resetSignal = 1'b1;
 		      end
 
 	   	   Walk1: 
@@ -289,6 +291,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			  end
 	   	   H: 
 		      begin
+				resetSignal = 1'b1;
 				Dog_X = 10'b0000101011 + (32*end_walk); //43
 				Dog_Y = 10'b0100111110; //318
 				Frame = 5'b00000;
