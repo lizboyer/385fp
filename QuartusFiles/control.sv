@@ -1,5 +1,5 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
-                output logic [9:0] Dog_X, Dog_Y, LEDR,
+                output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
 					 output logic jump2Signal, resetSignal,
 				output logic [4:0] Frame,
 				output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
@@ -17,8 +17,6 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     // with enum values for states
     enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, H}   curr_state, next_state; 
 	logic [3:0] Step_size = 4'b0100;
-	// logic [9:0] Dog_X, Dog_Y; //should this be an input, or just an internal signal set to 0 at the beginning?
-
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin

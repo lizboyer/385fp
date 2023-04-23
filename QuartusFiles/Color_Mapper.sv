@@ -14,8 +14,8 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y,
-					   input logic [4:0] Frame,
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y
+					   input logic [4:0] Frame, DuckFrame,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
@@ -46,13 +46,22 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	logic [13:0] dog_rom_address;
 	logic [3:0] dog_rom_q;
 	logic [3:0] dog_palette_red, dog_palette_green, dog_palette_blue;
-	
+
 	logic [9:0] dog_distX, dog_distY;
 	assign dog_distX = DrawX - Dog_X;
 	assign dog_distY = DrawY - Dog_Y;
-
-
 	assign dog_rom_address = (dog_distX + dog_distY * 110);
+
+	//duck internal signals
+	logic [11:0] ducks_rom_address;
+	logic [3:0] ducks_rom_q;
+	logic [3:0] ducks_palette_red, ducks_palette_green, ducks_palette_blue;
+
+	logic [9:0] duck_distX, duck_distY;
+	assign duck_distX = DrawX - Duck_X;
+	assign duck_distY = DrawY - Duck_Y;
+	assign ducks_rom_address = (duck_distX + duck_distY * 64);
+
 
     always_comb
     begin:Ball_on_proc
@@ -79,6 +88,13 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 		end
     	else 
         	dog_on = 1'b0;
+    end 
+
+	begin:Duck_on_proc
+    	if (duck_distX < 64 && duck_distY < 64 && ~((ducks_palette_red == 4'hA) && (ducks_palette_blue == 4'hE) && (ducks_palette_green == 4'hA)) && (resetSignal == 1'b0)) 
+			duck_on = 1'b1;
+		else
+			duck_on = 1'b0;
     end 
 	  
 	 always_comb
@@ -130,20 +146,27 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						Blue <= dog_palette_blue;
 					end  		  
 					else //draw bg
-					begin
-						if(square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1)
+						if((duck_on ==1'b1))
 						begin
-							Red <= 4'hA;
-							Green <= 4'hA;
-							Blue <= 4'hA;
+							Red <= ducks_palette_red;
+							Green <= ducks_palette_green;
+							Blue <= ducks_palette_blue;
 						end
-						else 
+						else
 						begin
-							Red <= /*4'hB*/bg_palette_red;
-							Green <= /*4'hB*/ bg_palette_green;
-							Blue <= /*4'hB*/ bg_palette_blue;
-						end 
-					end
+							if(square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1)
+							begin
+								Red <= 4'hA;
+								Green <= 4'hA;
+								Blue <= 4'hA;
+							end
+							else 
+							begin
+								Red <= /*4'hB*/bg_palette_red;
+								Green <= /*4'hB*/ bg_palette_green;
+								Blue <= /*4'hB*/ bg_palette_blue;
+							end 
+						end
 				end
 			end
 		else //blanking
@@ -186,6 +209,19 @@ assign negedge_vga_clk = ~vga_clk;
 		.red   (dog_palette_red),
 		.green (dog_palette_green),
 		.blue  (dog_palette_blue)
+	);
+
+	AssetsDucks_rom AssetsDucks0_rom (
+		.clock   (negedge_vga_clk),
+		.address (ducks_rom_address),
+		.q       (ducks_rom_q)
+	);
+
+	AssetsDucks0_palette AssetsDucks0_palette (
+		.index (ducks_rom_q),
+		.red   (ducks_palette_red),
+		.green (ducks_palette_green),
+		.blue  (ducks_palette_blue)
 	);
 
     
