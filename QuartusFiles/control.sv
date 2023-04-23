@@ -1,6 +1,6 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
                 output logic [9:0] Dog_X, Dog_Y, LEDR,
-					 output logic resetSignal,
+					 output logic jump2Signal,
 				output logic [4:0] Frame,
 				output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
 					 );
@@ -8,7 +8,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				assign LEDR[2:0] = end_sniff;
 				assign LEDR[3] = (curr_state == Jump1);
 				assign LEDR[4] = (curr_state == Jump2);
-				assign LEDR[8:5] = go_to_jump_2;
+				assign LEDR[8:5] = end_jump_2;
 				assign LEDR[9] = Run;
 				
 
@@ -24,7 +24,6 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     begin
        if (Reset)
 			begin
-			resetSignal <= 1'b1;
          curr_state <= R;
 			end_walk <=  4'b0000;
 			end_sniff <= 4'b0000;
@@ -35,7 +34,6 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			end
         else 
 		  begin
-			resetSignal <= 1'b0;
 		  	if(curr_state == Walk4) 
 				begin
 				end_walk <= end_walk + 4'b0001;
@@ -55,7 +53,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				end_surprised <= end_surprised + 4'b0001;
 			if(curr_state == Jump1)
 				go_to_jump_2 <= go_to_jump_2 + 4'b0001;
-				if(go_to_jump_2 == 10)
+				if(go_to_jump_2 == 9)
 					go_to_jump_2 <= 0;
 			if(curr_state == Jump2)
 				end_jump_2 <= end_jump_2 + 4'b0001;
@@ -72,6 +70,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     begin
 		Dog_X = 0;
 		Dog_Y = 0;
+		jump2Signal = 1'b0;
 	
 
 		next_state  = curr_state;	//required because I haven't enumerated all possibilities below
@@ -117,7 +116,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 	   	   R: 
 	         begin
 				Dog_X = 10'b0000001011;	//11
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 //dog starts at ~ 11, 318, 
 //walks until ~ 72, 318, sniffs
 //walks again until ~ 142, 318
@@ -129,28 +128,28 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 	   	   Walk1: 
 		      begin
 				Dog_X = 10'b0000010011 + (32*end_walk); //19
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 				Frame = 5'b00001;
 		      end
 
 	   	   Walk2: 
 		      begin
 				Dog_X = 10'b0000011011 + (32*end_walk); //27
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 				Frame = 5'b00010;
 		      end
 
 	   	   Walk3: 
 		      begin
 				Dog_X = 10'b0000100011 + (32*end_walk); //35 
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 				Frame = 5'b00011;
 		      end
 
 	   	   Walk4: 
 		      begin
 				Dog_X = 10'b0000101011 + (32*end_walk); //43
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 				Frame = 5'b00011;
 		      end
 
@@ -158,19 +157,19 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 		   	  begin
 				Frame = 5'b00100;
 				Dog_X = 10'b0000101011 + (32*end_walk); //43
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 			  end
 		   Sniff2:
 		   	  begin
 				Dog_X = 10'b0000101011 + (32*end_walk); //43
-				Dog_Y = 10'd300; //300
+				Dog_Y = 10'd290; //290
 				Frame = 5'b00101;
 				
 			  end
 			Surprised1:
 		     begin
 				   Dog_X = 10'b0000101011 + (32*end_walk); //43
-					Dog_Y = 10'd300; //300
+					Dog_Y = 10'd290; //290
 					Frame = 5'b00110;
 			  end
 			Jump1:
@@ -179,52 +178,52 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 						4'd0:
 						begin
 						Dog_X = 10'd267; //267
-						Dog_Y = 10'd300; //300
+						Dog_Y = 10'd290; //290
 						end
 						4'd1:
 						begin
 						Dog_X = 10'd276; //276
-						Dog_Y = 10'd284; //284
+						Dog_Y = 10'd274; //274
 						end
 						4'd2:
 						begin
 						Dog_X = 10'd285; //285
-						Dog_Y = 10'd270; //270
+						Dog_Y = 10'd260; //260
 						end
 						4'd3:
 						begin
 						Dog_X = 10'd294; //294
-						Dog_Y = 10'd258; //258
+						Dog_Y = 10'd248; //248
 						end
 						4'd4:
 						begin
 						Dog_X = 10'd303; //303
-						Dog_Y = 10'd248; //248
+						Dog_Y = 10'd238; //238
 						end
 						4'd5:
 						begin
 						Dog_X = 10'd312; //312
-						Dog_Y = 10'd239; //239
+						Dog_Y = 10'd229; //229
 						end
 						4'd6:
 						begin
 						Dog_X = 10'd321; //321
-						Dog_Y = 10'd232; //232
+						Dog_Y = 10'd222; //222
 						end
 						4'd7:
 						begin
 						Dog_X = 10'd330; //330
-						Dog_Y = 10'd227; //227
+						Dog_Y = 10'd217; //217
 						end
 						4'd8:
 						begin
 						Dog_X = 10'd341; //341
-						Dog_Y = 10'd223; //223
+						Dog_Y = 10'd213; //213
 						end
 						4'd9:
 						begin
 						Dog_X = 10'd352; //352
-						Dog_Y = 10'd222; //222
+						Dog_Y = 10'd212; //212
 						end
 						default: ;
 					endcase
@@ -232,61 +231,61 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			  end
 			Jump2:
 		   	  begin
-				   case(go_to_jump_2)
+				   case(end_jump_2)
 						4'd0:
 						begin
 						Dog_X = 10'd352;
-						Dog_Y = 10'd222;
+						Dog_Y = 10'd212;
 						end
 						4'd1:
 						begin
 						Dog_X = 10'd363; //267
-						Dog_Y = 10'd223; //300
+						Dog_Y = 10'd213; //300
 						end
 						4'd2:
 						begin
 						Dog_X = 10'd374; //276
-						Dog_Y = 10'd227; //284
+						Dog_Y = 10'd217; //284
 						end
 						4'd3:
 						begin
 						Dog_X = 10'd383; //285
-						Dog_Y = 10'd232; //270
+						Dog_Y = 10'd222; //270
 						end
 						4'd4:
 						begin
 						Dog_X = 10'd392; //294
-						Dog_Y = 10'd239; //258
+						Dog_Y = 10'd229; //258
 						end
 						4'd5:
 						begin
 						Dog_X = 10'd401; //303
-						Dog_Y = 10'd248; //248
+						Dog_Y = 10'd238; //248
 						end
 						4'd6:
 						begin
 						Dog_X = 10'd410; //312
-						Dog_Y = 10'd258; //239
+						Dog_Y = 10'd248; //239
 						end
 						4'd7:
 						begin
 						Dog_X = 10'd419; //321
-						Dog_Y = 10'd270; //232
+						Dog_Y = 10'd260; //232
 						end
 						4'd8:
 						begin
 						Dog_X = 10'd428; //330
-						Dog_Y = 10'd284; //227
+						Dog_Y = 10'd274; //227
 						end
 						4'd9:
 						begin
 						Dog_X = 10'd437; //341
-						Dog_Y = 10'd330; //223
+						Dog_Y = 10'd290; //223
 						end
 						default: ;
 					endcase
+				jump2Signal = 1'b1;
 				Frame = 5'b01000;
-				//jump equation
 			  end
 	   	   H: 
 		      begin

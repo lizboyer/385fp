@@ -59,7 +59,7 @@ module finalproject (
 
 );
 
-logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, resetSignal;
+logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal;
 //
 //assign LEDR = ANIM_Clk;
 //=======================================================
@@ -191,8 +191,8 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, resetSignal;
 
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .clk_10Hz(ANIM_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig));
     cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
-	color_mapper cm1(.vga_clk(VGA_Clk), .Frame, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h)/*, .LEDR*/, .Dog_X, .Dog_Y, .resetSignal); 
-	dog_control cont1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Frame, .Run, .LEDR, .resetSignal);
+	color_mapper cm1(.vga_clk(VGA_Clk), .Frame, .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h)/*, .LEDR*/, .Dog_X, .Dog_Y, .jump2Signal); 
+	dog_control cont1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Frame, .Run, .LEDR, .jump2Signal);
 //	AssetsDogs0_example aaa(.DrawX(drawxsig), .DrawY(drawysig), .vga_clk(VGA_Clk), .blank, .red(Red), .green(Green), .blue(Blue));
 //  sprite_rom sr1(.CLK(MAX10_CLK1_50), .Dogs0, .Dogs1, .Dogs3, .Bgs0);
 //	dog dog1(.Reset(Reset_h), .frame_clk(VGA_VS));

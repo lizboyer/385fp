@@ -16,7 +16,7 @@
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y,
 					   input logic [4:0] Frame,
-						input blank, vga_clk, Reset, resetSignal,
+						input blank, vga_clk, Reset, jump2Signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
 
@@ -36,10 +36,10 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign Size = Ball_size;
 	  
 	//background internal signals (comment out for better runtime for testing... comment out rom/palette instantiations at the bottom of this file as well)
-//	logic [17:0] bg_rom_address;
-//	logic [3:0] bg_rom_q;
-//	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
-//	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
+	logic [17:0] bg_rom_address;
+	logic [3:0] bg_rom_q;
+	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
+	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 
 
 	//dog internal signals
@@ -65,9 +65,17 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	always_comb
 	
 	begin:Dog_on_proc
-    	if (dog_distX < 110 && dog_distY < 86 && (dog_palette_red != 4'h6) && (dog_palette_blue != 4'hA) && (dog_palette_green != 4'hF) && (~resetSignal)) 
+    	if (dog_distX < 110 && dog_distY < 86 && (dog_palette_red != 4'h6) && (dog_palette_blue != 4'hA) && (dog_palette_green != 4'hF)) 
     	begin
-			dog_on = 1'b1;
+			if(jump2Signal == 1'b1)
+				begin
+				if(DrawY < 300)
+					dog_on = 1'b1;
+				else 
+					dog_on = 1'b0;
+				end
+			else 
+				dog_on = 1'b1;
 		end
     	else 
         	dog_on = 1'b0;
@@ -131,9 +139,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						end
 						else 
 						begin
-							Red <= 4'hA/*bg_palette_red*/;
-							Green <= 4'hA/*bg_palette_green*/;
-							Blue <= 4'hA/*bg_palette_blue*/;
+							Red <= /*4'hB*/bg_palette_red;
+							Green <= /*4'hB*/ bg_palette_green;
+							Blue <= /*4'hB*/ bg_palette_blue;
 						end 
 					end
 				end
@@ -147,18 +155,18 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			
     end 
 
-//	bgs0_rom bgs0_rom (
-//	.clock   (vga_clk),
-//	.address (bg_rom_address),
-//	.q       (bg_rom_q)
-//	);
-//
-//	bgs0_palette bgs0_palette (
-//	.index (bg_rom_q),
-//	.red   (bg_palette_red),
-//	.green (bg_palette_green),
-//	.blue  (bg_palette_blue)
-//	);
+	bgs0_rom bgs0_rom (
+	.clock   (vga_clk),
+	.address (bg_rom_address),
+	.q       (bg_rom_q)
+	);
+
+	bgs0_palette bgs0_palette (
+	.index (bg_rom_q),
+	.red   (bg_palette_red),
+	.green (bg_palette_green),
+	.blue  (bg_palette_blue)
+	);
 
 logic negedge_vga_clk;
 assign negedge_vga_clk = ~vga_clk;
