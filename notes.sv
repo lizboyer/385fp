@@ -17,9 +17,8 @@ Horizontal coordinates (VGA coords):
 
 //menu screen with modes, top score, and year
 
-//dog starts at ~ 11, 318, 
-//walks until ~ 72, 318, sniffs
-//walks again until ~ 142, 318
+//dog starts at ~ 11, 290, 
+//walks until ~ 267, 290, sniffing twice (once in the middle, once at end of walk)
 //big *** eyes and jumps behind grass
 	//492, 518, -> 580, 500 -> 650,630
 
@@ -28,3 +27,11 @@ Horizontal coordinates (VGA coords):
 	//if not hit in 6 seconds, bird disappears
 	//if all three shots used, bird disappears
 	//if bird disappears, dog laugh emote.
+
+randomization for ducks:
+	randomize using 50MHz clock + modulo
+		randomize between 3 duck colors
+		randomize between 4 directions of duck flight ("NW", "W", "NE", and "E"... see sprites for explanation)
+		randomize 4 bit starting X position of duck 
+		randomize X position of dog popping up (holding duck after a duck is killed) 
+		

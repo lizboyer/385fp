@@ -16,7 +16,7 @@
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y,
 					   input logic [4:0] Frame,
-						input blank, vga_clk, Reset,
+						input blank, vga_clk, Reset, jump2Signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
 
@@ -35,10 +35,12 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign DistYabs = DistY[31] ? -DistY : DistY;
 	assign Size = Ball_size;
 	  
-	//background internal signals
+	//background internal signals (comment out for better runtime for testing... comment out rom/palette instantiations at the bottom of this file as well)
 	logic [17:0] bg_rom_address;
 	logic [3:0] bg_rom_q;
 	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
+	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
+
 
 	//dog internal signals
 	logic [13:0] dog_rom_address;
@@ -50,7 +52,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign dog_distY = DrawY - Dog_Y;
 
 
-	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 	assign dog_rom_address = (dog_distX + dog_distY * 110);
 
     always_comb
@@ -66,7 +67,15 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	begin:Dog_on_proc
     	if (dog_distX < 110 && dog_distY < 86 && (dog_palette_red != 4'h6) && (dog_palette_blue != 4'hA) && (dog_palette_green != 4'hF)) 
     	begin
-			dog_on = 1'b1;
+			if(jump2Signal == 1'b1)
+				begin
+				if(DrawY < 300)
+					dog_on = 1'b1;
+				else 
+					dog_on = 1'b0;
+				end
+			else 
+				dog_on = 1'b1;
 		end
     	else 
         	dog_on = 1'b0;
@@ -130,9 +139,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						end
 						else 
 						begin
-							Red <= bg_palette_red;
-							Green <= bg_palette_green;
-							Blue <= bg_palette_blue;
+							Red <= /*4'hB*/bg_palette_red;
+							Green <= /*4'hB*/ bg_palette_green;
+							Blue <= /*4'hB*/ bg_palette_blue;
 						end 
 					end
 				end
