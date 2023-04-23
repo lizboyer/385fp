@@ -1,8 +1,11 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
-                output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
-					 output logic jump2Signal, resetSignal,
-				output logic [4:0] Frame,
-				output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
+					input logic [1:0] Duck_color_rand, Duck_direction_rand;	//NEW
+					input logic [9:0] dog_rand_X, Duck_start_rand_X;	//NEW
+
+                	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
+					output logic jump2Signal, resetSignal,
+					output logic [4:0] Frame, DuckFrame,
+					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
 					 );
 					
 				assign LEDR[2:0] = end_sniff;
@@ -10,12 +13,10 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				assign LEDR[4] = (curr_state == Jump2);
 				assign LEDR[8:5] = end_jump_2;
 				assign LEDR[9] = Run;
-				
-
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
-    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, H}   curr_state, next_state; 
+    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, H}   curr_state, next_state; 
 	logic [3:0] Step_size = 4'b0100;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
@@ -29,6 +30,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			end_surprised <= 4'b0000;
 			go_to_jump_2 <= 4'b0000;
 			end_jump_2 <= 4'b0000;
+			waitcount1 <= 4'b0000;
 			end
         else 
 		  begin
@@ -57,6 +59,10 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				end_jump_2 <= end_jump_2 + 4'b0001;
 				if(end_jump_2 == 10)
 					end_jump_2 <= 0;
+			if(curr_state == Wait1)
+				waitcount1 <= waitcount1 + 4'b0001;
+					if(waitcount1 == 10)
+		  				waitcount1 <=0;
 			
          curr_state <= next_state;
 
@@ -68,6 +74,8 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     begin
 		Dog_X = 0;
 		Dog_Y = 0;
+		Duck_X = 0;
+		Duck_Y = 0;
 		resetSignal = 1'b0;
 		jump2Signal = 1'b0;
 	
@@ -104,7 +112,11 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			Jump1:	   if(go_to_jump_2 == 9)
 							next_state = Jump2;
 			Jump2:   	if(end_jump_2 == 9)
-							next_state = H;
+							next_state = Wait1;
+			Wait1:		if(waitcount1 == 10)
+							next_state == DuckStart1;
+			DuckStart1:	next_state = DuckStart2;
+			DuckStart2: next_state = H;
             H :   /* if(Reset)	//holds, was ~Run */
 						next_state = R;
 							  
@@ -116,11 +128,6 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 	         begin
 				Dog_X = 10'b0000001011;	//11
 				Dog_Y = 10'd290; //290
-//dog starts at ~ 11, 318, 
-//walks until ~ 72, 318, sniffs
-//walks again until ~ 142, 318
-//big *** eyes and jumps behind grass
-	//492, 518, -> 580, 500 -> 650,630
 				Frame = 5'b00000;
 				resetSignal = 1'b1;
 		      end
@@ -287,6 +294,14 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				jump2Signal = 1'b1;
 				Frame = 5'b01000;
 			  end
+		   Wait1: ;
+		   DuckStart1: begin
+			//case statement for frame via direction
+			end
+		   DuckStart2: begin
+			//case statement for frame via color
+			//case statement for frame via position
+			end
 	   	   H: 
 		      begin
 				resetSignal = 1'b1;

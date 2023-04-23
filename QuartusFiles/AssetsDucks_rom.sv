@@ -7,7 +7,7 @@ module AssetsDucks_rom (
 );
 logic [3:0] q0 ,q1, q2, q3;
 
-
+//flying right
 	AssetsDuck0_rom AssetsDucks0_rom0(.clock, .address(address), .q(q0));
 	AssetsDucks1_rom AssetsDucks1_rom0(.clock, .address(address), .q(q1));
 	AssetsDucks2_rom AssetsDucks2_rom0(.clock, .address(address), .q(q2));
