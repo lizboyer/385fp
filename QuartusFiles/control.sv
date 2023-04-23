@@ -294,13 +294,50 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				jump2Signal = 1'b1;
 				Frame = 5'b01000;
 			  end
-		   Wait1: ;
+		   Wait1: ;	//wait for 1 second, 10 frames
 		   DuckStart1: begin
-			//case statement for frame via direction
+				case(Duck_direction_rand) //case statement for frame via direction
+					2'b00: 	case(Duck_color_rand)
+								2'b00: 
+								2'b01:
+								2'b10:
+								2'b11:
+								default: ;
+							endcase
+					2'b01: case(Duck_color_rand)
+								2'b00:
+								2'b01:
+								2'b10:
+								2'b11:
+								default: ;
+							endcase
+					2'b10: case(Duck_color_rand)
+								2'b00:
+								2'b01:
+								2'b10:
+								2'b11:
+								default: ;
+							endcase
+					2'b11: case(Duck_color_rand)
+								2'b00:
+								2'b01:
+								2'b10:
+								2'b11:
+								default: ;
+							endcase
+					default: ;
+				endcase
 			end
 		   DuckStart2: begin
-			//case statement for frame via color
-			//case statement for frame via position
+				// case(Duck_color_rand) //case statement for frame via color
+				// 	2'b00:
+				// 	2'b01:
+				// 	2'b10:
+				// 	2'b11:
+				// 	default: ;
+				// endcase
+				Duck_X = duck_x_position; //set x position via duck_x_position
+				Duck_Y = 300;
 			end
 	   	   H: 
 		      begin
