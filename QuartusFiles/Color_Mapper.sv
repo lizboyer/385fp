@@ -19,8 +19,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
-
-
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
@@ -62,7 +60,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign duck_distY = DrawY - Duck_Y;
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
 
-
+//procs
     always_comb
     begin:Ball_on_proc
         if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
@@ -92,11 +90,15 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 
 	begin:Duck_on_proc
     	if (duck_distX < 64 && duck_distY < 64 && ~((ducks_palette_red == 4'hA) && (ducks_palette_blue == 4'hE) && (ducks_palette_green == 4'hA)) && (resetSignal == 1'b0)) 
-			duck_on = 1'b1;
+			if (DrawY < 300)	//only draw duck above y = 300
+				duck_on = 1'b1;
+			else
+				duck_on = 1'b0;
 		else
 			duck_on = 1'b0;
     end 
 	  
+	//shot counter drawing
 	 always_comb
 	 begin:Shot_Square_on_proc
 			if(DrawX >= 102 && DrawX < 111 && DrawY >= 418 && DrawY < 431)
@@ -112,7 +114,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			else 
 				square_on1 = 1'b0;
 		end
-		assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
+	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
 	 always_ff @ (posedge vga_clk)
 	 begin: Draw_bullets
 		 if(Reset == 1'b1)
@@ -127,6 +129,8 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 		 else 
 			count <= count;
 	 end
+
+	//drawing hierarchy
     always_ff @ (posedge vga_clk)
     begin:RGB_Display2
 		if(blank) //added blank signal
@@ -211,13 +215,13 @@ assign negedge_vga_clk = ~vga_clk;
 		.blue  (dog_palette_blue)
 	);
 
-	AssetsDucks_rom AssetsDucks0_rom (
+	AssetsDucks_rom AssetsDucks_rom (
 		.clock   (negedge_vga_clk),
 		.address (ducks_rom_address),
 		.q       (ducks_rom_q)
 	);
 
-	AssetsDucks0_palette AssetsDucks0_palette (
+	AssetsDucks_palette AssetsDucks_palette (
 		.index (ducks_rom_q),
 		.red   (ducks_palette_red),
 		.green (ducks_palette_green),
