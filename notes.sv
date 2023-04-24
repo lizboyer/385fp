@@ -35,3 +35,16 @@ randomization for ducks:
 		randomize 4 bit starting X position of duck 
 		randomize X position of dog popping up (holding duck after a duck is killed) 
 		
+duck file organization:
+	black duck:
+		right facing: 0 - 8
+		falling: 9 - 10
+		left facing: 11 - 19
+	red duck:
+		right facing: 20 - 28
+		falling: 29 - 30
+		left facing: 31 - 39
+	pink duck:
+		right facing: 40 - 48
+		falling: 49 - 50
+		left facing: 51 - 59
