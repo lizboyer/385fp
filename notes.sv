@@ -38,13 +38,25 @@ randomization for ducks:
 duck file organization:
 	black duck:
 		right facing: 0 - 8
+			NE: 0 - 3
+			E: 4 - 8
 		falling: 9 - 10
 		left facing: 11 - 19
+			NW: 11 - 14
+			W: 15 - 19
 	red duck:
 		right facing: 20 - 28
+			NE: 20 - 23
+			E: 24 - 28
 		falling: 29 - 30
 		left facing: 31 - 39
+			NW: 31 - 34
+			W: 35 - 39
 	pink duck:
 		right facing: 40 - 48
+			NE: 40 - 43
+			E: 44 - 48 
 		falling: 49 - 50
 		left facing: 51 - 59
+			NW: 51 - 54
+			W: 55 - 59
