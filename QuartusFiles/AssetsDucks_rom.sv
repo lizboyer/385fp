@@ -5,7 +5,7 @@ module AssetsDucks_rom (
 	output logic [3:0] q,
 	output logic [6:0] DuckSizeX, DuckSizeY
 );
-logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9;
+logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 ,q11, q12, q13, q14, q15, q16, q17;
 
 //flying right
 	AssetsDuck0_rom AssetsDucks0_rom0(.clock, .address(address), .q(q0));
@@ -18,6 +18,14 @@ logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9;
 	AssetsDucks7_rom AssetsDucks7_rom0(.clock, .address(address), .q(q7));
 	AssetsDucks8_rom AssetsDucks8_rom0(.clock, .address(address), .q(q8));
 	AssetsDucks9_rom AssetsDucks9_rom0(.clock, .address(address), .q(q9));
+	AssetsDucks10_rom AssetsDucks10_rom0(.clock, .address(address), .q(q10));
+	AssetsDucks11_rom AssetsDucks11_rom0(.clock, .address(address), .q(q11));
+	AssetsDucks12_rom AssetsDucks12_rom0(.clock, .address(address), .q(q12));
+	AssetsDucks13_rom AssetsDucks13_rom0(.clock, .address(address), .q(q13));
+	AssetsDucks14_rom AssetsDucks14_rom0(.clock, .address(address), .q(q14));
+	AssetsDucks15_rom AssetsDucks15_rom0(.clock, .address(address), .q(q15));
+	AssetsDucks16_rom AssetsDucks16_rom0(.clock, .address(address), .q(q16));
+	AssetsDucks17_rom AssetsDucks17_rom0(.clock, .address(address), .q(q17));
 
 always_comb
 begin
@@ -70,6 +78,46 @@ begin
 		5'b01001:begin
 			q = q9;//Ducks10
 			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01010: begin
+			q = q10;//Ducks11
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01011:begin
+			q = q11;//Ducks12
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01100:begin
+			q = q12;//Ducks13
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01101: begin
+			q = q13;//Ducks14
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01110: begin
+			q = q14;//Ducks15
+			DuckSizeX = 7'b1000100;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b01111:begin
+			q = q15;//Ducks16
+			DuckSizeX = 7'b1000100;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b10000:begin
+			q = q16;//Ducks17
+			DuckSizeX = 7'b1000100;
+			DuckSizeY = 7'b1000000;
+		end
+		5'b10001: begin
+			q = q17;//Ducks18
+			DuckSizeX = 7'b1000100;
 			DuckSizeY = 7'b1000000;
 		end
 		default: 

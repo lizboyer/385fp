@@ -13,11 +13,15 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				assign LEDR[4] = (curr_state == Jump2);
 				assign LEDR[8:5] = end_jump_2;
 				assign LEDR[9] = Run;
+				
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
     enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, H}   curr_state, next_state; 
 	logic [3:0] Step_size = 4'b0100;
+	logic [1:0] Duck_color = Duck_color_rand;
+	logic [1:0] Duck_direction = Duck_direction_rand;
+	logic [9:0] Duck_start = Duck_start_rand_X;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin
@@ -296,33 +300,29 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			  end
 		   Wait1: ;	//wait for 1 second, 10 frames
 		   DuckStart1: begin
-				case(Duck_direction_rand) //case statement for frame via direction
-					2'b00: 	case(Duck_color_rand)
-								2'b00: 
-								2'b01:
-								2'b10:
-								2'b11:
+				case(Duck_direction) //case statement for frame via direction
+					2'b00: 	case(Duck_color) //NW
+								2'b00: DuckFrame = 5'b01011;//Black
+								2'b01: DuckFrame = //Red
+								2'b10: DuckFrame = //Green
 								default: ;
 							endcase
-					2'b01: case(Duck_color_rand)
-								2'b00:
-								2'b01:
-								2'b10:
-								2'b11:
+					2'b01: case(Duck_color)	//W
+								2'b00: DuckFrame = 5'b01111; //Black
+								2'b01: ;
+								2'b10: ;
 								default: ;
 							endcase
-					2'b10: case(Duck_color_rand)
-								2'b00:
-								2'b01:
-								2'b10:
-								2'b11:
+					2'b10: case(Duck_color) //NE
+								2'b00: DuckFrame = 5'b00000; //Black
+								2'b01: ;
+								2'b10: ;
 								default: ;
 							endcase
-					2'b11: case(Duck_color_rand)
-								2'b00:
-								2'b01:
-								2'b10:
-								2'b11:
+					2'b11: case(Duck_color)	//E
+								2'b00: DuckFrame = 5'b00100; //Black
+								2'b01: ;
+								2'b10: ;
 								default: ;
 							endcase
 					default: ;
@@ -336,7 +336,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				// 	2'b11:
 				// 	default: ;
 				// endcase
-				Duck_X = duck_x_position; //set x position via duck_x_position
+				Duck_X = Duck_start; //set x position via duck_x_position_rand
 				Duck_Y = 300;
 			end
 	   	   H: 
