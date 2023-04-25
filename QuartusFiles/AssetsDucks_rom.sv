@@ -5,7 +5,7 @@ module AssetsDucks_rom (
 	output logic [3:0] q,
 	output logic [6:0] DuckSizeX, DuckSizeY
 );
-logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 ,q11, q12, q13, q14, q15, q16, q17, q18, q19, q20 ,q21, q22, q23, q24, q25, q26, q27, q28, q29, q30;
+logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20 ,q21, q22, q23, q24, q25, q26, q27, q28, q29, q30, q31, q32, q33, q34, q35, q36, q37, q38, q39;
 
 //flying right
 	AssetsDuck0_rom AssetsDucks0_rom0(.clock, .address(address), .q(q0));
@@ -39,7 +39,15 @@ logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10 ,q11, q12, q13, q14, q15
 	AssetsDucks28_rom AssetsDucks28_rom0(.clock, .address(address), .q(q28));
 	AssetsDucks29_rom AssetsDucks29_rom0(.clock, .address(address), .q(q29));
 	AssetsDucks30_rom AssetsDucks30_rom0(.clock, .address(address), .q(q30));
-
+	AssetsDucks31_rom AssetsDucks31_rom0(.clock, .address(address), .q(q31));
+	AssetsDucks32_rom AssetsDucks32_rom0(.clock, .address(address), .q(q32));
+	AssetsDucks33_rom AssetsDucks33_rom0(.clock, .address(address), .q(q33));
+	AssetsDucks34_rom AssetsDucks34_rom0(.clock, .address(address), .q(q34));
+	AssetsDucks35_rom AssetsDucks35_rom0(.clock, .address(address), .q(q35));
+	AssetsDucks36_rom AssetsDucks36_rom0(.clock, .address(address), .q(q36));
+	AssetsDucks37_rom AssetsDucks37_rom0(.clock, .address(address), .q(q37));
+	AssetsDucks38_rom AssetsDucks38_rom0(.clock, .address(address), .q(q38));
+	AssetsDucks39_rom AssetsDucks39_rom0(.clock, .address(address), .q(q39));
 
 always_comb
 begin
@@ -642,6 +650,132 @@ module AssetsDucks30_rom (
 );
 
 logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks30/AssetsDucks30.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks31_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks31/AssetsDucks31.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks32_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks32/AssetsDucks32.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks33_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks33/AssetsDucks33.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks34_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks34/AssetsDucks34.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks35_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks35/AssetsDucks35.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks36_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks36/AssetsDucks36.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks37_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks37/AssetsDucks37.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks38_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks38/AssetsDucks38.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks39_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks39/AssetsDucks39.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
