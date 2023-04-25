@@ -5,6 +5,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
 					output logic jump2Signal, resetSignal,
 					output logic [4:0] Frame, DuckFrame,
+					output logic [5:0] DuckFrame,
 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
 					 );
 					
@@ -339,7 +340,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				Duck_X = Duck_start; //set x position via duck_x_position_rand
 				Duck_Y = 300;
 			end
-			
+
 //GAME LOGIC STATES WIP
 
 	   	   H: 
