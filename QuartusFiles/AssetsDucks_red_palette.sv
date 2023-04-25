@@ -1,15 +1,15 @@
-module AssetsDucks23_palette (
+module AssetsDucks_red_palette (
 	input logic [3:0] index,
 	output logic [3:0] red, green, blue
 );
 
 localparam [0:15][11:0] palette = {
-	{4'hA, 4'h0, 4'h1},//0, should be 1
-	{4'hA, 4'hE, 4'hA},//1, should be 0
-	{4'h0, 4'h0, 4'h0},//2, should be 3
-	{4'hF, 4'hF, 4'hF},//3, should be 2
-	{4'hF, 4'h7, 4'h6},//4
-	{4'h0, 4'h5, 4'h0},//5
+	{4'hA, 4'hE, 4'hA},//0 BACKGROUND
+	{4'hA, 4'h0, 4'h1},//1 red
+	{4'hF, 4'hF, 4'hF},//2 white
+	{4'h0, 4'h0, 4'h0},//3 black
+	{4'hF, 4'h7, 4'h6},//4 orange
+	{4'h0, 4'h5, 4'h0},//5 green
 	{4'hA, 4'hE, 4'hA},//6
 	{4'hA, 4'hE, 4'hA},//7
 	{4'hA, 4'hE, 4'hA},//8

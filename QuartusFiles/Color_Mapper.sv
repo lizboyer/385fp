@@ -89,7 +89,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
     end 
 
 	begin:Duck_on_proc
-    	if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red || ducks_red_palette_red || ducks_pink_palette_red) == 4'hA) && ((ducks_black_palette_blue || ducks_red_palette_blue || ducks_pink_palette_blue)  == 4'hE) && ((ducks_black_palette_green || ducks_red_palette_green || ducks_pink_palette_green)  == 4'hA)) && (resetSignal == 1'b0)) 
+    	if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red || ducks_red_palette_red || ducks_pink_palette_red) == 4'hA) && ((ducks_black_palette_blue || ducks_red_palette_blue || ducks_pink_palette_blue)  == 4'hA) && ((ducks_black_palette_green || ducks_red_palette_green || ducks_pink_palette_green)  == 4'hE)) && (resetSignal == 1'b0)) 
 			if (DrawY < 300)	//only draw duck above y = 300
 				duck_on = 1'b1;
 			else
