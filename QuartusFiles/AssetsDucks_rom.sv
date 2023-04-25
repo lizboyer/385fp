@@ -1,6 +1,6 @@
 module AssetsDucks_rom (
 	input logic clock,
-	input logic [4:0] frame,
+	input logic [5:0] frame,
 	input logic [13:0] address,
 	output logic [3:0] q,
 	output logic [6:0] DuckSizeX, DuckSizeY
@@ -52,158 +52,203 @@ logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15
 always_comb
 begin
 	case(frame)						//BLACK DUCK RIGHT FACING
-		5'b00000: begin
+		6'b000000: begin
 			q = q0;//Ducks1
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00001:begin
+		6'b000001:begin
 			q = q1;//Ducks2
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00010:begin
+		6'b000010:begin
 			q = q2;//Ducks3
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00011: begin
+		6'b000011: begin
 			q = q3;//Ducks4
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00100: begin
+		6'b000100: begin
 			q = q4;//Ducks5
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00101:begin
+		6'b000101:begin
 			q = q5;//Ducks6
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00110:begin
+		6'b000110:begin
 			q = q6;//Ducks7
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b00111: begin
+		6'b000111: begin
 			q = q7;//Ducks8
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01000:begin
+		6'b001000:begin
 			q = q8;//Ducks9
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end								//BLACK DUCK FALLING
-		5'b01001:begin
+		6'b001001:begin
 			q = q9;//Ducks10
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01010: begin
+		6'b001010: begin
 			q = q10;//Ducks11
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01011:begin					//BLACK DUCK LEFT FACING
+		6'b001011:begin					//BLACK DUCK LEFT FACING
 			q = q11;//Ducks12
 			DuckSizeX = 7'b1000000;	
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01100:begin
+		6'b001100:begin
 			q = q12;//Ducks13
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01101: begin
+		6'b001101: begin
 			q = q13;//Ducks14
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01101: begin
+		6'b001101: begin
 			q = q14;//Ducks15
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01110: begin
+		6'b001110: begin
 			q = q15;//Ducks16
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b01111:begin
+		6'b001111:begin
 			q = q16;//Ducks17
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10000:begin
+		6'b010000:begin
 			q = q17;//Ducks18
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10001: begin
+		6'b010001: begin
 			q = q18;//Ducks19
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b010010: begin
 			q = q19;//Ducks20
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin						//RED DUCK RIGHT FACING
+		6'b010011: begin						//RED DUCK RIGHT FACING
 			q = q20;//Ducks21
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b010100: begin
 			q = q21;//Ducks22
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b010101: begin
 			q = q22;//Ducks23
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b010110: begin
 			q = q23;//Ducks24
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b010111: begin
 			q = q24;//Ducks25
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b011000: begin
 			q = q25;//Ducks26
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b011001: begin
 			q = q26;//Ducks27
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b011010: begin
 			q = q27;//Ducks28
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b011011: begin
 			q = q28;//Ducks29
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin						//RED DUCK FALLING
+		6'b011100: begin						//RED DUCK FALLING
 			q = q29;//Ducks30
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		5'b10010: begin
+		6'b011101: begin
 			q = q30;//Ducks31
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b011110: begin						//RED DUCK LEFT FACING
+			q = q31;//Ducks31
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100000: begin						
+			q = q32;//Ducks31
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100001: begin						
+			q = q33;//Ducks31
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100010: begin						
+			q = q34;//Ducks31
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100011: begin					
+			q = q35;//Ducks31
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100100: begin					
+			q = q36;//Ducks31
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100110: begin					
+			q = q37;//Ducks31
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b100111: begin					
+			q = q38;//Ducks31
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101000: begin						
+			q = q39;//Ducks31
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end

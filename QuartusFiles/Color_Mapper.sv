@@ -15,7 +15,7 @@
 //nColor is the color of the pixel at that coordinate
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y
-					   input logic [4:0] Frame, DuckFrame,
+					   input logic [5:0] Frame, DuckFrame,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
