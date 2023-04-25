@@ -18,8 +18,8 @@ localparam [0:15][11:0] palette = {
 	{4'h6, 4'hA, 4'hF},//11
 	{4'h6, 4'hA, 4'hF},//12
 	{4'h6, 4'hA, 4'hF},//13
-	{4'h6, 4'hA, 4'hF},//14
-	{4'h6, 4'hA, 4'hF}//15
+	{4'hF, 4'h8, 4'h7},//14
+	{4'h0, 4'h5, 4'h0}//15
 };
 
 assign {red, green, blue} = palette[index];

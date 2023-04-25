@@ -5,7 +5,7 @@ module AssetsDucks_rom (
 	output logic [3:0] q,
 	output logic [6:0] DuckSizeX, DuckSizeY
 );
-logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20 ,q21, q22, q23, q24, q25, q26, q27, q28, q29, q30, q31, q32, q33, q34, q35, q36, q37, q38, q39;
+logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20 ,q21, q22, q23, q24, q25, q26, q27, q28, q29, q30, q31, q32, q33, q34, q35, q36, q37, q38, q39, q40, q41, q42, q43, q44, q45, q46, q47, q48, q49, q50, q51, q52, q53, q54, q55, q56, q57, q58, q59;
 
 //flying right
 	AssetsDuck0_rom AssetsDucks0_rom0(.clock, .address(address), .q(q0));
@@ -48,6 +48,26 @@ logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15
 	AssetsDucks37_rom AssetsDucks37_rom0(.clock, .address(address), .q(q37));
 	AssetsDucks38_rom AssetsDucks38_rom0(.clock, .address(address), .q(q38));
 	AssetsDucks39_rom AssetsDucks39_rom0(.clock, .address(address), .q(q39));
+	AssetsDucks40_rom AssetsDucks40_rom0(.clock, .address(address), .q(q40));
+	AssetsDucks41_rom AssetsDucks41_rom0(.clock, .address(address), .q(q41));
+	AssetsDucks42_rom AssetsDucks42_rom0(.clock, .address(address), .q(q42));
+	AssetsDucks43_rom AssetsDucks43_rom0(.clock, .address(address), .q(q43));
+	AssetsDucks44_rom AssetsDucks44_rom0(.clock, .address(address), .q(q44));
+	AssetsDucks45_rom AssetsDucks45_rom0(.clock, .address(address), .q(q45));
+	AssetsDucks46_rom AssetsDucks46_rom0(.clock, .address(address), .q(q46));
+	AssetsDucks47_rom AssetsDucks47_rom0(.clock, .address(address), .q(q47));
+	AssetsDucks48_rom AssetsDucks48_rom0(.clock, .address(address), .q(q48));
+	AssetsDucks49_rom AssetsDucks49_rom0(.clock, .address(address), .q(q49));
+	AssetsDucks50_rom AssetsDucks50_rom0(.clock, .address(address), .q(q50));
+	AssetsDucks51_rom AssetsDucks51_rom0(.clock, .address(address), .q(q51));
+	AssetsDucks52_rom AssetsDucks52_rom0(.clock, .address(address), .q(q52));
+	AssetsDucks53_rom AssetsDucks53_rom0(.clock, .address(address), .q(q53));
+	AssetsDucks54_rom AssetsDucks54_rom0(.clock, .address(address), .q(q54));
+	AssetsDucks55_rom AssetsDucks55_rom0(.clock, .address(address), .q(q55));
+	AssetsDucks56_rom AssetsDucks56_rom0(.clock, .address(address), .q(q56));
+	AssetsDucks57_rom AssetsDucks57_rom0(.clock, .address(address), .q(q57));
+	AssetsDucks58_rom AssetsDucks58_rom0(.clock, .address(address), .q(q58));
+	AssetsDucks59_rom AssetsDucks59_rom0(.clock, .address(address), .q(q59));
 
 always_comb
 begin
@@ -208,47 +228,147 @@ begin
 			DuckSizeY = 7'b1000000;
 		end
 		6'b011110: begin						//RED DUCK LEFT FACING
-			q = q31;//Ducks31
+			q = q31;//Ducks32
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100000: begin						
-			q = q32;//Ducks31
+			q = q32;//Ducks33
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100001: begin						
-			q = q33;//Ducks31
+			q = q33;//Ducks34
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100010: begin						
-			q = q34;//Ducks31
+			q = q34;//Ducks35
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100011: begin					
-			q = q35;//Ducks31
+			q = q35;//Ducks36
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100100: begin					
-			q = q36;//Ducks31
+			q = q36;//Ducks37
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100110: begin					
-			q = q37;//Ducks31
+			q = q37;//Ducks38
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
 		6'b100111: begin					
-			q = q38;//Ducks31
+			q = q38;//Ducks39
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;
 		end
 		6'b101000: begin						
-			q = q39;//Ducks31
+			q = q39;//Ducks40
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101001: begin					//PINK DUCK RIGHT FACING	
+			q = q40;//Ducks41
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101010: begin						
+			q = q41;//Ducks42
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101011: begin						
+			q = q42;//Ducks43
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101100: begin						
+			q = q43;//Ducks44
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101101: begin					
+			q = q44;//Ducks45
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101110: begin					
+			q = q45;//Ducks46
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b101111: begin					
+			q = q46;//Ducks47
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110000: begin					
+			q = q47;//Ducks48
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110001: begin						
+			q = q48;//Ducks49
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110010: begin					//PINK DUCK FALLING	
+			q = q49;//Ducks50
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110011: begin						
+			q = q50;//Ducks51
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110100: begin					//PINK DUCK LEFT FACING
+			q = q51;//Ducks52
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110101: begin						
+			q = q52;//Ducks53
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110110: begin						
+			q = q53;//Ducks54
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b110111: begin						
+			q = q54;//Ducks55
+			DuckSizeX = 7'b1000000;
+			DuckSizeY = 7'b1000000;
+		end
+		6'b111000: begin					
+			q = q55;//Ducks56
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b111001: begin					
+			q = q56;//Ducks57
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b111010: begin					
+			q = q57;//Ducks58
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b111011: begin					
+			q = q58;//Ducks59
+			DuckSizeX = 7'b1000100; //68
+			DuckSizeY = 7'b1000000;
+		end
+		6'b111100: begin						
+			q = q59;//Ducks60
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
@@ -258,7 +378,7 @@ begin
 			DuckSizeX = 7'b0000000;
 			DuckSizeY = 7'b0000000;
 		end
-		
+
 	endcase
 end
 //
@@ -821,6 +941,286 @@ module AssetsDucks39_rom (
 );
 
 logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks39/AssetsDucks39.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks40_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks40/AssetsDucks40.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks41_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks41/AssetsDucks41.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks42_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks42/AssetsDucks42.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks43_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks43/AssetsDucks43.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks44_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks44/AssetsDucks44.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks45_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks45/AssetsDucks45.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks46_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks46/AssetsDucks46.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks47_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks47/AssetsDucks47.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks48_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks48/AssetsDucks48.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks49_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks49/AssetsDucks49.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks50_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks50/AssetsDucks50.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks51_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks51/AssetsDucks51.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks52_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks52/AssetsDucks52.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks53_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks53/AssetsDucks53.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks54_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks54/AssetsDucks54.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks55_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks55/AssetsDucks55.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks56_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks56/AssetsDucks56.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks57_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks57/AssetsDucks57.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks58_rom (
+	input logic clock,
+	input logic [12:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks58/AssetsDucks58.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDucks59_rom (
+	input logic clock,
+	input logic [11:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks59/AssetsDucks59.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
