@@ -7,7 +7,7 @@ with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/D
     dogmifnew = dogmif.read()
     dogmif.close
 
-if file == 'AssetsDogs2.mif' or file == 'AssetsDogs3.mif' or file == 'AssetsDogs6.mif':
+if file == 'AssetsDogs2' or file == 'AssetsDogs3' or file == 'AssetsDogs6':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -20,14 +20,14 @@ if file == 'AssetsDogs2.mif' or file == 'AssetsDogs3.mif' or file == 'AssetsDogs
     dogmifnew = dogmifnew.replace('temp3;','2;')
     dogmifnew = dogmifnew.replace('temp4;','1;')
 
-if file == 'AssetsDogs5.mif':
+if file == 'AssetsDogs5':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
 
     dogmifnew = dogmifnew.replace('temp2;','3;')
     dogmifnew = dogmifnew.replace('temp3;','2;')
 
-if file == 'AssetsDogs7.mif':
+if file == 'AssetsDogs7':
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
@@ -38,7 +38,7 @@ if file == 'AssetsDogs7.mif':
     dogmifnew = dogmifnew.replace('temp3;','4;')
     dogmifnew = dogmifnew.replace('temp4;','2;')
 
-if file == 'AssetsDogs8.mif':
+if file == 'AssetsDogs8':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
@@ -48,7 +48,7 @@ if file == 'AssetsDogs8.mif':
     dogmifnew = dogmifnew.replace('temp3;','4;')
     dogmifnew = dogmifnew.replace('temp4;','0;')
 
-if file == 'AssetsDucks1.mif':
+if file == 'AssetsDucks1':
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -62,7 +62,7 @@ if file == 'AssetsDucks1.mif':
     dogmifnew = dogmifnew.replace('temp12;','0;')
     dogmifnew = dogmifnew.replace('temp13;','0;')
 
-if file == 'AssetsDucks2.mif':
+if file == 'AssetsDucks2':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -80,7 +80,7 @@ if file == 'AssetsDucks2.mif':
     dogmifnew = dogmifnew.replace('temp13;','2;')
     dogmifnew = dogmifnew.replace('temp14;','1;')
 
-if file == 'AssetsDucks3.mif' or file == 'AssetsDucks7.mif' or file == 'AssetsDucks16.mif' or file == 'AssetsDucks18.mif':
+if file == 'AssetsDucks3' or file == 'AssetsDucks7' or file == 'AssetsDucks16' or file == 'AssetsDucks18':
     dogmifnew = dogmifnew.replace('12;','temp12;')
     dogmifnew = dogmifnew.replace('13;','temp13;')
 
@@ -88,7 +88,7 @@ if file == 'AssetsDucks3.mif' or file == 'AssetsDucks7.mif' or file == 'AssetsDu
     dogmifnew = dogmifnew.replace('temp12;','0;')
     dogmifnew = dogmifnew.replace('temp13;','0;')
 
-if file == 'AssetsDucks4.mif':
+if file == 'AssetsDucks4':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
@@ -110,7 +110,7 @@ if file == 'AssetsDucks4.mif':
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
 
-if file == 'AssetsDucks5.mif':
+if file == 'AssetsDucks5':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
@@ -123,7 +123,7 @@ if file == 'AssetsDucks5.mif':
     dogmifnew = dogmifnew.replace('temp12;','0;')
     dogmifnew = dogmifnew.replace('temp13;','0;')
 
-if file == 'AssetsDucks6.mif':
+if file == 'AssetsDucks6':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -142,7 +142,7 @@ if file == 'AssetsDucks6.mif':
     dogmifnew = dogmifnew.replace('temp12;','0;')
     dogmifnew = dogmifnew.replace('temp13;','0;')
 
-if file == 'AssetsDucks8.mif':
+if file == 'AssetsDucks8':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -172,7 +172,7 @@ if file == 'AssetsDucks8.mif':
     dogmifnew = dogmifnew.replace('temp14;','2;')
     dogmifnew = dogmifnew.replace('temp15;','2;')
 
-if file == 'AssetsDucks9.mif':
+if file == 'AssetsDucks9':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -202,7 +202,7 @@ if file == 'AssetsDucks9.mif':
     dogmifnew = dogmifnew.replace('temp14;','0;')
     dogmifnew = dogmifnew.replace('temp15;','0;')
 
-if file == 'AssetsDucks10.mif':
+if file == 'AssetsDucks10':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -232,7 +232,7 @@ if file == 'AssetsDucks10.mif':
     dogmifnew = dogmifnew.replace('temp14;','2;')
     dogmifnew = dogmifnew.replace('temp15;','2;')
 
-if file == 'AssetsDucks11.mif':
+if file == 'AssetsDucks11':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
@@ -258,7 +258,7 @@ if file == 'AssetsDucks11.mif':
     dogmifnew = dogmifnew.replace('temp14;','4;')
     dogmifnew = dogmifnew.replace('temp15;','0;')
 
-if file == 'AssetsDucks12.mif':
+if file == 'AssetsDucks12':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
@@ -284,7 +284,7 @@ if file == 'AssetsDucks12.mif':
     dogmifnew = dogmifnew.replace('temp14;','4;')
     dogmifnew = dogmifnew.replace('temp15;','4;')
 
-if file == 'AssetsDucks13.mif':
+if file == 'AssetsDucks13':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('12;','temp12;')
@@ -295,7 +295,7 @@ if file == 'AssetsDucks13.mif':
     dogmifnew = dogmifnew.replace('temp12;','0;')
     dogmifnew = dogmifnew.replace('temp13;','0;')
 
-if file == 'AssetsDucks14.mif':
+if file == 'AssetsDucks14':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
     dogmifnew = dogmifnew.replace('8;','temp8;')
@@ -317,7 +317,7 @@ if file == 'AssetsDucks14.mif':
     dogmifnew = dogmifnew.replace('temp14;','4;')
     dogmifnew = dogmifnew.replace('temp15;','4;')
 
-if file == 'AssetsDucks15.mif':
+if file == 'AssetsDucks15':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
     dogmifnew = dogmifnew.replace('8;','temp8;')
@@ -339,7 +339,7 @@ if file == 'AssetsDucks15.mif':
     dogmifnew = dogmifnew.replace('temp14;','1;')
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
-if file == 'AssetsDucks17.mif':
+if file == 'AssetsDucks17':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -368,7 +368,7 @@ if file == 'AssetsDucks17.mif':
     dogmifnew = dogmifnew.replace('temp14;','1;')
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
-if file == 'AssetsDucks19.mif':
+if file == 'AssetsDucks19':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
     dogmifnew = dogmifnew.replace('7;','temp7;')
@@ -393,7 +393,7 @@ if file == 'AssetsDucks19.mif':
     dogmifnew = dogmifnew.replace('temp14;','2;')
     dogmifnew = dogmifnew.replace('temp15;','4;')
 
-if file == 'AssetsDucks20.mif':
+if file == 'AssetsDucks20':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('12;','temp12;')
@@ -404,7 +404,7 @@ if file == 'AssetsDucks20.mif':
     dogmifnew = dogmifnew.replace('temp12;','1;')
     dogmifnew = dogmifnew.replace('temp13;','3;')
 
-if file == 'AssetsDucks22.mif':
+if file == 'AssetsDucks22':
     dogmifnew = dogmifnew.replace('5;','temp5;')
     dogmifnew = dogmifnew.replace('12;','temp12;')
     dogmifnew = dogmifnew.replace('15;','temp15;')
@@ -413,7 +413,7 @@ if file == 'AssetsDucks22.mif':
     dogmifnew = dogmifnew.replace('temp12;','1;')
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
-if file == 'AssetsDogs23.mif':
+if file == 'AssetsDucks23':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -424,7 +424,7 @@ if file == 'AssetsDogs23.mif':
     dogmifnew = dogmifnew.replace('temp2;','3;')
     dogmifnew = dogmifnew.replace('temp3;','2;')
 
-if file == 'AssetsDucks24.mif':
+if file == 'AssetsDucks24':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -455,7 +455,7 @@ if file == 'AssetsDucks24.mif':
     dogmifnew = dogmifnew.replace('temp14;','3;')
     dogmifnew = dogmifnew.replace('temp15;','3;')
 
-if file == 'AssetsDucks25.mif':
+if file == 'AssetsDucks25':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
@@ -484,7 +484,7 @@ if file == 'AssetsDucks25.mif':
     dogmifnew = dogmifnew.replace('temp14;','1;')
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
-if file == 'AssetsDogs26.mif':
+if file == 'AssetsDucks26':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
@@ -493,7 +493,7 @@ if file == 'AssetsDogs26.mif':
     dogmifnew = dogmifnew.replace('temp3;','2;')
     dogmifnew = dogmifnew.replace('temp5;','0;')
 
-if file == 'AssetsDucks27.mif':
+if file == 'AssetsDucks27':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
@@ -520,7 +520,7 @@ if file == 'AssetsDucks27.mif':
     dogmifnew = dogmifnew.replace('temp14;','1;')
     dogmifnew = dogmifnew.replace('temp15;','1;')
 
-if file == 'AssetsDucks28.mif':
+if file == 'AssetsDucks28':
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
@@ -547,7 +547,7 @@ if file == 'AssetsDucks28.mif':
     dogmifnew = dogmifnew.replace('temp14;','2;')
     dogmifnew = dogmifnew.replace('temp15;','2;')
 
-if file == 'AssetsDucks29.mif':
+if file == 'AssetsDucks29':
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
@@ -579,7 +579,7 @@ if file == 'AssetsDucks29.mif':
     dogmifnew = dogmifnew.replace('temp14;','2;')
     dogmifnew = dogmifnew.replace('temp15;','2;')
 
-if file == 'AssetsDogs30.mif':
+if file == 'AssetsDucks30':
     dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('4;','temp4;')
