@@ -302,25 +302,25 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 		   DuckStart1: begin
 				case(Duck_direction) //case statement for frame via direction
 					2'b00: 	case(Duck_color) //NW
-								2'b00: DuckFrame = 5'b01011;//Black
+								2'b00: DuckFrame = 6'b001011;//Black
 								2'b01: DuckFrame = //Red
 								2'b10: DuckFrame = //Green
 								default: ;
 							endcase
 					2'b01: case(Duck_color)	//W
-								2'b00: DuckFrame = 5'b01111; //Black
+								2'b00: DuckFrame = 6'b001111; //Black
 								2'b01: ;
 								2'b10: ;
 								default: ;
 							endcase
 					2'b10: case(Duck_color) //NE
-								2'b00: DuckFrame = 5'b00000; //Black
+								2'b00: DuckFrame = 6'b000000; //Black
 								2'b01: ;
 								2'b10: ;
 								default: ;
 							endcase
 					2'b11: case(Duck_color)	//E
-								2'b00: DuckFrame = 5'b00100; //Black
+								2'b00: DuckFrame = 6'b000100; //Black
 								2'b01: ;
 								2'b10: ;
 								default: ;
@@ -339,6 +339,9 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				Duck_X = Duck_start; //set x position via duck_x_position_rand
 				Duck_Y = 300;
 			end
+			
+//GAME LOGIC STATES WIP
+
 	   	   H: 
 		      begin
 				resetSignal = 1'b1;
