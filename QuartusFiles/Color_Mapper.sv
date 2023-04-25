@@ -89,7 +89,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
     end 
 
 	begin:Duck_on_proc
-    	if (duck_distX < 64 && duck_distY < 64 && ~((ducks_palette_red == 4'hA) && (ducks_palette_blue == 4'hE) && (ducks_palette_green == 4'hA)) && (resetSignal == 1'b0)) 
+    	if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red || ducks_red_palette_red || ducks_pink_palette_red) == 4'hA) && ((ducks_black_palette_blue || ducks_red_palette_blue || ducks_pink_palette_blue)  == 4'hE) && ((ducks_black_palette_green || ducks_red_palette_green || ducks_pink_palette_green)  == 4'hA)) && (resetSignal == 1'b0)) 
 			if (DrawY < 300)	//only draw duck above y = 300
 				duck_on = 1'b1;
 			else
@@ -152,9 +152,23 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 					else //draw bg
 						if((duck_on ==1'b1))
 						begin
-							Red <= ducks_palette_red;
-							Green <= ducks_palette_green;
-							Blue <= ducks_palette_blue;
+							case(Duck_color)
+								2'b00: begin
+									Red <= ducks_black_palette_red;
+									Green <= ducks_black_palette_green;
+									Blue <= ducks_black_palette_blue;
+								end
+								2'b01: begin
+									Red <= ducks_red_palette_red;
+									Green <= ducks_red_palette_green;
+									Blue <= ducks_red_palette_blue;
+								end
+								2'b10: begin
+									Red <= ducks_pink_palette_red;
+									Green <= ducks_pink_palette_green;
+									Blue <= ducks_pink_palette_blue;
+								end
+							endcase
 						end
 						else
 						begin
@@ -221,11 +235,26 @@ assign negedge_vga_clk = ~vga_clk;
 		.q       (ducks_rom_q)
 	);
 
-	AssetsDucks_palette AssetsDucks_palette (
+
+	AssetsDucks_black_palette AssetsDucks_palette (
 		.index (ducks_rom_q),
-		.red   (ducks_palette_red),
-		.green (ducks_palette_green),
-		.blue  (ducks_palette_blue)
+		.red   (ducks_black_palette_red),
+		.green (ducks_black_palette_green),
+		.blue  (ducks_black_palette_blue)
+	);
+
+	AssetsDucks_red_palette AssetsDucks_palette (
+		.index (ducks_rom_q),
+		.red   (ducks_red_palette_red),
+		.green (ducks_red_palette_green),
+		.blue  (ducks_red_palette_blue)
+	);
+
+	AssetsDucks_pink_palette AssetsDucks_palette (
+		.index (ducks_rom_q),
+		.red   (ducks_pink_palette_red),
+		.green (ducks_pink_palette_green),
+		.blue  (ducks_pink_palette_blue)
 	);
 
     
