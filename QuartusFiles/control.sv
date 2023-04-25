@@ -6,7 +6,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 					output logic jump2Signal, resetSignal,
 					output logic [4:0] Frame,
 					output logic [5:0] DuckFrame,
-					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1
+					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1
 					 );
 					
 				assign LEDR[2:0] = end_sniff;
@@ -18,11 +18,11 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
-    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, H}   curr_state, next_state; 
+    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H}   curr_state, next_state; 
 	logic [3:0] Step_size = 4'b0100;
-	logic [1:0] Duck_color = Duck_color_rand;
-	logic [1:0] Duck_direction = Duck_direction_rand;
-	logic [9:0] Duck_start = Duck_start_rand_X;
+	logic [1:0] Duck_color;
+	logic [9:0] Duck_start;
+	logic [1:0] Duck_direction;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin
@@ -36,6 +36,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			go_to_jump_2 <= 4'b0000;
 			end_jump_2 <= 4'b0000;
 			waitcount1 <= 4'b0000;
+			flycounter1 <= 4'b0000;
 			end
         else 
 		  begin
@@ -68,6 +69,12 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				waitcount1 <= waitcount1 + 4'b0001;
 					if(waitcount1 == 7)
 		  				waitcount1 <=0;
+			if(curr_state == Duck4)
+				begin
+				flycounter1 <= flycounter1 + 4'b0001;
+				if(flycounter1 == 2)
+					flycounter1 <= 0;
+				end
 			
          curr_state <= next_state;
 
@@ -121,7 +128,12 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			Wait1:		if(waitcount1 == 6)
 							next_state == DuckStart1; //initializes direction + color
 			DuckStart1:	next_state = DuckStart2; // 
-			DuckStart2: next_state = H;
+			DuckStart2: next_state = Duck1;
+			Duck1: next_state = Duck2;
+			Duck2: next_state = Duck3;
+			Duck3: next_state = Duck4;
+			Duck4: 		if(flycounter1 == 1)
+							next_state = H;
             H :   /* if(Reset)	//holds, was ~Run */
 						next_state = R;
 							  
@@ -301,45 +313,45 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			  end
 		   Wait1: ;	//wait for 1 second, 10 frames
 		   DuckStart1: begin
+				Duck_color = Duck_color_rand;
+				Duck_start = Duck_start_rand_X;
+				Duck_X = Duck_start; //set x position via duck_x_position_rand
+				Duck_Y = 300;
+			end
+		   DuckStart2: Duck_direction = Duck_direction_rand;		   
+		   Duck1: begin
 				case(Duck_direction) //case statement for frame via direction
 					2'b00: 	case(Duck_color) //NW
-								2'b00: DuckFrame = 6'b001011;//Black
-								2'b01: DuckFrame = //Red
-								2'b10: DuckFrame = //Green
+								2'b00: DuckFrame = 6'd11;//Black
+								2'b01: DuckFrame = 6'd31;//Red
+								2'b10: DuckFrame = 6'd51;//Pink
 								default: ;
 							endcase
 					2'b01: case(Duck_color)	//W
-								2'b00: DuckFrame = 6'b001111; //Black
-								2'b01: ;
-								2'b10: ;
+								2'b00: DuckFrame = 6'd15; //Black
+								2'b01: DuckFrame = 6'd35;
+								2'b10: DuckFrame = 6'd55;
 								default: ;
 							endcase
 					2'b10: case(Duck_color) //NE
-								2'b00: DuckFrame = 6'b000000; //Black
-								2'b01: ;
-								2'b10: ;
+								2'b00: DuckFrame = 6'd0; //Black
+								2'b01: DuckFrame = 6'd20;
+								2'b10: DuckFrame = 6'd40;
 								default: ;
 							endcase
 					2'b11: case(Duck_color)	//E
-								2'b00: DuckFrame = 6'b000100; //Black
-								2'b01: ;
-								2'b10: ;
+								2'b00: DuckFrame = 6'd4; //Black
+								2'b01: DuckFrame = 6'd24;
+								2'b10: DuckFrame = 6'd44;
 								default: ;
 							endcase
 					default: ;
 				endcase
 			end
-		   DuckStart2: begin
-				// case(Duck_color_rand) //case statement for frame via color
-				// 	2'b00:
-				// 	2'b01:
-				// 	2'b10:
-				// 	2'b11:
-				// 	default: ;
-				// endcase
-				Duck_X = Duck_start; //set x position via duck_x_position_rand
-				Duck_Y = 300;
-			end
+			Duck2: ;
+			Duck3: ;
+			Duck4: ; 
+
 
 //GAME LOGIC STATES WIP
 

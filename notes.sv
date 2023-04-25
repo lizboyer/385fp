@@ -60,3 +60,6 @@ duck file organization:
 		left facing: 51 - 59
 			NW: 51 - 54
 			W: 55 - 59
+
+Duck motion:
+	300/(335-158) 
