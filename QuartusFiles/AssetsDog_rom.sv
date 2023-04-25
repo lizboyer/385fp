@@ -5,7 +5,7 @@ module AssetsDogs_rom (
 	output logic [3:0] q,
 	output logic [6:0] DogSizeX, DogSizeY
 );
-logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8;
+logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11;
 
 
 	AssetsDogs0_rom AssetsDogs0_rom0(.clock, .address(address), .q(q0));
@@ -17,6 +17,9 @@ logic [3:0] q0 ,q1, q2, q3, q4, q5, q6, q7, q8;
 	AssetsDogs6_rom AssetsDogs6_rom0(.clock, .address(address), .q(q6));
 	AssetsDogs7_rom AssetsDogs7_rom0(.clock, .address(address), .q(q7));
 	AssetsDogs8_rom AssetsDogs8_rom0(.clock, .address(address), .q(q8));
+	AssetsDogs9_rom AssetsDogs9_rom0(.clock, .address(address), .q(q9));
+	AssetsDogs10_rom AssetsDogs10_rom0(.clock, .address(address), .q(q10));
+	AssetsDogs11_rom AssetsDogs11_rom0(.clock, .address(address), .q(q11));
 
 
 always_comb
@@ -64,6 +67,21 @@ begin
 		end
 		5'b01000: begin
 			q = q8;//jump2
+			DogSizeX = 7'b1101110;
+			DogSizeY = 7'b1100000;
+		end
+		5'b01001: begin
+			q = q9;//caught_bird
+			DogSizeX = 7'b1101110;
+			DogSizeY = 7'b1100000;
+		end
+		5'b01010: begin
+			q = q10;//laughing1
+			DogSizeX = 7'b1101110;
+			DogSizeY = 7'b1100000;
+		end
+		5'b01011: begin
+			q = q11;//laughing2
 			DogSizeX = 7'b1101110;
 			DogSizeY = 7'b1100000;
 		end
@@ -201,6 +219,48 @@ module AssetsDogs8_rom (
 );
 
 logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs8/AssetsDogs8.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDogs9_rom (
+	input logic clock,
+	input logic [13:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs10/AssetsDogs9.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDogs10_rom (
+	input logic clock,
+	input logic [13:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs11/AssetsDogs10.mif" */;
+
+always_ff @ (posedge clock) begin
+	q <= memory[address];
+end
+
+endmodule
+
+module AssetsDogs11_rom (
+	input logic clock,
+	input logic [13:0] address,
+	output logic [3:0] q
+);
+
+logic [3:0] memory [0:10559] /* synthesis ram_init_file = "./AssetsDogs12/AssetsDogs11.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
