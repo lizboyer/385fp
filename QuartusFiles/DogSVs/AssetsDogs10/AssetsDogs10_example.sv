@@ -1,4 +1,4 @@
-module AssetsDogs10_example (
+module AssetsDogs11_example (
 	input logic vga_clk,
 	input logic [9:0] DrawX, DrawY,
 	input logic blank,
@@ -31,13 +31,13 @@ always_ff @ (posedge vga_clk) begin
 	end
 end
 
-AssetsDogs10_rom AssetsDogs10_rom (
+AssetsDogs11_rom AssetsDogs11_rom (
 	.clock   (negedge_vga_clk),
 	.address (rom_address),
 	.q       (rom_q)
 );
 
-AssetsDogs10_palette AssetsDogs10_palette (
+AssetsDogs11_palette AssetsDogs11_palette (
 	.index (rom_q),
 	.red   (palette_red),
 	.green (palette_green),
