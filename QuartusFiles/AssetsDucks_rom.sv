@@ -421,7 +421,7 @@ module AssetsDucks2_rom (
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks0/AssetsDucks2.mif" */;
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks2/AssetsDucks2.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];
@@ -435,7 +435,7 @@ module AssetsDucks3_rom (
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks0/AssetsDucks3.mif" */;
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks3/AssetsDucks3.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];

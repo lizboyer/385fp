@@ -17,7 +17,7 @@
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
-						input blank, vga_clk, Reset, jump2Signal, resetSignal, ANIM_Clk,
+						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
@@ -109,7 +109,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 
 	always_comb
 	begin:Duck_on_proc
-			if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red == 4'hA)  || (ducks_red_palette_red == 4'hA) || (ducks_pink_palette_red == 4'hA)) && ((ducks_black_palette_blue == 4'hA) || (ducks_red_palette_blue == 4'hA)|| (ducks_pink_palette_blue == 4'hA)) && ((ducks_black_palette_green  == 4'hE) || (ducks_red_palette_green  == 4'hE) || (ducks_pink_palette_green == 4'hE))))
+			if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red == 4'hA)  || (ducks_red_palette_red == 4'hA) || (ducks_pink_palette_red == 4'hA)) && ((ducks_black_palette_blue == 4'hA) || (ducks_red_palette_blue == 4'hA)|| (ducks_pink_palette_blue == 4'hA)) && ((ducks_black_palette_green  == 4'hE) || (ducks_red_palette_green  == 4'hE) || (ducks_pink_palette_green == 4'hE))) && (duckresetSignal == 1'b0))
 				duck_on = 1'b1;
 			else
 				duck_on = 1'b0;
@@ -219,9 +219,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 							end
 							else 
 							begin
-								Red <= /*4'hB*/bg_palette_red;
-								Green <= /*4'hB*/ bg_palette_green;
-								Blue <= /*4'hB*/ bg_palette_blue;
+								Red <= 4'hB/*bg_palette_red*/;
+								Green <= 4'hB/* bg_palette_green*/;
+								Blue <= 4'hB/* bg_palette_blue*/;
 							end 
 						end
 					end
@@ -271,9 +271,11 @@ assign negedge_vga_clk = ~vga_clk;
 	);
 
 	AssetsDucks_rom AssetsDucks_rom (
+		.frame	(DuckFrame),
 		.clock   (negedge_vga_clk),
 		.address (ducks_rom_address),
 		.q       (ducks_rom_q)
+		
 	);
 
 

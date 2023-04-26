@@ -3,21 +3,25 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 					input logic [9:0] Dog_rand_X, Duck_start_rand_X,	//NEW
 
                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
-					output logic jump2Signal, resetSignal,
+					output logic jump2Signal, resetSignal, duckresetSignal,
 					output logic [4:0] Frame,
 					output logic [5:0] DuckFrame,
 					output logic [1:0] Duck_color,
 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1
 					 );
 					
-				assign LEDR[9:0] = Duck_X_step;
+				assign LEDR[5:0] = DuckFrame;
+				assign LEDR[9:6] = DuckFrameInit;
 				
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
     enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H}   curr_state, next_state; 
-	logic [3:0] Step_size_lg = 4'b0100;
-	logic [3:0] Step_size_sm = 4'b0010;
+	logic [3:0] Step_size_lg_x = 4'd8;
+	logic [3:0] Step_size_sm_x = 4'd6;
+	logic [3:0] Step_size_sm_y = 4'd1;
+	logic [3:0] Step_size_lg_y = 4'd5;
+	logic [5:0] DuckFrameInit;
 
 	logic [9:0] Duck_start, Duck_X_step, Duck_Y_step;
 	logic [1:0] Duck_direction;
@@ -73,7 +77,24 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				if(flycounter1 == 2)
 					flycounter1 <= 0;
 				end
-			
+			if(curr_state == DuckStart1)
+			begin
+				Duck_color <= /*Duck_color_rand*/ 1;
+				Duck_X <= /*Duck_start_rand_X*/ 400; //set x position via duck_x_position_rand
+				Duck_Y <= 300;
+			end
+			if(curr_state == DuckStart2)
+				Duck_X <= Duck_X;
+				Duck_Y <= Duck_Y;
+				Duck_direction <= /*Duck_direction_rand*/ 1;
+				DuckFrame <= DuckFrameInit;
+			if((curr_state == Duck1) || (curr_state == Duck2) || (curr_state == Duck3) || (curr_state == Duck4))
+			begin
+				Duck_X <= Duck_X_step;
+				Duck_Y <= Duck_Y_step;
+				DuckFrame <= DuckFrame + 6'b000001;
+
+			end
          curr_state <= next_state;
 
 		  end
@@ -87,20 +108,20 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 		begin
 			case(Duck_direction)
 				2'b00: begin	//NW
-					Duck_X_step <= Duck_X_step - Step_size_lg;
-					Duck_Y_step <= Duck_Y_step - Step_size_lg;
+					Duck_X_step <= Duck_X_step - Step_size_sm_x;
+					Duck_Y_step <= Duck_Y_step - Step_size_lg_y;
 				end
 				2'b01:begin		//W
-					Duck_X_step <= Duck_X_step - Step_size_lg;
-					Duck_Y_step <= Duck_Y_step - Step_size_sm;
+					Duck_X_step <= Duck_X_step - Step_size_lg_x;
+					Duck_Y_step <= Duck_Y_step - Step_size_sm_y;
 				end
 				2'b10:begin		//NE
-					Duck_X_step <= Duck_X_step + Step_size_lg;
-					Duck_Y_step <= Duck_Y_step - Step_size_lg;
+					Duck_X_step <= Duck_X_step + Step_size_sm_x;
+					Duck_Y_step <= Duck_Y_step - Step_size_lg_y;
 				end
 				2'b11:begin		//E
-					Duck_X_step <= Duck_X_step + Step_size_lg;
-					Duck_Y_step <= Duck_Y_step - Step_size_sm;
+					Duck_X_step <= Duck_X_step + Step_size_lg_x;
+					Duck_Y_step <= Duck_Y_step - Step_size_sm_y;
 				end
 				default: ;
 			endcase
@@ -117,16 +138,18 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 	always_comb
     begin
 		Frame = 5'd0;
-		DuckFrame = 6'd0;
-		Duck_color = 2'd0;
-		Duck_start = 10'd0;
-		Duck_direction = 2'd0;
+		DuckFrameInit = 6'd0;
+//		Duck_color = 2'd0;
+//		Duck_start = 10'd0;
+//		Duck_direction = 2'd0;
+
 		Dog_X = 0;
 		Dog_Y = 0;
-		Duck_X = 0;
-		Duck_Y = 0;
+//		Duck_X = 0;
+//		Duck_Y = 0;
 		resetSignal = 1'b0;
 		jump2Signal = 1'b0;
+		duckresetSignal = 1'b1;
 	
 
 		next_state  = curr_state;	//required because I haven't enumerated all possibilities below
@@ -352,65 +375,70 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			  end
 		   Wait1: ;	//wait for 1 second, 10 frames
 		   DuckStart1: begin
-				Duck_color = Duck_color_rand;
-				Duck_start = Duck_start_rand_X;
-				Duck_X = Duck_start; //set x position via duck_x_position_rand
-				Duck_Y = 300;
+			resetSignal = 1'b1;
+//				Duck_color = Duck_color_rand;
+//				Duck_start = Duck_start_rand_X;
+//				Duck_X = Duck_start; //set x position via duck_x_position_rand
+//				Duck_Y = 300;
 			end
 		   DuckStart2: begin
-				Duck_direction = Duck_direction_rand;
+//				Duck_direction = Duck_direction_rand;
 				resetSignal = 1'b1;
-				
-				end
-		   Duck1: begin
-				resetSignal = 1'b1;
+				duckresetSignal = 1'b0;
 				case(Duck_direction) //case statement for frame via direction
 					2'b00: 	case(Duck_color) //NW
-								2'b00: DuckFrame = 6'd11;//Black
-								2'b01: DuckFrame = 6'd31;//Red
-								2'b10: DuckFrame = 6'd51;//Pink
+								2'b00: DuckFrameInit = 6'd11;//Black
+								2'b01: DuckFrameInit = 6'd31;//Red
+								2'b10: DuckFrameInit = 6'd51;//Pink
 								default: ;
 							endcase
 					2'b01: case(Duck_color)	//W
-								2'b00: DuckFrame = 6'd15; //Black
-								2'b01: DuckFrame = 6'd35;
-								2'b10: DuckFrame = 6'd55;
+								2'b00: DuckFrameInit = 6'd15; //Black
+								2'b01: DuckFrameInit = 6'd35;
+								2'b10: DuckFrameInit = 6'd55;
 								default: ;
 							endcase
 					2'b10: case(Duck_color) //NE
-								2'b00: DuckFrame = 6'd0; //Black
-								2'b01: DuckFrame = 6'd20;
-								2'b10: DuckFrame = 6'd40;
+								2'b00: DuckFrameInit = 6'd0; //Black
+								2'b01: DuckFrameInit = 6'd20;
+								2'b10: DuckFrameInit = 6'd40;
 								default: ;
 							endcase
 					2'b11: case(Duck_color)	//E
-								2'b00: DuckFrame = 6'd4; //Black
-								2'b01: DuckFrame = 6'd24;
-								2'b10: DuckFrame = 6'd44;
+								2'b00: DuckFrameInit = 6'd4; //Black
+								2'b01: DuckFrameInit = 6'd24;
+								2'b10: DuckFrameInit = 6'd44;
 								default: ;
 							endcase
 					default: ;
 				endcase
-				Duck_X = Duck_X_step;
-				Duck_Y = Duck_Y_step;
+				end
+		   Duck1: begin
+				resetSignal = 1'b1;
+				duckresetSignal = 1'b0;
+//				Duck_X = Duck_X_step;
+//				Duck_Y = Duck_Y_step;
 			end
 			Duck2: begin
 				resetSignal = 1'b1;
-				DuckFrame = DuckFrame + 6'b000001;
-				Duck_X = Duck_X_step;
-				Duck_Y = Duck_Y_step;
+				duckresetSignal = 1'b0;
+//				DuckFrame = DuckFrame + 6'b000001;
+//				Duck_X = Duck_X_step;
+//				Duck_Y = Duck_Y_step;
 			end
 			Duck3: begin
 				resetSignal = 1'b1;
-				DuckFrame = DuckFrame + 6'b000001;
-				Duck_X = Duck_X_step;
-				Duck_Y = Duck_Y_step;
+				duckresetSignal = 1'b0;
+//				DuckFrame = DuckFrame + 6'b000001;
+//				Duck_X = Duck_X_step;
+//				Duck_Y = Duck_Y_step;
 			end
 			Duck4: begin
 				resetSignal = 1'b1;
-				DuckFrame = DuckFrame + 6'b000001;
-				Duck_X = Duck_X_step;
-				Duck_Y = Duck_Y_step;
+				duckresetSignal = 1'b0;
+//				DuckFrame = DuckFrame + 6'b000001;
+//				Duck_X = Duck_X_step;
+//				Duck_Y = Duck_Y_step;
 			end
 
 //GAME LOGIC STATES WIP
