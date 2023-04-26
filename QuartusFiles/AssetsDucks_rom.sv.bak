@@ -347,7 +347,7 @@ begin
 			DuckSizeX = 7'b1000000;
 			DuckSizeY = 7'b1000000;
 		end
-		6'b110111: begin					
+		6'b1110111: begin					
 			q = q55;//Ducks56
 			DuckSizeX = 7'b1000100; //68
 			DuckSizeY = 7'b1000000;

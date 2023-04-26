@@ -1,6 +1,6 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
-					input logic [1:0] Duck_color_rand, Duck_direction_rand;	//NEW
-					input logic [9:0] dog_rand_X, Duck_start_rand_X;	//NEW
+					input logic [1:0] Duck_color_rand, Duck_direction_rand,	//NEW
+					input logic [9:0] dog_rand_X, Duck_start_rand_X,	//NEW
 
                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
 					output logic jump2Signal, resetSignal,
@@ -126,7 +126,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 			Jump2:   	if(end_jump_2 == 9)
 							next_state = Wait1;
 			Wait1:		if(waitcount1 == 6)
-							next_state == DuckStart1; //initializes direction + color
+							next_state = DuckStart1; //initializes direction + color
 			DuckStart1:	next_state = DuckStart2; // 
 			DuckStart2: next_state = Duck1;
 			Duck1: next_state = Duck2;

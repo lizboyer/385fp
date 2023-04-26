@@ -14,7 +14,7 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y,
 					   input logic [5:0] Frame, DuckFrame,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, ANIM_Clk,
 						input signed [7:0] MouseButtons,
@@ -77,7 +77,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
      end 
 
 	always_comb
-	
 	begin:Dog_on_proc
     	if (dog_distX < 110 && dog_distY < 86 && ~((dog_palette_red == 4'h6) && (dog_palette_blue == 4'hF) && (dog_palette_green == 4'hA)) && (resetSignal == 1'b0)) 
     	begin
@@ -95,6 +94,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
         	dog_on = 1'b0;
     end 
 
+	always_comb
 	begin:Duck_on_proc
     	if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red || ducks_red_palette_red || ducks_pink_palette_red) == 4'hA) && ((ducks_black_palette_blue || ducks_red_palette_blue || ducks_pink_palette_blue)  == 4'hA) && ((ducks_black_palette_green || ducks_red_palette_green || ducks_pink_palette_green)  == 4'hE)) && (resetSignal == 1'b0)) 
 			if (DrawY < 300)	//only draw duck above y = 300
@@ -263,21 +263,21 @@ assign negedge_vga_clk = ~vga_clk;
 	);
 
 
-	AssetsDucks_black_palette AssetsDucks_palette (
+	AssetsDucks_black_palette AssetsDucks_palette1 (
 		.index (ducks_rom_q),
 		.red   (ducks_black_palette_red),
 		.green (ducks_black_palette_green),
 		.blue  (ducks_black_palette_blue)
 	);
 
-	AssetsDucks_red_palette AssetsDucks_palette (
+	AssetsDucks_red_palette AssetsDucks_palette2 (
 		.index (ducks_rom_q),
 		.red   (ducks_red_palette_red),
 		.green (ducks_red_palette_green),
 		.blue  (ducks_red_palette_blue)
 	);
 
-	AssetsDucks_pink_palette AssetsDucks_palette (
+	AssetsDucks_pink_palette AssetsDucks_palette3 (
 		.index (ducks_rom_q),
 		.red   (ducks_pink_palette_red),
 		.green (ducks_pink_palette_green),
