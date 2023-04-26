@@ -16,13 +16,13 @@
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y
 					   input logic [5:0] Frame, DuckFrame,
-						input blank, vga_clk, Reset, jump2Signal, resetSignal, ANIM_Clk,
+						input blank, vga_clk, Reset, jump2Signal, resetSignal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
-    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa, shot_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa;
 	 logic [1:0] count = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX;
 	//ball internal signals
@@ -61,13 +61,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
 
 //procs
-    always_comb 
-	 begin:shot_square_on
-		  if(MouseButtons == 8'd2 && ANIM_Clk)
-				shot_on = 1'b1;
-		  else
-				shot_on = 1'b0;
-	 end
     always_comb
     begin:Ball_on_proc
         if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
@@ -122,7 +115,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 				square_on1 = 1'b0;
 		end
 	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
-	 always_ff @ (posedge vga_clk or posedge Reset)
+	 always_ff @ (posedge vga_clk)
 	 begin: Draw_bullets
 		 if(Reset == 1'b1)
 				count <= 2'b00;
@@ -141,23 +134,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
     always_ff @ (posedge vga_clk)
     begin:RGB_Display2
 		if(blank) //added blank signal
-		begin
-			if(shot_on)
-			begin
-				if(drawX >= BallX - 5'd25 && DrawX < BallX + 5'd26 && DrawY >= BallY - 5'd25 && DrawY < BallY + 5'd26)
-				begin
-					Red <= 4'hF;
-					Green <= 4'hF;
-					Blue <= 4'hF;
-				end
-				else 
-				begin
-					Red <= 4'h0;
-					Green <= 4'h0;
-					Blue <= 4'h0;
-				end
-			end
-			else 
 			begin
 				if ((ball_on == 1'b1)) 
 				begin 
@@ -174,7 +150,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						Blue <= dog_palette_blue;
 					end  		  
 					else //draw bg
-					begin
 						if((duck_on ==1'b1))
 						begin
 							case(Duck_color)
@@ -210,10 +185,8 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 								Blue <= /*4'hB*/ bg_palette_blue;
 							end 
 						end
-					end
 				end
 			end
-		end
 		else //blanking
 		begin
 			Red <= 4'h0;
