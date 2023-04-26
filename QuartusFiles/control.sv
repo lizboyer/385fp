@@ -1,6 +1,6 @@
 module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
-					input logic [1:0] Duck_color_rand, Duck_direction_rand,	//NEW
-					input logic [9:0] dog_rand_X, Duck_start_rand_X,	//NEW
+					input logic [1:0] Duck_color_rand, Duck_direction_rand;	//NEW
+					input logic [9:0] dog_rand_X, Duck_start_rand_X;	//NEW
 
                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR,
 					output logic jump2Signal, resetSignal,
@@ -19,9 +19,10 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
     enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H}   curr_state, next_state; 
-	logic [3:0] Step_size = 4'b0100;
+	logic [3:0] Step_size_lg = 4'b0100;
+	logic [3:0] Step_size_sm = 4'b0010;
 	logic [1:0] Duck_color;
-	logic [9:0] Duck_start;
+	logic [9:0] Duck_start, Duck_X_step, Duck_Y_step;
 	logic [1:0] Duck_direction;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
@@ -80,8 +81,42 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 
 		  end
     end
+	// HANDLES STEP SIZE //
+	always_ff @ (posedge ANIM_Clk or posedge Reset)
+	begin
+		Duck_X_step <= Duck_X;
+		Duck_Y_step <= Duck_Y;
+		if((curr_state == Duck1) || (curr_state == Duck2) || (curr_state == Duck3) || (curr_state == Duck4))
+		begin
+			case(Duck_direction)
+				2'b00: begin	//NW
+					Duck_X_step <= Duck_X_step - Step_size_lg;
+					Duck_Y_step <= Duck_Y_step - Step_size_lg;
+				end
+				2'b01:begin		//W
+					Duck_X_step <= Duck_X_step - Step_size_lg;
+					Duck_Y_step <= Duck_Y_step - Step_size_sm;
+				end
+				2'b10:begin		//NE
+					Duck_X_step <= Duck_X_step + Step_size_lg;
+					Duck_Y_step <= Duck_Y_step - Step_size_lg;
+				end
+				2'b11:begin		//E
+					Duck_X_step <= Duck_X_step + Step_size_lg;
+					Duck_Y_step <= Duck_Y_step - Step_size_sm;
+				end
+				default: ;
+			endcase
+		end
+		else
+		begin
+			Duck_Y_step <= Duck_Y_step;
+			Duck_X_step <= Duck_X_step;
+		end
+	end
 
-    // Assign outputs based on state
+
+    // Assign outputs based on state //
 	always_comb
     begin
 		Dog_X = 0;
@@ -129,11 +164,13 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 							next_state = DuckStart1; //initializes direction + color
 			DuckStart1:	next_state = DuckStart2; // 
 			DuckStart2: next_state = Duck1;
-			Duck1: next_state = Duck2;
+			Duck1: next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
 			Duck2: next_state = Duck3;
 			Duck3: next_state = Duck4;
-			Duck4: 		if(flycounter1 == 1)
-							next_state = H;
+			Duck4: 		if(flycounter1 == 1) /*or if(edgehit_flag)*/ 
+							next_state = DuckStart2;
+						else
+							next_state = Duck1;
             H :   /* if(Reset)	//holds, was ~Run */
 						next_state = R;
 							  
@@ -347,11 +384,24 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 							endcase
 					default: ;
 				endcase
+				Duck_X = Duck_X_step;
+				Duck_Y = Duck_Y_step;
 			end
-			Duck2: ;
-			Duck3: ;
-			Duck4: ; 
-
+			Duck2: begin
+				DuckFrame = DuckFrame + 6'b000001;
+				Duck_X = Duck_X_step;
+				Duck_Y = Duck_Y_step;
+			end
+			Duck3: begin
+				DuckFrame = DuckFrame + 6'b000001;
+				Duck_X = Duck_X_step;
+				Duck_Y = Duck_Y_step;
+			end
+			Duck4: begin
+				DuckFrame = DuckFrame + 6'b000001;
+				Duck_X = Duck_X_step;
+				Duck_Y = Duck_Y_step;
+			end
 
 //GAME LOGIC STATES WIP
 
