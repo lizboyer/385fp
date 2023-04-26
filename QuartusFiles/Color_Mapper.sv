@@ -16,13 +16,14 @@
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y,
 					   input logic [5:0] Frame, DuckFrame,
+						input logic [1:0] Duck_color,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, ANIM_Clk,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
-    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa, shot_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
 	 logic [1:0] count = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX;
 	//ball internal signals
@@ -53,7 +54,9 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	//duck internal signals
 	logic [11:0] ducks_rom_address;
 	logic [3:0] ducks_rom_q;
-	logic [3:0] ducks_palette_red, ducks_palette_green, ducks_palette_blue;
+	logic [3:0] ducks_black_palette_red, ducks_black_palette_green, ducks_black_palette_blue;
+	logic [3:0] ducks_red_palette_red, ducks_red_palette_green, ducks_red_palette_blue;
+	logic [3:0] ducks_pink_palette_red, ducks_pink_palette_green, ducks_pink_palette_blue;
 
 	logic [9:0] duck_distX, duck_distY;
 	assign duck_distX = DrawX - Duck_X;
@@ -122,7 +125,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 				square_on1 = 1'b0;
 		end
 	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
-	 always_ff @ (posedge vga_clk or posedge Reset)
+	 always_ff @ (posedge vga_clk)
 	 begin: Draw_bullets
 		 if(Reset == 1'b1)
 				count <= 2'b00;
@@ -144,7 +147,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 		begin
 			if(shot_on)
 			begin
-				if(drawX >= BallX - 5'd25 && DrawX < BallX + 5'd26 && DrawY >= BallY - 5'd25 && DrawY < BallY + 5'd26)
+				if(DrawX >= BallX - 5'd25 && DrawX < BallX + 5'd26 && DrawY >= BallY - 5'd25 && DrawY < BallY + 5'd26)
 				begin
 					Red <= 4'hF;
 					Green <= 4'hF;
