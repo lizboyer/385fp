@@ -10,11 +10,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1
 					 );
 					
-				assign LEDR[2:0] = end_sniff;
-				assign LEDR[3] = (curr_state == Jump1);
-				assign LEDR[4] = (curr_state == Jump2);
-				assign LEDR[8:5] = end_jump_2;
-				assign LEDR[9] = Run;
+				assign LEDR[9:0] = Duck_X_step;
 				
 
     // Declare signals curr_state, next_state of type enum
@@ -361,8 +357,13 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				Duck_X = Duck_start; //set x position via duck_x_position_rand
 				Duck_Y = 300;
 			end
-		   DuckStart2: Duck_direction = Duck_direction_rand;		   
+		   DuckStart2: begin
+				Duck_direction = Duck_direction_rand;
+				resetSignal = 1'b1;
+				
+				end
 		   Duck1: begin
+				resetSignal = 1'b1;
 				case(Duck_direction) //case statement for frame via direction
 					2'b00: 	case(Duck_color) //NW
 								2'b00: DuckFrame = 6'd11;//Black
@@ -394,16 +395,19 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run,
 				Duck_Y = Duck_Y_step;
 			end
 			Duck2: begin
+				resetSignal = 1'b1;
 				DuckFrame = DuckFrame + 6'b000001;
 				Duck_X = Duck_X_step;
 				Duck_Y = Duck_Y_step;
 			end
 			Duck3: begin
+				resetSignal = 1'b1;
 				DuckFrame = DuckFrame + 6'b000001;
 				Duck_X = Duck_X_step;
 				Duck_Y = Duck_Y_step;
 			end
 			Duck4: begin
+				resetSignal = 1'b1;
 				DuckFrame = DuckFrame + 6'b000001;
 				Duck_X = Duck_X_step;
 				Duck_Y = Duck_Y_step;

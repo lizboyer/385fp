@@ -23,7 +23,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
-    logic dog_on, bg_on, ball_on, square_on1, square_on2, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
 	 logic [1:0] count = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX;
 	//ball internal signals
@@ -66,11 +66,21 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //procs
     always_comb 
 	 begin:shot_square_on
-		  if(MouseButtons == 8'd2 && ANIM_Clk)
+//		  if(MouseButtons == 8'd2)
+		  if(intermed == 1'd1)
+
 				shot_on = 1'b1;
 		  else
 				shot_on = 1'b0;
 	 end
+	 always_ff @ (posedge ANIM_Clk)
+	 begin
+	 intermed = 1'd0;
+		if(MouseButtons == 8'd2)
+			intermed = 1'd1;
+		end
+	
+			
     always_comb
     begin:Ball_on_proc
         if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
@@ -99,13 +109,10 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 
 	always_comb
 	begin:Duck_on_proc
-    	if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red || ducks_red_palette_red || ducks_pink_palette_red) == 4'hA) && ((ducks_black_palette_blue || ducks_red_palette_blue || ducks_pink_palette_blue)  == 4'hA) && ((ducks_black_palette_green || ducks_red_palette_green || ducks_pink_palette_green)  == 4'hE)) && (resetSignal == 1'b0)) 
-			if (DrawY < 300)	//only draw duck above y = 300
+			if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red == 4'hA)  || (ducks_red_palette_red == 4'hA) || (ducks_pink_palette_red == 4'hA)) && ((ducks_black_palette_blue == 4'hA) || (ducks_red_palette_blue == 4'hA)|| (ducks_pink_palette_blue == 4'hA)) && ((ducks_black_palette_green  == 4'hE) || (ducks_red_palette_green  == 4'hE) || (ducks_pink_palette_green == 4'hE))))
 				duck_on = 1'b1;
 			else
 				duck_on = 1'b0;
-		else
-			duck_on = 1'b0;
     end 
 	  
 	//shot counter drawing
@@ -125,19 +132,23 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 				square_on1 = 1'b0;
 		end
 	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
-	 always_ff @ (posedge vga_clk)
+
+	 always_ff @ (posedge vga_clk or posedge Reset)
 	 begin: Draw_bullets
-		 if(Reset == 1'b1)
+			if(Reset)
 				count <= 2'b00;
-		 if(MouseButtons == 8'b00000010)
-				aaa <= 1'b1;
-		 else 
-				aaa <= 1'b0;
-		 aaa_delayed <= aaa;
-		 if(count_enable == 1'b1 && count < 2'b11) 
-			count <= count + 2'b01;
-		 else 
-			count <= count;
+			else 
+			begin
+			 if(MouseButtons == 8'b00000010)
+					aaa <= 1'b1;
+			 else 
+					aaa <= 1'b0;
+			 aaa_delayed <= aaa;
+			 if(count_enable == 1'b1 && count < 2'b11) 
+				count <= count + 2'b01;
+			 else 
+				count <= count;
+			end
 	 end
 
 	//drawing hierarchy
