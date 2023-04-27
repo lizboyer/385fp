@@ -16,8 +16,8 @@ localparam [0:15][11:0] palette = {
 	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA},
-	{4'hA, 4'hE, 4'hA},//12, should be 0
-	{4'hA, 4'hE, 4'hA},//13, should be 0
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA}
 };
