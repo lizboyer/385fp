@@ -169,7 +169,7 @@ if file == 'AssetsDucks2':
     dogmifnew = dogmifnew.replace('temp13;','2;')
     dogmifnew = dogmifnew.replace('temp14;','1;')
 
-if file == 'AssetsDucks3' or file == 'AssetsDucks16' or file == 'AssetsDucks18':
+if file == 'AssetsDucks3':
     dogmifnew = dogmifnew.replace('12;','temp12;')
     dogmifnew = dogmifnew.replace('13;','temp13;')
 
@@ -185,7 +185,7 @@ if file == 'AssetsDucks5':
     dogmifnew = dogmifnew.replace('temp0;','1;')
     dogmifnew = dogmifnew.replace('temp1;','0;')
 
-if file == 'AssetsDucks6':
+if file == 'AssetsDucks6' or file == 'AssetsDucks17':
     dogmifnew = dogmifnew.replace('5;','temp5;')
 
     dogmifnew = dogmifnew.replace('temp5;','1;')
@@ -366,55 +366,13 @@ if file == 'AssetsDucks14':
     dogmifnew = dogmifnew.replace('temp15;','4;')
 
 if file == 'AssetsDucks15':
-    dogmifnew = dogmifnew.replace('5;','temp5;')
-    dogmifnew = dogmifnew.replace('7;','temp7;')
-    dogmifnew = dogmifnew.replace('8;','temp8;')
-    dogmifnew = dogmifnew.replace('9;','temp9;')
-    dogmifnew = dogmifnew.replace('10;','temp10;')
-    dogmifnew = dogmifnew.replace('11;','temp11;')
-    dogmifnew = dogmifnew.replace('13;','temp13;')
-    dogmifnew = dogmifnew.replace('14;','temp14;')
-    dogmifnew = dogmifnew.replace('15;','temp15;')
-
-
-    dogmifnew = dogmifnew.replace('temp5;','4;')
-    dogmifnew = dogmifnew.replace('temp7;','1;')
-    dogmifnew = dogmifnew.replace('temp8;','1;')
-    dogmifnew = dogmifnew.replace('temp9;','1;')
-    dogmifnew = dogmifnew.replace('temp10;','1;')
-    dogmifnew = dogmifnew.replace('temp11;','1;')
-    dogmifnew = dogmifnew.replace('temp13;','4;')
-    dogmifnew = dogmifnew.replace('temp14;','1;')
-    dogmifnew = dogmifnew.replace('temp15;','1;')
-
-if file == 'AssetsDucks17':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('5;','temp5;')
-    dogmifnew = dogmifnew.replace('6;','temp6;')
-    dogmifnew = dogmifnew.replace('7;','temp7;')
-    dogmifnew = dogmifnew.replace('8;','temp8;')
-    dogmifnew = dogmifnew.replace('9;','temp9;')
-    dogmifnew = dogmifnew.replace('10;','temp10;')
-    dogmifnew = dogmifnew.replace('11;','temp11;')
-    dogmifnew = dogmifnew.replace('12;','temp12;')
-    dogmifnew = dogmifnew.replace('13;','temp13;')
-    dogmifnew = dogmifnew.replace('14;','temp14;')
-    dogmifnew = dogmifnew.replace('15;','temp15;')
 
     dogmifnew = dogmifnew.replace('temp0;','1;')
-    dogmifnew = dogmifnew.replace('temp1;','1;')
+    dogmifnew = dogmifnew.replace('temp1;','0;')
     dogmifnew = dogmifnew.replace('temp5;','1;')
-    dogmifnew = dogmifnew.replace('temp6;','0;')
-    dogmifnew = dogmifnew.replace('temp7;','1;')
-    dogmifnew = dogmifnew.replace('temp8;','1;')
-    dogmifnew = dogmifnew.replace('temp9;','1;')
-    dogmifnew = dogmifnew.replace('temp10;','1;')
-    dogmifnew = dogmifnew.replace('temp11;','1;')
-    dogmifnew = dogmifnew.replace('temp12;','1;')
-    dogmifnew = dogmifnew.replace('temp13;','1;')
-    dogmifnew = dogmifnew.replace('temp14;','1;')
-    dogmifnew = dogmifnew.replace('temp15;','1;')
 
 if file == 'AssetsDucks19':
     dogmifnew = dogmifnew.replace('5;','temp5;')
