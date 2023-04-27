@@ -9,17 +9,17 @@ localparam [0:15][11:0] palette = {
 	{4'hF, 4'hF, 4'hF},//2, should be 3
 	{4'hB, 4'h0, 4'hB},//3, should be 2
 	{4'hF, 4'h7, 4'h6},//4
-	{4'hF, 4'hF, 4'hF},//5, should be 3
-	{4'hF, 4'hF, 4'hF},//6, should be 3
-	{4'hF, 4'hF, 4'hF},//7, should be 3
-	{4'hF, 4'hF, 4'hF},//8, should be 3
-	{4'hF, 4'hF, 4'hF},//9, should be 3
-	{4'hF, 4'hF, 4'hF},//10, should be 3
-	{4'hF, 4'hF, 4'hF},//11, should be 3
-	{4'hF, 4'hF, 4'hF},//12, should be 3
-	{4'hF, 4'hF, 4'hF},//13, should be 3
-	{4'hF, 4'hF, 4'hF},//14, should be 3
-	{4'hF, 4'hF, 4'hF}//15, should be 3
+	{4'h0, 4'h0, 4'hA},//5
+	{4'h0, 4'h0, 4'hA},//6
+	{4'h0, 4'h0, 4'hA},//7
+	{4'h0, 4'h0, 4'hA},//8
+	{4'h0, 4'h0, 4'hA},//9
+	{4'h0, 4'h0, 4'hA},//10
+	{4'h0, 4'h0, 4'hA},//11
+	{4'h0, 4'h0, 4'hA},//12, should be 1
+	{4'h0, 4'h0, 4'hA},//13
+	{4'h0, 4'h0, 4'hA},//14
+	{4'h0, 4'h0, 4'hA}//15
 };
 
 assign {red, green, blue} = palette[index];
