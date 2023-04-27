@@ -4,22 +4,22 @@ module AssetsDucks25_palette (
 );
 
 localparam [0:15][11:0] palette = {
-	{4'hF, 4'hF, 4'hF},//0, should be 2
-	{4'hA, 4'h0, 4'h1},//1
-	{4'h0, 4'h0, 4'h0},//2, should be 3
-	{4'hA, 4'h0, 4'h1},//3, should be 1
-	{4'hF, 4'h7, 4'h6},//4
+	{4'hF, 4'h7, 4'h6},//0, should be 4
+	{4'hA, 4'hE, 4'hA},//1, should be 0
+	{4'hA, 4'h0, 4'h1},//2, should be 1
+	{4'hF, 4'hF, 4'hF},//3
+	{4'h0, 4'h0, 4'h0},//4, should be 2
 	{4'h0, 4'h5, 4'h0},//5
 	{4'h0, 4'h5, 4'h0},//6, should be 5
-	{4'hA, 4'hE, 4'hA},//7, should be 0
-	{4'hA, 4'h0, 4'h1},//8, should be 1
-	{4'hA, 4'h0, 4'h1},//9, should be 1
-	{4'hA, 4'h0, 4'h1},//10, should be 1
-	{4'hA, 4'h0, 4'h1},//11, should be 1
-	{4'hA, 4'h0, 4'h1},//12, should be 1
-	{4'hA, 4'h0, 4'h1},//13, should be 1
-	{4'hA, 4'h0, 4'h1},//14, should be 1
-	{4'hA, 4'h0, 4'h1}//15, should be 1
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'hE, 4'hA}
 };
 
 assign {red, green, blue} = palette[index];
