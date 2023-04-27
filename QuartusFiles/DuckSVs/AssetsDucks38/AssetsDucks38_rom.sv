@@ -1,10 +1,10 @@
 module AssetsDucks38_rom (
 	input logic clock,
-	input logic [12:0] address,
+	input logic [11:0] address,
 	output logic [3:0] q
 );
 
-logic [3:0] memory [0:4351] /* synthesis ram_init_file = "./AssetsDucks38/AssetsDucks38.mif" */;
+logic [3:0] memory [0:4095] /* synthesis ram_init_file = "./AssetsDucks38/AssetsDucks38.mif" */;
 
 always_ff @ (posedge clock) begin
 	q <= memory[address];

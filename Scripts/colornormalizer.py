@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 file = input("Enter file:")
 
-with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/DogSVs/{}/{}.mif'.format(file,file), 'r') as dogmif:
+with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/DuckSVs/{}/{}.mif'.format(file,file), 'r') as dogmif:
     dogmifnew = dogmif.read()
     dogmif.close
 
@@ -756,96 +756,34 @@ if file == 'AssetsDucks34':
     dogmifnew = dogmifnew.replace('temp15;','3;')
 
 if file == 'AssetsDucks35':
-    dogmifnew = dogmifnew.replace('0;','temp0;')
-    dogmifnew = dogmifnew.replace('1;','temp1;')
+    dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
-    dogmifnew = dogmifnew.replace('6;','tem64;')
-    dogmifnew = dogmifnew.replace('7;','temp7;')
-    dogmifnew = dogmifnew.replace('8;','temp8;')
-    dogmifnew = dogmifnew.replace('9;','temp9;')
-    dogmifnew = dogmifnew.replace('10;','temp10;')
-    dogmifnew = dogmifnew.replace('11;','temp11;')
-    dogmifnew = dogmifnew.replace('12;','temp12;')
-    dogmifnew = dogmifnew.replace('13;','temp13;')
-    dogmifnew = dogmifnew.replace('14;','temp14;')
-    dogmifnew = dogmifnew.replace('15;','temp15;')
 
-    dogmifnew = dogmifnew.replace('temp0;','3;')
-    dogmifnew = dogmifnew.replace('temp1;','3;')
-    dogmifnew = dogmifnew.replace('temp3;','3;')
-    dogmifnew = dogmifnew.replace('temp6;','0;')
-    dogmifnew = dogmifnew.replace('temp7;','3;')
-    dogmifnew = dogmifnew.replace('temp8;','3;')
-    dogmifnew = dogmifnew.replace('temp9;','3;')
-    dogmifnew = dogmifnew.replace('temp10;','3;')
-    dogmifnew = dogmifnew.replace('temp11;','3;')
-    dogmifnew = dogmifnew.replace('temp12;','3;')
-    dogmifnew = dogmifnew.replace('temp13;','3;')
-    dogmifnew = dogmifnew.replace('temp14;','1;')
-    dogmifnew = dogmifnew.replace('temp15;','3;')
+    dogmifnew = dogmifnew.replace('temp2;','3;')
+    dogmifnew = dogmifnew.replace('temp3;','2;')
 
 if file == 'AssetsDucks36':
     dogmifnew = dogmifnew.replace('0;','temp0;')
     dogmifnew = dogmifnew.replace('1;','temp1;')
     dogmifnew = dogmifnew.replace('2;','temp2;')
-    dogmifnew = dogmifnew.replace('6;','temp6;')
-    dogmifnew = dogmifnew.replace('7;','temp7;')
-    dogmifnew = dogmifnew.replace('8;','temp8;')
-    dogmifnew = dogmifnew.replace('9;','temp9;')
-    dogmifnew = dogmifnew.replace('10;','temp10;')
-    dogmifnew = dogmifnew.replace('11;','temp11;')
-    dogmifnew = dogmifnew.replace('12;','temp12;')
-    dogmifnew = dogmifnew.replace('13;','temp13;')
-    dogmifnew = dogmifnew.replace('14;','temp14;')
-    dogmifnew = dogmifnew.replace('15;','temp15;')
-
-    dogmifnew = dogmifnew.replace('temp0;','2;')
-    dogmifnew = dogmifnew.replace('temp1;','0;')
-    dogmifnew = dogmifnew.replace('temp2;','1;')
-    dogmifnew = dogmifnew.replace('temp6;','5;')
-    dogmifnew = dogmifnew.replace('temp7;','1;')
-    dogmifnew = dogmifnew.replace('temp8;','1;')
-    dogmifnew = dogmifnew.replace('temp9;','1;')
-    dogmifnew = dogmifnew.replace('temp10;','1;')
-    dogmifnew = dogmifnew.replace('temp11;','1;')
-    dogmifnew = dogmifnew.replace('temp12;','1;')
-    dogmifnew = dogmifnew.replace('temp13;','1;')
-    dogmifnew = dogmifnew.replace('temp14;','1;')
-    dogmifnew = dogmifnew.replace('temp15;','1;')
-
-if file == 'AssetsDucks37':
-    dogmifnew = dogmifnew.replace('0;','temp0;')
-    dogmifnew = dogmifnew.replace('1;','temp1;')
-    dogmifnew = dogmifnew.replace('2;','temp2;')
     dogmifnew = dogmifnew.replace('3;','temp3;')
-    dogmifnew = dogmifnew.replace('5;','temp5;')
+    dogmifnew = dogmifnew.replace('6;','temp6;')
 
     dogmifnew = dogmifnew.replace('temp0;','1;')
     dogmifnew = dogmifnew.replace('temp1;','0;')
     dogmifnew = dogmifnew.replace('temp2;','3;')
     dogmifnew = dogmifnew.replace('temp3;','2;')
-    dogmifnew = dogmifnew.replace('temp5;','0;')
+    dogmifnew = dogmifnew.replace('temp6;','5;')
+
 
 if file == 'AssetsDucks38':
+    dogmifnew = dogmifnew.replace('2;','temp2;')
+    dogmifnew = dogmifnew.replace('3;','temp3;')
     dogmifnew = dogmifnew.replace('6;','temp6;')
-    dogmifnew = dogmifnew.replace('8;','temp8;')
-    dogmifnew = dogmifnew.replace('9;','temp9;')
-    dogmifnew = dogmifnew.replace('10;','temp10;')
-    dogmifnew = dogmifnew.replace('11;','temp11;')
-    dogmifnew = dogmifnew.replace('12;','temp12;')
-    dogmifnew = dogmifnew.replace('13;','temp13;')
-    dogmifnew = dogmifnew.replace('14;','temp14;')
-    dogmifnew = dogmifnew.replace('15;','temp15;')
 
+    dogmifnew = dogmifnew.replace('temp2;','3;')
+    dogmifnew = dogmifnew.replace('temp3;','2;')
     dogmifnew = dogmifnew.replace('temp6;','5;')
-    dogmifnew = dogmifnew.replace('temp8;','1;')
-    dogmifnew = dogmifnew.replace('temp9;','1;')
-    dogmifnew = dogmifnew.replace('temp10;','1;')
-    dogmifnew = dogmifnew.replace('temp11;','1;')
-    dogmifnew = dogmifnew.replace('temp12;','1;')
-    dogmifnew = dogmifnew.replace('temp13;','1;')
-    dogmifnew = dogmifnew.replace('temp14;','1;')
-    dogmifnew = dogmifnew.replace('temp15;','1;')
 
 if file == 'AssetsDucks39':
     dogmifnew = dogmifnew.replace('2;','temp2;')
@@ -1176,7 +1114,7 @@ if file == 'AssetsDucks59':
     dogmifnew = dogmifnew.replace('temp15;','2;')
 
 
-with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/DogSVs/{}/{}.mif'.format(file,file), 'w') as dogmif:
+with open('/Users/liz/OneDrive/Desktop/After Glitch/Desktop/385fp/QuartusFiles/DuckSVs/{}/{}.mif'.format(file,file), 'w') as dogmif:
     dogmif.write(dogmifnew)
     dogmif.close
 
