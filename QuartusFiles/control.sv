@@ -7,7 +7,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 					output logic [4:0] Frame,
 					output logic [5:0] DuckFrame,
 					output logic [1:0] Duck_color,
-					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1
+					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1, duck_shocked
 					 );
 					
 //				assign LEDR[8:0] = Duck_Y;
@@ -46,6 +46,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 			flycounter1 <= 4'b0000;
 			Duck_X <= 400;
 			Duck_Y <= 300;
+			duck_shocked <= 4'b0000;
 			end
         else 
 		  begin
@@ -83,6 +84,12 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 				flycounter1 <= flycounter1 + 4'b0001;
 				if(flycounter1 == 3)
 					flycounter1 <= 0;
+				end
+			if(curr_state == DuckHit)
+				begin
+					duck_shocked <= duck_shocked + 4'b0001;
+					if(duck_shocked == 17)
+						duck_shocked <= 0;
 				end
 			if(curr_state == DuckStart1)
 			begin
@@ -168,6 +175,8 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 								endcase
 						default: ;
 					endcase
+				Duck_X <= Duck_X;
+				Duck_Y <= Duck_Y;
 			end
 
          curr_state <= next_state;
@@ -279,6 +288,8 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 						else
 							next_state = Duck1;
 						end
+			DuckHit: if(duck_shocked == 17)
+							next_state = DuckStart1;
             H :   /* if(Reset)	//holds, was ~Run */
 						next_state = R;
 							  
@@ -501,8 +512,9 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 //				Duck_Y = Duck_Y_step;
 			end
 			DuckHit: begin
-				
-				end
+				resetSignal = 1'b1;
+				duckresetSignal = 1'b0;
+			end
 
 //GAME LOGIC STATES WIP
 
