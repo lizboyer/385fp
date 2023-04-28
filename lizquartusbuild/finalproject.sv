@@ -59,9 +59,8 @@ module finalproject (
 
 );
 
-logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal, resetSignal, duckresetSignal, rand_clk1, rand_clk2, duck_kill_signal;
-//
-//assign LEDR = ANIM_Clk;
+logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal, resetSignal, duckresetSignal, duck_kill_signal;
+
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -76,14 +75,9 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal, resetSig
 	logic [7:0] keycode;
 	logic signed [7:0] MouseX, MouseY, MouseButtons;
 	logic [9:0] BackgroundX, BackgroundY, BackgroundSizeX, BackgroundSizeY, DogX, DogY, DogSizeX, DogSizeY;
-	logic [9:0] Dog_X, Dog_Y, Dog_rand_X, Duck_start_rand_X, Duck_X, Duck_Y, Duck_start_rand_X_int, Dog_rand_X_int;
-	logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand, Duck_color, Duck_direction_rand_int, Duck_color_rand_int, Num_repeats_rand_int;
+	logic [9:0] Dog_X, Dog_Y, Dog_rand_X, Duck_start_rand_X, Duck_X, Duck_Y;
+	logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand, Duck_color;
 
-//    logic [79:0][109:0][3:0] Dogs0;
-//    logic [85:0][109:0][3:0] Dogs1; 
-//    logic [79:0][109:0][3:0] Dogs2; 
-//    logic [85:0][109:0][3:0] Dogs3; 
-//    logic [479:0][511:0][3:0] Bgs0;
 
 //=======================================================
 //  Structural coding
@@ -194,8 +188,8 @@ logic Reset_h, vssig, blank, sync, VGA_Clk, ANIM_Clk, Run, jump2Signal, resetSig
 	vga_controller vga1 (.Clk(MAX10_CLK1_50), .Reset(Reset_h), .hs(VGA_HS), .vs(VGA_VS), .pixel_clk(VGA_Clk), .clk_10Hz(ANIM_Clk), .blank(blank), .sync(sync), .DrawX(drawxsig), .DrawY(drawysig), .clk_10Hz2(rand_clk1), .clk_10Hz3(rand_clk2));
     cursor cursor1 (.MouseX, .MouseY, .MouseButtons,.Reset(Reset_h), .frame_clk(VGA_VS), .keycode, .BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig), .blank);
 	color_mapper cm1(.duck_kill_signal, .duckresetSignal, .Duck_color,.vga_clk(VGA_Clk), .Frame(Frame), .DuckFrame(DuckFrame), .BallX(ballxsig), .BallY(ballysig), .DrawX(drawxsig), .DrawY(drawysig), .Ball_size(ballsizesig), .Red, .Green, .Blue, .blank, .MouseButtons, .Reset(Reset_h)/*, .LEDR*/, .Dog_X, .Dog_Y, .Duck_X, .Duck_Y, .jump2Signal, .resetSignal); 
-	dog_control cont1 (.duck_kill_signal, .duckresetSignal, .Dog_rand_X(Dog_rand_X_int), .Duck_color, .Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Duck_X, .Duck_Y, .Frame, .DuckFrame, .Duck_color_rand(Duck_color_rand_int), .Duck_direction_rand(Duck_direction_rand_int), .Duck_start_rand_X(Duck_start_rand_X_int), .Run, .LEDR, .jump2Signal, .resetSignal, .Num_repeats_rand(Num_repeats_rand_int));
-	Randomization rand1(.Clk(MAX10_CLK1_50), .ANIM_Clk, .rand_clk1, .rand_clk2, .Dog_rand_X, .Dog_rand_X_int, .Duck_start_rand_X, .Duck_start_rand_X_int, .Duck_color_rand, .Duck_color_rand_int, .Duck_direction_rand, .Duck_direction_rand_int, .Num_repeats_rand, .Num_repeats_rand_int);
+	dog_control cont1 (.duck_kill_signal, .duckresetSignal, .Dog_rand_X(Dog_rand_X), .Duck_color, .Clk(MAX10_CLK1_50), .Reset(Reset_h), .ANIM_Clk, .Dog_X, .Dog_Y, .Duck_X, .Duck_Y, .Frame, .DuckFrame, .Duck_color_rand(Duck_color_rand), .Duck_direction_rand(Duck_direction_rand), .Duck_start_rand_X(Duck_start_rand_X), .Run, /*.LEDR,*/ .jump2Signal, .resetSignal, .Num_repeats_rand(Num_repeats_rand));
+	Randomization rand1(.Reset(Reset_h),.LEDR, .Clk(MAX10_CLK1_50), .ANIM_Clk, .Dog_rand_X, .Duck_start_rand_X, .Duck_color_rand, .Duck_direction_rand, .Num_repeats_rand);
 
 
 endmodule

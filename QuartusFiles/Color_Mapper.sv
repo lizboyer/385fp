@@ -130,7 +130,6 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 					shotcount <= shotcount + 10'd1;
 					if(shotcount < 250 && shotcount != 0)
 						shot_on <= 1'b1;
-						
 			 end
 			 else 
 			 begin
@@ -153,7 +152,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	
 always_comb 
 begin
-	if(BallX < Duck_X + 43 && BallX > Duck_X + 22 && BallY > Duck_Y + 22 && BallY < Duck_Y + 43 && MouseButtons == 8'd2)
+	if(BallX < Duck_X + 53 && BallX > Duck_X + 12 && BallY > Duck_Y + 12 && BallY < Duck_Y + 53 && MouseButtons == 8'd2)
 		duck_kill_signal = 1'b1;
 	else 
 		duck_kill_signal = 1'b0;
