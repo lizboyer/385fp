@@ -1,7 +1,7 @@
 module AssetsDucks_rom (
 	input logic clock,
 	input logic [5:0] frame,
-	input logic [13:0] address,
+	input logic [12:0] address,
 	output logic [3:0] q,
 	output logic [6:0] DuckSizeX, DuckSizeY
 );

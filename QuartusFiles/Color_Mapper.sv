@@ -18,6 +18,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,
+						output logic duck_kill_signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
@@ -25,7 +26,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 //internal signals
     logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
 	 logic [1:0] count = 2'b00;
-	logic [6:0] DogSizeY, DogSizeX;
+	logic [6:0] DogSizeY, DogSizeX, DuckSizeX, DuckSizeY;
 	//ball internal signals
 	int DistX, DistY, Size, DistXabs, DistYabs;
 	assign DistX = DrawX - BallX;
@@ -52,33 +53,17 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign dog_rom_address = (dog_distX + dog_distY * 110);
 
 	//duck internal signals
-	logic [11:0] ducks_rom_address;
+	logic [12:0] ducks_rom_address;
 	logic [3:0] ducks_rom_q;
 	logic [3:0] ducks_black_palette_red, ducks_black_palette_green, ducks_black_palette_blue;
 	logic [3:0] ducks_red_palette_red, ducks_red_palette_green, ducks_red_palette_blue;
 	logic [3:0] ducks_pink_palette_red, ducks_pink_palette_green, ducks_pink_palette_blue;
 
-	logic [9:0] duck_distX, duck_distY;
+	logic [9:0] duck_distX, duck_distY, shotcount;
 	assign duck_distX = DrawX - Duck_X;
 	assign duck_distY = DrawY - Duck_Y;
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
 
-//procs
-    always_comb 
-	 begin:shot_square_on
-//		  if(MouseButtons == 8'd2)
-		  if(intermed == 1'd1)
-
-				shot_on = 1'b1;
-		  else
-				shot_on = 1'b0;
-	 end
-	 always_ff @ (posedge ANIM_Clk)
-	 begin
-	 intermed = 1'd0;
-		if(MouseButtons == 8'd2)
-			intermed = 1'd1;
-		end
 	
 			
     always_comb
@@ -109,7 +94,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 
 	always_comb
 	begin:Duck_on_proc
-			if (duck_distX < 64 && duck_distY < 64 && ~(((ducks_black_palette_red == 4'hA)  || (ducks_red_palette_red == 4'hA) || (ducks_pink_palette_red == 4'hA)) && ((ducks_black_palette_blue == 4'hA) || (ducks_red_palette_blue == 4'hA)|| (ducks_pink_palette_blue == 4'hA)) && ((ducks_black_palette_green  == 4'hE) || (ducks_red_palette_green  == 4'hE) || (ducks_pink_palette_green == 4'hE))) && (duckresetSignal == 1'b0))
+			if (duck_distX < 64 && duck_distY < 64 && ~((/*(ducks_black_palette_red == 4'hA)  || */(ducks_red_palette_red == 4'hA) /*|| (ducks_pink_palette_red == 4'hA)*/) && (/*(ducks_black_palette_blue == 4'hA) || */(ducks_red_palette_blue == 4'hA)/* || (ducks_pink_palette_blue == 4'hA)*/) && (/*(ducks_black_palette_green  == 4'hE) || */(ducks_red_palette_green  == 4'hE) /*|| (ducks_pink_palette_green == 4'hE)*/)) && (duckresetSignal == 1'b0))
 				duck_on = 1'b1;
 			else
 				duck_on = 1'b0;
@@ -140,16 +125,40 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			else 
 			begin
 			 if(MouseButtons == 8'b00000010)
+			 begin
 					aaa <= 1'b1;
+					shotcount <= shotcount + 10'd1;
+					if(shotcount < 2500 && shotcount != 0)
+						shot_on <= 1'b1;
+						
+			 end
 			 else 
+			 begin
 					aaa <= 1'b0;
+					shotcount <= 10'd0;
+					shot_on <= 1'b0;
+			 end
+					
 			 aaa_delayed <= aaa;
 			 if(count_enable == 1'b1 && count < 2'b11) 
+			 begin
 				count <= count + 2'b01;
+			end
 			 else 
-				count <= count;
+				begin
+					count <= count;
+				end
 			end
 	 end
+	
+always_comb 
+begin
+	if(BallX < Duck_X + 43 && BallX > Duck_X + 22 && BallY > Duck_Y + 22 && BallY < Duck_Y + 43 && MouseButtons == 8'd2)
+		duck_kill_signal = 1'b1;
+	else 
+		duck_kill_signal = 1'b0;
+end
+			
 
 	//drawing hierarchy
     always_ff @ (posedge vga_clk)
@@ -272,9 +281,11 @@ assign negedge_vga_clk = ~vga_clk;
 
 	AssetsDucks_rom AssetsDucks_rom (
 		.frame	(DuckFrame),
-		.clock   (negedge_vga_clk),
+		.clock   (vga_clk),
 		.address (ducks_rom_address),
-		.q       (ducks_rom_q)
+		.q       (ducks_rom_q),
+		.DuckSizeX,
+		.DuckSizeY
 		
 	);
 
