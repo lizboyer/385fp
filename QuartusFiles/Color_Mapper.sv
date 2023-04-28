@@ -128,7 +128,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			 begin
 					aaa <= 1'b1;
 					shotcount <= shotcount + 10'd1;
-					if(shotcount < 2500 && shotcount != 0)
+					if(shotcount < 250 && shotcount != 0)
 						shot_on <= 1'b1;
 						
 			 end
