@@ -21,7 +21,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
-    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H}   curr_state, next_state; 
+    enum logic [4:0] {R, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit}   curr_state, next_state; 
 	logic [3:0] Step_size_lg_x = 4'd15;
 	logic [3:0] Step_size_sm_x = 4'd12;
 	logic [3:0] Step_size_sm_y = 4'd2;
@@ -137,9 +137,39 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 					DuckFrame <= DuckFrame + 6'b000001;
 					Duck_X <= Duck_X_step;
 					Duck_Y <= Duck_Y_step;
-					
-
 			end
+
+			if(curr_state == DuckHit)
+			begin
+				case(Duck_direction) //case statement for frame via direction
+						2'b00: 	case(Duck_color) //NW
+									2'b00: DuckFrameInit <= 6'd19;//Black
+									2'b01: DuckFrameInit <= 6'd39;//Red
+									2'b10: DuckFrameInit <= 6'd;//Pink
+									default: DuckFrameInit <= 6'd19;//Black
+								endcase
+						2'b01: case(Duck_color)	//W
+									2'b00: DuckFrameInit <= 6'd19; //Black
+									2'b01: DuckFrameInit <= 6'd39;
+									2'b10: DuckFrameInit <= 6'd;
+									default: DuckFrameInit <= 6'd19;//Black
+								endcase
+						2'b10: case(Duck_color) //NE
+									2'b00: DuckFrameInit <= 6'd8; //Black
+									2'b01: DuckFrameInit <= 6'd28;
+									2'b10: DuckFrameInit <= 6'd48;
+									default: DuckFrameInit <= 6'd19;//Black
+								endcase
+						2'b11: case(Duck_color)	//E
+									2'b00: DuckFrameInit <= 6'd8; //Black
+									2'b01: DuckFrameInit <= 6'd28;
+									2'b10: DuckFrameInit <= 6'd48;
+									default: DuckFrameInit <= 6'd19;//Black
+								endcase
+						default: ;
+					endcase
+			end
+
          curr_state <= next_state;
 
 		  end
@@ -228,13 +258,27 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 							next_state = DuckStart1; //initializes direction + color
 			DuckStart1:	next_state = DuckStart2; // 
 			DuckStart2: next_state = Duck1;
-			Duck1: next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
-			Duck2: next_state = Duck3;
-			Duck3: next_state = Duck4;
-			Duck4: 		if ((flycounter1 == 3) || (Duck_X == 0) || (Duck_X == 480) || (Duck_Y == 0))
+			Duck1: 	if(duck_kill_signal == 1)
+						next_state == DuckHit;
+					else
+						next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
+			Duck2: if(duck_kill_signal == 1)
+						next_state == DuckHit;
+					else
+						next_state = Duck3;
+			Duck3: if(duck_kill_signal == 1)
+						next_state == DuckHit;
+					else
+						next_state = Duck4;
+			Duck4: 	if(duck_kill_signal == 1)
+						next_state == DuckHit;
+					else
+						begin
+						if ((flycounter1 == 3) || (Duck_X == 0) || (Duck_X == 480) || (Duck_Y == 0))
 							next_state = DuckStart2;
 						else
 							next_state = Duck1;
+						end
             H :   /* if(Reset)	//holds, was ~Run */
 						next_state = R;
 							  
@@ -456,6 +500,9 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 //				Duck_X = Duck_X_step;
 //				Duck_Y = Duck_Y_step;
 			end
+			DuckHit: begin
+				
+				end
 
 //GAME LOGIC STATES WIP
 
