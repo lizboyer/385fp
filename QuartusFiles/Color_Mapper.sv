@@ -23,8 +23,15 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
     
+	 
+assign LEDR[9] = shot_on;
+assign LEDR[8] = mouse_flag;
+assign LEDR[7:0] = shotcount;
+	 
+	 
+	 
 //internal signals
-    logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on, mouse_flag;
 	 logic [1:0] count = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX, DuckSizeX, DuckSizeY;
 	//ball internal signals
@@ -59,7 +66,8 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	logic [3:0] ducks_red_palette_red, ducks_red_palette_green, ducks_red_palette_blue;
 	logic [3:0] ducks_pink_palette_red, ducks_pink_palette_green, ducks_pink_palette_blue;
 
-	logic [9:0] duck_distX, duck_distY, shotcount;
+	logic [9:0] duck_distX, duck_distY;
+	logic [25:0] shotcount;
 	assign duck_distX = DrawX - Duck_X;
 	assign duck_distY = DrawY - Duck_Y;
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
@@ -126,15 +134,23 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			begin
 			 if(MouseButtons == 8'b00000010)
 			 begin
+//					mouse_flag <= mouse_flag;
+					if(~mouse_flag)
+						shot_on <= 1'b1;
 					aaa <= 1'b1;
 					shotcount <= shotcount + 10'd1;
-					if(shotcount < 250 && shotcount != 0)
-						shot_on <= 1'b1;
+					if(shotcount > 1_000_000 && (mouse_flag == 1'b0))
+					begin
+						shot_on <= 1'b0;
+						shotcount <= 0;
+						mouse_flag <= 1;
+					end
 			 end
 			 else 
 			 begin
+					shotcount <= 0;
+					mouse_flag <= 0;
 					aaa <= 1'b0;
-					shotcount <= 10'd0;
 					shot_on <= 1'b0;
 			 end
 					
@@ -142,6 +158,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			 if(count_enable == 1'b1 && count < 2'b11) 
 			 begin
 				count <= count + 2'b01;
+				mouse_flag <= 0;
 			end
 			 else 
 				begin
@@ -228,8 +245,8 @@ end
 							else 
 							begin
 								Red <= 4'hB/*bg_palette_red*/;
-								Green <= 4'hB/* bg_palette_green*/;
-								Blue <= 4'hB/* bg_palette_blue*/;
+								Green <= 4'hB /*bg_palette_green*/;
+								Blue <= 4'hB/*bg_palette_blue*/;
 							end 
 						end
 					end

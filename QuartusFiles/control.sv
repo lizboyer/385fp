@@ -10,9 +10,14 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1, duck_shocked
 					 );
 					
-//				assign LEDR[8:0] = Duck_Y;
-//				assign LEDR[9] = (curr_state == DuckStart1);
-//				assign LEDR[5] = shot_on;
+
+				assign LEDR[0] = (Duck_X == 0 || Duck_X == 640 || Duck_Y == 0 || Duck_Y == 460);
+				assign LEDR[1] = (curr_state == Bounce);
+				assign LEDR[2] = (curr_state == Duck1);
+				assign LEDR[3] = (curr_state == Duck2);
+				assign LEDR[4] = (curr_state == Duck3);
+				assign LEDR[5] = (curr_state == Duck4);
+				
 				
 				
 				
@@ -45,6 +50,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 			Duck_X <= 400;
 			Duck_Y <= 300;
 			duck_shocked <= 4'b0000;
+			duck_bounce_signal <= 1'b0;
 			end
         else 
 		  begin
@@ -80,7 +86,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 			if(curr_state == Duck4)
 				begin
 				flycounter1 <= flycounter1 + 4'b0001;
-				if(flycounter1 == Num_repeats_rand)
+				if(flycounter1 == Num_repeats_rand + 4'd3)
 					flycounter1 <= 0;
 				Duck_direction <= Duck_direction_rand;
 				end
@@ -156,7 +162,6 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 				if(Duck_X == 0 || Duck_X == 640 || Duck_Y == 0 || Duck_Y == 460)
 				begin
 					flycounter1 <= 3'd0;
-					duck_bounce_signal <= 1'b1;
 					if(Duck_direction == 3'd1) //W
 					begin
 						if(Duck_Y == 0)
@@ -200,7 +205,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 							Duck_direction <= 3'd4;
 					end
 					
-					
+					duck_bounce_signal <= 1'b1;	
 				end
 						
 				
@@ -248,6 +253,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 						
 						default: ;
 				endcase
+				duck_bounce_signal <= 1'b0;
 			end
 
 			if(curr_state == DuckHit)
@@ -420,7 +426,7 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 								next_state = Bounce;
 							else
 							begin
-								if ((flycounter1 == Num_repeats_rand))
+								if ((flycounter1 == Num_repeats_rand + 4'd3))
 									next_state = DuckStart2;
 								else
 									next_state = Duck1;
@@ -630,6 +636,10 @@ module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal,
 				duckresetSignal = 1'b0;
 			end
 			Duck4: begin
+				resetSignal = 1'b1;
+				duckresetSignal = 1'b0;
+			end
+			Bounce: begin
 				resetSignal = 1'b1;
 				duckresetSignal = 1'b0;
 			end
