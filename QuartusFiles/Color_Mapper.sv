@@ -18,7 +18,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,
-						output logic duck_kill_signal,
+						output logic duck_kill_signal, start_game_signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
@@ -32,7 +32,7 @@ assign LEDR[7:0] = shotcount;
 	 
 //internal signals
     logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on, mouse_flag;
-	 logic [1:0] count = 2'b00;
+	logic [1:0] count = 2'b00, background = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX, DuckSizeX, DuckSizeY;
 	//ball internal signals
 	int DistX, DistY, Size, DistXabs, DistYabs;
@@ -48,6 +48,11 @@ assign LEDR[7:0] = shotcount;
 	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
 	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 
+	//main menu internal signals
+	logic [15:0] mainmenu_rom_address;
+	logic [3:0] mainmenu_rom_q;
+	logic [3:0] mainmenu_palette_red, mainmenu_palette_green, mainmenu_palette_blue;
+	assign rom_address = ((DrawX * 256) / 640) + (((DrawY * 224) / 480) * 256);
 
 	//dog internal signals
 	logic [13:0] dog_rom_address;
@@ -72,8 +77,17 @@ assign LEDR[7:0] = shotcount;
 	assign duck_distY = DrawY - Duck_Y;
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
 
-	
-			
+//PROCS
+
+	always_comb 
+	begin:Main_Menu_Logic
+		if(BallX < 200  && BallX > 300 && BallY > 200 && BallY < 250 && MouseButtons == 8'd2) //test, play with it
+			background = 2'b01;
+			start_game_signal = 1'b1;
+		else 
+			background = 2'b00;
+	end			
+
     always_comb
     begin:Ball_on_proc
         if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
@@ -247,9 +261,24 @@ end
 							end
 							else 
 							begin
-								Red <= 4'hB/*bg_palette_red*/;
-								Green <= 4'hB /*bg_palette_green*/;
-								Blue <= 4'hB/*bg_palette_blue*/;
+								case(background)
+									2'b00: begin
+										Red <= mainmenu_palette_red;
+										Green <= mainmenu_palette_green;
+										Blue <= mainmenu_palette_blue;
+									end
+									2'b01: begin
+										Red <= bg_palette_red;
+										Green <= bg_palette_green;
+										Blue <= bg_palette_blue;
+									end
+									2'b10: begin
+										Red <= bg1_palette_red;
+										Green <= bg1_palette_green;
+										Blue <= bg_palette_blue;
+									end
+									default: ;
+								endcase
 							end 
 						end
 					end
@@ -330,5 +359,17 @@ assign negedge_vga_clk = ~vga_clk;
 		.blue  (ducks_pink_palette_blue)
 	);
 
+	mainmenu_rom mainmenu_rom (
+		.clock   (negedge_vga_clk),
+		.address (mainmenu_rom_address),
+		.q       (mainmenu_rom_q)
+	);
+
+	mainmenu_palette mainmenu_palette (
+		.index (mainmenu_rom_q),
+		.red   (mainmenu_palette_red),
+		.green (mainmenu_palette_green),
+		.blue  (mainmenu_palette_blue)
+	);
     
 endmodule

@@ -1,4 +1,4 @@
-module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_game_signal,
+module dog_control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_game_signal,
 					input logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand,	//NEW
 					input logic [9:0] Dog_rand_X, Duck_start_rand_X,	//NEW
 
@@ -11,13 +11,12 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					 );
 					
 
-				assign LEDR[0] = (Duck_X == 0);
-				assign LEDR[1] = (Duck_X == 640);
-				assign LEDR[2] = (Duck_Y == 0);
-				assign LEDR[3] = (Duck_Y == 460);
-				assign LEDR[4] = (curr_state == Bounce1);
-				assign LEDR[6:5] = Duck_color;
-				assign LEDR[9:7] = Duck_direction;
+				assign LEDR[0] = (Duck_X == 0 || Duck_X == 640 || Duck_Y == 0 || Duck_Y == 460);
+				assign LEDR[1] = (curr_state == Bounce);
+				assign LEDR[2] = (curr_state == Duck1);
+				assign LEDR[3] = (curr_state == Duck2);
+				assign LEDR[4] = (curr_state == Duck3);
+				assign LEDR[5] = (curr_state == Duck4);
 				
 				
 				
@@ -25,7 +24,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
-    enum logic [4:0] {R, MainMenu, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit, Bounce1, Bounce2}   curr_state, next_state; 
+    enum logic [4:0] {R, MainMenu, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit, Bounce}   curr_state, next_state; 
 	logic [3:0] Step_size_lg_x = 4'd15;
 	logic [3:0] Step_size_sm_x = 4'd12;
 	logic [3:0] Step_size_sm_y = 4'd2;
@@ -33,14 +32,13 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 	logic [5:0] DuckFrameInit;
 
 	logic [9:0] Duck_start, Duck_X_step, Duck_Y_step;
-	logic [2:0] Duck_direction, Duck_direction_int;
-	logic [2:0] Num_repeats;
+	logic [2:0] Duck_direction;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin
        if (Reset)
 			begin
-         curr_state <= R;
+         	curr_state <= R;
 			end_walk <=  4'b0000;
 			end_sniff <= 4'b0000;
 			startjump <= 4'b0000;
@@ -86,15 +84,12 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					if(waitcount1 == 7)
 		  				waitcount1 <= 0;
 			if(curr_state == Duck4)
-			begin
-				Num_repeats <= Num_repeats_rand + 4'd3;
-				flycounter1 <= flycounter1 + 4'b0001;
-				if(flycounter1 == Num_repeats)
 				begin
-					Duck_direction <= Duck_direction_rand;
+				flycounter1 <= flycounter1 + 4'b0001;
+				if(flycounter1 == Num_repeats_rand + 4'd3)
 					flycounter1 <= 0;
+				Duck_direction <= Duck_direction_rand;
 				end
-			end
 			if(curr_state == DuckHit)
 				begin
 					duck_shocked <= duck_shocked + 4'b0001;
@@ -103,8 +98,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				end
 			if(curr_state == DuckStart1)
 			begin
-				
-				Duck_color <= (Duck_color_rand == 2'd3) ? 2'd0 : Duck_color_rand;
+				Duck_color <= Duck_color_rand;
 				Duck_X <= Duck_start_rand_X; //set x position via duck_x_position_rand
 				Duck_Y <= 300;
 				Duck_direction <= Duck_direction_rand;
@@ -116,43 +110,37 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 									2'b00: DuckFrameInit <= 6'd11;//Black
 									2'b01: DuckFrameInit <= 6'd31;//Red
 									2'b10: DuckFrameInit <= 6'd51;//Pink
-									2'b11: DuckFrameInit <= 6'd11;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd11;//Black
 								endcase
 						3'b001: case(Duck_color)	//W
 									2'b00: DuckFrameInit <= 6'd15; //Black
 									2'b01: DuckFrameInit <= 6'd35;
 									2'b10: DuckFrameInit <= 6'd55;
-									2'b11: DuckFrameInit <= 6'd15;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd15;//Black
 								endcase
 						3'b010: case(Duck_color) //NE
 									2'b00: DuckFrameInit <= 6'd0; //Black
 									2'b01: DuckFrameInit <= 6'd20;
 									2'b10: DuckFrameInit <= 6'd40;
-									2'b11: DuckFrameInit <= 6'd0;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd0;//Black
 								endcase
 						3'b011: case(Duck_color)	//E
 									2'b00: DuckFrameInit <= 6'd4; //Black
 									2'b01: DuckFrameInit <= 6'd24;
 									2'b10: DuckFrameInit <= 6'd44;
-									2'b11: DuckFrameInit <= 6'd4;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd4;//Black
 								endcase
 						3'b100: case(Duck_color)  //SW
 									2'b00: DuckFrameInit <= 6'd11;//Black
 									2'b01: DuckFrameInit <= 6'd31;//Red
 									2'b10: DuckFrameInit <= 6'd51;//Pink
-									2'b11: DuckFrameInit <= 6'd11;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd11;//Black
 								endcase
 						3'b101: case(Duck_color)  //SE
 									2'b00: DuckFrameInit <= 6'd0; //Black
 									2'b01: DuckFrameInit <= 6'd20;
 									2'b10: DuckFrameInit <= 6'd40;
-									2'b11: DuckFrameInit <= 6'd0;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd0;//Black
 								endcase
 						
 						default: ;
@@ -171,187 +159,141 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					DuckFrame <= DuckFrame + 6'b000001;
 					Duck_X <= Duck_X_step;
 					Duck_Y <= Duck_Y_step;
-				if(Duck_X <= 20 || Duck_X >= 576 || Duck_Y <= 20 || Duck_Y >= 236)
+				if(Duck_X == 0 || Duck_X == 640 || Duck_Y == 0 || Duck_Y == 460)
 				begin
 					flycounter1 <= 3'd0;
+					if(Duck_direction == 3'd1) //W
+					begin
+						if(Duck_Y == 0)
+							Duck_direction <= 3'd4; 
+						else 
+							Duck_direction <= 3'd3;
+					end
+					if(Duck_direction == 3'd3) //E
+					begin
+						if(Duck_Y == 0)
+							Duck_direction <= 3'd5;
+						else
+							Duck_direction <= 3'd1;
+					end
+					if(Duck_direction == 3'd0) //NW
+					begin
+						if(Duck_Y == 0)
+							Duck_direction <= 3'd4;
+						else 
+							Duck_direction <= 3'd2;
+					end
+					if(Duck_direction == 3'd2) //NE
+					begin
+						if(Duck_Y == 0)
+							Duck_direction <= 3'd5;
+						else
+							Duck_direction <= 3'd0;
+					end
+					if(Duck_direction == 3'd4) //SW
+					begin
+						if(Duck_Y == 460)
+							Duck_direction <= 3'd0;
+						else
+							Duck_direction <= 3'd5;
+					end
+					if(Duck_direction == 3'd5) //SE
+					begin
+						if(Duck_Y == 460)
+							Duck_direction <= 3'd2;
+						else
+							Duck_direction <= 3'd4;
+					end
+					
 					duck_bounce_signal <= 1'b1;	
-					case(Duck_direction)
-						3'd0: begin
-							if(Duck_Y <= 20)
-							begin
-								Duck_direction_int <= 3'd4;
-//								Duck_Y <= 40;
-							end
-							else 
-							begin
-								Duck_direction_int <= 3'd2;
-//								Duck_X <= 40;
-							end
-						end
-						3'd1: begin
-							if(Duck_Y <= 20)
-							begin
-								Duck_direction_int <= 3'd4; 
-//								Duck_Y <= 40;
-							end
-							else 
-							begin
-								Duck_direction_int <= 3'd3;
-//								Duck_X <= 40;
-							end
-						end
-						3'd2: begin
-							if(Duck_Y <= 20)
-							begin
-								Duck_direction_int <= 3'd5;
-//								Duck_Y <= 40;
-							end
-							else
-							begin
-								Duck_direction_int <= 3'd0;
-//								Duck_X <= 556;
-							end
-						end
-						3'd3: begin
-							if(Duck_Y <= 20)
-							begin
-								Duck_direction_int <= 3'd5;
-//								Duck_Y <= 40;
-							end
-							else
-							begin
-								Duck_direction_int <= 3'd1;
-//								Duck_X <= 556;
-							end
-						end
-						3'd4: begin
-							if(Duck_Y >= 236)
-							begin
-								Duck_direction_int <= 3'd0;
-//								Duck_Y <= 216;
-							end
-							else
-							begin
-								Duck_direction_int <= 3'd5;
-//								Duck_X <= 40;
-							end
-						end
-						3'd5: begin
-							if(Duck_Y >= 236)
-							begin
-								Duck_direction_int <= 3'd2;
-//								Duck_Y <= 216;
-							end
-							else
-							begin
-								Duck_direction_int <= 3'd4;
-//								Duck_X <= 556;
-							end
-						end
-						default: ;
-					endcase
 				end
+						
+				
 			end
 			
-			if(curr_state == Bounce1)
+			if(curr_state == Bounce)
 			begin
 				case(Duck_direction) //case statement for frame via direction
 						3'b000: 	case(Duck_color) //NW
 									2'b00: DuckFrameInit <= 6'd11;//Black
 									2'b01: DuckFrameInit <= 6'd31;//Red
 									2'b10: DuckFrameInit <= 6'd51;//Pink
-									2'b11: DuckFrameInit <= 6'd11;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd11;//Black
 								endcase
 						3'b001: case(Duck_color)	//W
 									2'b00: DuckFrameInit <= 6'd15; //Black
 									2'b01: DuckFrameInit <= 6'd35;
 									2'b10: DuckFrameInit <= 6'd55;
-									2'b11: DuckFrameInit <= 6'd15;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd15;//Black
 								endcase
 						3'b010: case(Duck_color) //NE
 									2'b00: DuckFrameInit <= 6'd0; //Black
 									2'b01: DuckFrameInit <= 6'd20;
 									2'b10: DuckFrameInit <= 6'd40;
-									2'b11: DuckFrameInit <= 6'd0;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd0;//Black
 								endcase
 						3'b011: case(Duck_color)	//E
 									2'b00: DuckFrameInit <= 6'd4; //Black
 									2'b01: DuckFrameInit <= 6'd24;
 									2'b10: DuckFrameInit <= 6'd44;
-									2'b11: DuckFrameInit <= 6'd4;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd4;//Black
 								endcase
 						3'b100: case(Duck_color)  //SW
 									2'b00: DuckFrameInit <= 6'd11;//Black
 									2'b01: DuckFrameInit <= 6'd31;//Red
 									2'b10: DuckFrameInit <= 6'd51;//Pink
-									2'b11: DuckFrameInit <= 6'd11;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd11;//Black
 								endcase
 						3'b101: case(Duck_color)  //SE
 									2'b00: DuckFrameInit <= 6'd0; //Black
 									2'b01: DuckFrameInit <= 6'd20;
 									2'b10: DuckFrameInit <= 6'd40;
-									2'b11: DuckFrameInit <= 6'd0;//Black
-									default: ;
+									default: DuckFrameInit <= 6'd0;//Black
 								endcase
 						
 						default: ;
 				endcase
-				Num_repeats <= 2'd5;
 				duck_bounce_signal <= 1'b0;
 			end
-			
-			if(curr_state == Bounce2)
-				Duck_direction <= Duck_direction_int;
 
 			if(curr_state == DuckHit)
 			begin
 				case(Duck_direction) //case statement for frame via direction
 						3'b000: 	case(Duck_color) //NW
-									2'b00: DuckFrame <= 6'd19;//Black
-									2'b01: DuckFrame <= 6'd39;//Red
-									2'b10: DuckFrame <= 6'd59;//Pink
-									2'b11: DuckFrame <= 6'd19;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd19;//Black
+									2'b01: DuckFrameInit <= 6'd39;//Red
+									2'b10: DuckFrameInit <= 6'd59;//Pink
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						3'b001: case(Duck_color)	//W
-									2'b00: DuckFrame <= 6'd19; //Black
-									2'b01: DuckFrame <= 6'd39;
-									2'b10: DuckFrame <= 6'd59;
-									2'b11: DuckFrame <= 6'd19;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd19; //Black
+									2'b01: DuckFrameInit <= 6'd39;
+									2'b10: DuckFrameInit <= 6'd59;
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						3'b010: case(Duck_color) //NE
-									2'b00: DuckFrame <= 6'd8; //Black
-									2'b01: DuckFrame <= 6'd28;
-									2'b10: DuckFrame <= 6'd48;
-									2'b11: DuckFrame <= 6'd8;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd8; //Black
+									2'b01: DuckFrameInit <= 6'd28;
+									2'b10: DuckFrameInit <= 6'd48;
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						3'b011: case(Duck_color)	//E
-									2'b00: DuckFrame <= 6'd8; //Black
-									2'b01: DuckFrame <= 6'd28;
-									2'b10: DuckFrame <= 6'd48;
-									2'b11: DuckFrame <= 6'd19;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd8; //Black
+									2'b01: DuckFrameInit <= 6'd28;
+									2'b10: DuckFrameInit <= 6'd48;
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						3'b100: case(Duck_color)  //SW
-									2'b00: DuckFrame <= 6'd19;//Black
-									2'b01: DuckFrame <= 6'd39;//Red
-									2'b10: DuckFrame <= 6'd59;//Pink
-									2'b11: DuckFrame <= 6'd19;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd19;//Black
+									2'b01: DuckFrameInit <= 6'd39;//Red
+									2'b10: DuckFrameInit <= 6'd59;//Pink
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						3'b101: case(Duck_color)  //SE
-									2'b00: DuckFrame <= 6'd8; //Black
-									2'b01: DuckFrame <= 6'd28;
-									2'b10: DuckFrame <= 6'd48;
-									2'b11: DuckFrame <= 6'd8;//Black
-									default: ;
+									2'b00: DuckFrameInit <= 6'd8; //Black
+									2'b01: DuckFrameInit <= 6'd28;
+									2'b10: DuckFrameInit <= 6'd48;
+									default: DuckFrameInit <= 6'd19;//Black
 								endcase
 						default: ;
 					endcase
@@ -456,7 +398,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						else
 						begin
 							if(duck_bounce_signal == 1)
-								next_state = Bounce1;
+								next_state = Bounce;
 							else 
 								next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
 						end
@@ -465,7 +407,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					 else
 					 begin
 						 if(duck_bounce_signal == 1)
-							next_state = Bounce1;
+							next_state = Bounce;
 						 else
 							next_state = Duck3;
 					 end
@@ -474,7 +416,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					 else
 					 begin
 						 if(duck_bounce_signal == 1)
-							next_state = Bounce1;
+							next_state = Bounce;
 						else
 							next_state = Duck4;
 					 end
@@ -483,17 +425,16 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						else
 						begin
 							if(duck_bounce_signal == 1)
-								next_state = Bounce1;
+								next_state = Bounce;
 							else
 							begin
-								if ((flycounter1 == Num_repeats))
+								if ((flycounter1 == Num_repeats_rand + 4'd3))
 									next_state = DuckStart2;
 								else
 									next_state = Duck1;
 							end
 						end
-			Bounce1:	next_state = Bounce2;
-			Bounce2: next_state = Duck1;
+			Bounce:	next_state = Duck1;
 			DuckHit: if(duck_shocked == 15)
 							next_state = DuckStart1;
             H :   /* if(Reset)	//holds, was ~Run */
@@ -700,11 +641,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				resetSignal = 1'b1;
 				duckresetSignal = 1'b0;
 			end
-			Bounce1: begin
-				resetSignal = 1'b1;
-				duckresetSignal = 1'b0;
-			end
-			Bounce2: begin
+			Bounce: begin
 				resetSignal = 1'b1;
 				duckresetSignal = 1'b0;
 			end

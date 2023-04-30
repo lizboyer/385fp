@@ -18,13 +18,14 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,
+						output logic start_game_signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
                        output logic [3:0]  Red, Green, Blue );
     
 //internal signals
     logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on;
-	 logic [1:0] count = 2'b00;
+	 logic [1:0] count = 2'b00, background = 2'b00;
 	logic [6:0] DogSizeY, DogSizeX;
 	//ball internal signals
 	int DistX, DistY, Size, DistXabs, DistYabs;
@@ -40,6 +41,11 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
 	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 
+	//main menu internal signals
+	logic [15:0] mainmenu_rom_address;
+	logic [3:0] mainmenu_rom_q;
+	logic [3:0] mainmenu_palette_red, mainmenu_palette_green, mainmenu_palette_blue;
+	assign rom_address = ((DrawX * 256) / 640) + (((DrawY * 224) / 480) * 256);
 
 	//dog internal signals
 	logic [13:0] dog_rom_address;
@@ -64,6 +70,16 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
 
 //procs
+
+	always_comb 
+	begin:Main_Menu_Logic
+		if(BallX < 200  && BallX > 300 && BallY > 200 && BallY < 250 && MouseButtons == 8'd2) //test, play with it
+			background = 2'b01;
+			start_game_signal = 1'b1;
+		else 
+			background = 2'b00;
+	end
+
     always_comb 
 	 begin:shot_square_on
 //		  if(MouseButtons == 8'd2)
@@ -151,21 +167,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 			end
 	 end
 
-	//  always_ff @ (posedge vga_clk or posedge Reset)
-	//  begin: Draw_Duck_Counter
-	// 		if(Reset)
-	// 			duck_count <= 4'b0000;
-	// 		else
-	// 		begin
-	// 		 if(Hit == 1)
-	// 		 	duck_counter_signal <= 1'b1;
-	// 		 else
-	// 		 	duck_counter_signal <= 1'b0;
-	// 		duck_counter_signal_delay <= duck_counter_signal;
-	// 		if()
 
-	// 		end
-	//  end
 
 	//drawing hierarchy
     always_ff @ (posedge vga_clk)
@@ -362,6 +364,24 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 							end
 							else 
 							begin
+								case(background)
+									2'b00: begin
+										Red <= mainmenu_palette_red;
+										Green <= mainmenu_palette_green;
+										Blue <= mainmenu_palette_blue;
+									end
+									2'b01: begin
+										Red <= bg_palette_red;
+										Green <= bg_palette_green;
+										Blue <= bg_palette_blue;
+									end
+									2'b10: begin
+										Red <= bg1_palette_red;
+										Green <= bg1_palette_green;
+										Blue <= bg_palette_blue;
+									end
+									default: ;
+								endcase
 								Red <= 4'hB/*bg_palette_red*/;
 								Green <= 4'hB/* bg_palette_green*/;
 								Blue <= 4'hB/* bg_palette_blue*/;
@@ -441,6 +461,19 @@ assign negedge_vga_clk = ~vga_clk;
 		.red   (ducks_pink_palette_red),
 		.green (ducks_pink_palette_green),
 		.blue  (ducks_pink_palette_blue)
+	);
+
+	mainmenu_rom mainmenu_rom (
+		.clock   (negedge_vga_clk),
+		.address (mainmenu_rom_address),
+		.q       (mainmenu_rom_q)
+	);
+
+	mainmenu_palette mainmenu_palette (
+		.index (mainmenu_rom_q),
+		.red   (mainmenu_palette_red),
+		.green (mainmenu_palette_green),
+		.blue  (mainmenu_palette_blue)
 	);
 
     
