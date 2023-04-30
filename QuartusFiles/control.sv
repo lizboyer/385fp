@@ -3,7 +3,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					input logic [9:0] Dog_rand_X, Duck_start_rand_X,	//NEW
 
                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR, duck_killed,
-					output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal,
+					output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int,
 					output logic [4:0] Frame,
 					output logic [5:0] DuckFrame,
 					output logic [1:0] Duck_color,
@@ -11,13 +11,11 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					 );
 					
 
-				assign LEDR[0] = (Duck_X == 0);
-				assign LEDR[1] = (Duck_X == 640);
-				assign LEDR[2] = (Duck_Y == 0);
-				assign LEDR[3] = (Duck_Y == 460);
-				assign LEDR[4] = (curr_state == Bounce1);
-				assign LEDR[6:5] = Duck_color;
-				assign LEDR[9:7] = Duck_direction;
+				assign LEDR[0] = start_game_signal_int;
+				assign LEDR[1] = start_game_signal;
+				assign LEDR[5:2] = duck_number;
+				assign LEDR[8:6] = duck_killed;
+				assign LEDR[9] = (curr_state == DuckHit);
 				
 				
 				
@@ -35,7 +33,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 
 	logic [9:0] Duck_start, Duck_X_step, Duck_Y_step;
 	logic [2:0] Duck_direction, Duck_direction_int;
-	logic [2:0] Num_repeats;
+	logic [2:0] Num_repeats, bounce_cooldown;
 	//updates flip flop, current state is the only one
      always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin
@@ -56,6 +54,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			duck_bounce_signal <= 1'b0;
 			duck_killed <= 10'b0000000000;
 			duck_number <= 0;	
+			bounce_cooldown <= 0;
 			end
         else 
 		  begin
@@ -101,7 +100,8 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			if(curr_state == DuckHit)
 				begin
 					duck_shocked <= duck_shocked + 4'b0001;
-					duck_killed = duck_killed + (2** duck_number);
+					duck_killed[duck_number-1] = 1'b1;
+//					duck_killed <= duck_killed + (2** (duck_number - 1); //duck_killed = {duck_killed[9-duck_number],  rv
 					if(duck_shocked == 15)
 						duck_shocked <= 0;
 				end
@@ -170,19 +170,27 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				DuckFrameInit <= DuckFrameInit;
 				if(curr_state == Duck1)
 					DuckFrame <= DuckFrameInit;
-					Duck_X <= 400;
-					Duck_Y <= 300;
+//					Duck_X <= 400;
+//					Duck_Y <= 300;
 				if(curr_state != Duck1)
+				begin
 					DuckFrame <= DuckFrame + 6'b000001;
 					Duck_X <= Duck_X_step;
 					Duck_Y <= Duck_Y_step;
-				if(Duck_X <= 20 || Duck_X >= 576 || Duck_Y <= 20 || Duck_Y >= 236)
+				end
+				if(bounce_cooldown > 3'd1)
+				begin
+					bounce_cooldown <= bounce_cooldown + 3'd1;
+					if(bounce_cooldown > 3'd5)
+						bounce_cooldown <= 3'd0;
+				end
+				if(Duck_X <= 0 || Duck_X >= 576 || Duck_Y <= 0 || Duck_Y >= 236)
 				begin
 					flycounter1 <= 3'd0;
 					duck_bounce_signal <= 1'b1;	
 					case(Duck_direction)
 						3'd0: begin
-							if(Duck_Y <= 20)
+							if(Duck_Y <= 5)
 							begin
 								Duck_direction_int <= 3'd4;
 //								Duck_Y <= 40;
@@ -194,7 +202,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd1: begin
-							if(Duck_Y <= 20)
+							if(Duck_Y <= 5)
 							begin
 								Duck_direction_int <= 3'd4; 
 //								Duck_Y <= 40;
@@ -206,7 +214,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd2: begin
-							if(Duck_Y <= 20)
+							if(Duck_Y <= 5)
 							begin
 								Duck_direction_int <= 3'd5;
 //								Duck_Y <= 40;
@@ -218,7 +226,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd3: begin
-							if(Duck_Y <= 20)
+							if(Duck_Y <= 5)
 							begin
 								Duck_direction_int <= 3'd5;
 //								Duck_Y <= 40;
@@ -230,7 +238,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd4: begin
-							if(Duck_Y >= 236)
+							if(Duck_Y >= 231)
 							begin
 								Duck_direction_int <= 3'd0;
 //								Duck_Y <= 216;
@@ -242,7 +250,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd5: begin
-							if(Duck_Y >= 236)
+							if(Duck_Y >= 231)
 							begin
 								Duck_direction_int <= 3'd2;
 //								Duck_Y <= 216;
@@ -306,13 +314,16 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						
 						default: ;
 				endcase
-				Num_repeats <= 2'd5;
+				Num_repeats <= 3'd5;
 				duck_bounce_signal <= 1'b0;
+				bounce_cooldown <= bounce_cooldown + 3'd1;
 			end
 			
 			if(curr_state == Bounce2)
+			begin
 				Duck_direction <= Duck_direction_int;
-
+				bounce_cooldown <= bounce_cooldown + 3'd1;
+			end
 			if(curr_state == DuckHit)
 			begin
 				case(Duck_direction) //case statement for frame via direction
@@ -366,18 +377,18 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			if(curr_state == DuckFall)		//FALLING STATE
 			begin
 				Duck_X <= Duck_X;
-				Duck_Y <= Duck_y - 10;
+				Duck_Y <= Duck_Y + 10;
 				case(Duck_direction) //case statement for frame via direction
 						3'b000: 	case(Duck_color) //NW
 									2'b00: DuckFrame <= 6'd10;//Black
-									2'b01: DuckFrame <= 6'd19;//Red
+									2'b01: DuckFrame <= 6'd29;//Red
 									2'b10: DuckFrame <= 6'd50;//Pink
 									2'b11: DuckFrame <= 6'd10;//Black
 									default: ;
 								endcase
 						3'b001: case(Duck_color)	//W
 									2'b00: DuckFrame <= 6'd10; //Black
-									2'b01: DuckFrame <= 6'd19;
+									2'b01: DuckFrame <= 6'd29;
 									2'b10: DuckFrame <= 6'd50;
 									2'b11: DuckFrame <= 6'd10;//Black
 									default: ;
@@ -398,7 +409,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 								endcase
 						3'b100: case(Duck_color)  //SW
 									2'b00: DuckFrame <= 6'd10;//Black
-									2'b01: DuckFrame <= 6'd19;//Red
+									2'b01: DuckFrame <= 6'd29;//Red
 									2'b10: DuckFrame <= 6'd50;//Pink
 									2'b11: DuckFrame <= 6'd10;//Black
 									default: ;
@@ -469,6 +480,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 		resetSignal = 1'b0;
 		jump2Signal = 1'b0;
 		duckresetSignal = 1'b1;
+		start_game_signal_int = 1'b1;
 	
 
 		next_state  = curr_state;	//required because I haven't enumerated all possibilities below
@@ -476,7 +488,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 
             R :    
 							if(Run)
-                       next_state = /*Walk1*/ DuckStart1; //change depending on what you are testing
+                       next_state = /*Walk1*/ MainMenu; //change depending on what you are testing
 							else 
 								next_state = R;
 			MainMenu: if(start_game_signal)
@@ -514,7 +526,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						next_state = DuckHit;
 						else
 						begin
-							if(duck_bounce_signal == 1)
+							if(duck_bounce_signal == 1 && bounce_cooldown == 0)
 								next_state = Bounce1;
 							else 
 								next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
@@ -523,7 +535,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						next_state = DuckHit;
 					 else
 					 begin
-						 if(duck_bounce_signal == 1)
+						 if(duck_bounce_signal == 1 && bounce_cooldown == 0)
 							next_state = Bounce1;
 						 else
 							next_state = Duck3;
@@ -532,7 +544,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						next_state = DuckHit;
 					 else
 					 begin
-						 if(duck_bounce_signal == 1)
+						 if(duck_bounce_signal == 1 && bounce_cooldown == 0)
 							next_state = Bounce1;
 						else
 							next_state = Duck4;
@@ -541,7 +553,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						next_state = DuckHit;
 						else
 						begin
-							if(duck_bounce_signal == 1)
+							if(duck_bounce_signal == 1 && bounce_cooldown == 0)
 								next_state = Bounce1;
 							else
 							begin
@@ -566,12 +578,18 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 		  // Assign outputs based on ‘state’ //
 		  /////////////////////////////////////
         case (curr_state) 
+				MainMenu:
+				begin
+				resetSignal = 1'b1;
+				start_game_signal_int = 1'b0;
+				end
 	   	   R: 
 	         begin
 				Dog_X = 10'b0000001011;	//11
 				Dog_Y = 10'd290; //290
 				Frame = 5'b00000;
 				resetSignal = 1'b1;
+				start_game_signal_int = 1'b0;
 		      end
 
 	   	   Walk1: 

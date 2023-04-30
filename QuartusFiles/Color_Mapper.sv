@@ -14,10 +14,10 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y,
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y, duck_killed,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
-						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,
+						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,  start_game_signal_int,
 						output logic duck_kill_signal, start_game_signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
@@ -32,7 +32,9 @@ assign LEDR[7:0] = shotcount;
 	 
 //internal signals
     logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on, mouse_flag;
-	logic [1:0] count = 2'b00, background = 2'b00;
+	 logic fly_away = 1'b0;
+	logic [1:0] count = 2'b00;
+	logic [1:0] background;
 	logic [6:0] DogSizeY, DogSizeX, DuckSizeX, DuckSizeY;
 	//ball internal signals
 	int DistX, DistY, Size, DistXabs, DistYabs;
@@ -47,13 +49,14 @@ assign LEDR[7:0] = shotcount;
 	logic [17:0] bg_rom_address;
 	logic [3:0] bg_rom_q;
 	logic [3:0] bg_palette_red, bg_palette_green, bg_palette_blue;
+	logic [3:0] bg1_palette_red, bg1_palette_green, bg1_palette_blue;
 	assign bg_rom_address = ((DrawX * 480) / 640) + (((DrawY * 512) / 480) * 480);
 
 	//main menu internal signals
 	logic [15:0] mainmenu_rom_address;
 	logic [3:0] mainmenu_rom_q;
 	logic [3:0] mainmenu_palette_red, mainmenu_palette_green, mainmenu_palette_blue;
-	assign rom_address = ((DrawX * 256) / 640) + (((DrawY * 224) / 480) * 256);
+	assign mainmenu_rom_address = ((DrawX * 256) / 640) + (((DrawY * 224) / 480) * 256);
 
 	//dog internal signals
 	logic [13:0] dog_rom_address;
@@ -77,18 +80,20 @@ assign LEDR[7:0] = shotcount;
 	assign duck_distX = DrawX - Duck_X;
 	assign duck_distY = DrawY - Duck_Y;
 	assign ducks_rom_address = (duck_distX + duck_distY * 64);
-	assign duck_counter_init_x = 10'd180;
-	assign duck_counter_init_y = 10'd420;
-
+	assign duck_counter_init_x = 10'd228;
+	assign duck_counter_init_y = 10'd424;
+	assign background[0] = (fly_away) ? 1'b0 : start_game_signal_int;
+	assign background[1] = fly_away; //CHANGE LATER!!!!!! (when added flyaway)
 //PROCS
 
 	always_comb 
 	begin:Main_Menu_Logic
-		if(BallX < 200  && BallX > 300 && BallY > 200 && BallY < 250 && MouseButtons == 8'd2) //test, play with it
-			background = 2'b01;
+		if(BallX >= 200  && BallX < 301 && BallY >= 200 && BallY < 251 && MouseButtons == 8'd1 && ~start_game_signal_int) //test, play with it
+		begin
 			start_game_signal = 1'b1;
+		end
 		else 
-			background = 2'b00;
+			start_game_signal = 1'b0;
 	end			
 
     always_comb
@@ -143,54 +148,66 @@ assign LEDR[7:0] = shotcount;
 		end
 	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
 
-
-if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) //use parametric equation for diamond (|x| + |y| = size) 
-
 	//duck counter drawing
 	 always_comb
 	 begin:Duck_Counter_on_proc	//duck_counter_on is red when the duck has been hit, white when it hasnt, and isnt drawn if beam isnt on it
-			if((DrawX - duck_counter_init_x + (14*9))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count10
+		if(DrawX >= 200 && DrawX < 434 && DrawY >= 417 && DrawY < 432)
+		begin
+			if((DrawX - (duck_counter_init_x + (22*9)))*(DrawX - (duck_counter_init_x + (22*9))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count10
 				duck_counter_on_10 = (duck_killed[9]) ? 2'b10 : 2'b01;	//red or white
 			else
 				duck_counter_on_10 = 2'b00;	//dont draw
-			if((DrawX - duck_counter_init_x + (14*8))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count9
+			if((DrawX - (duck_counter_init_x + (22*8)))*(DrawX - (duck_counter_init_x + (22*8))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count9
 				duck_counter_on_9 = (duck_killed[8]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_9 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*7))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count8
+			if((DrawX - (duck_counter_init_x + (22*7)))*(DrawX - (duck_counter_init_x + (22*7))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count8
 				duck_counter_on_8 = (duck_killed[7]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_8 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*6))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count7
+			if((DrawX - (duck_counter_init_x + (22*6)))*(DrawX - (duck_counter_init_x + (22*6))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)
 				duck_counter_on_7 = (duck_killed[6]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_7 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*5))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count6
+			if((DrawX - (duck_counter_init_x + (22*5)))*(DrawX - (duck_counter_init_x + (22*5))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count6
 				duck_counter_on_6 = (duck_killed[5]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_6 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*4))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count5
+			if((DrawX - (duck_counter_init_x + (22*4)))*(DrawX - (duck_counter_init_x + (22*4))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)
 				duck_counter_on_5 = (duck_killed[4]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_5 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*3))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count4
+			if((DrawX - (duck_counter_init_x + (22*3)))*(DrawX - (duck_counter_init_x + (22*3))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)//Duck_Count4
 				duck_counter_on_4 = (duck_killed[3]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_4 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*2))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count3
+			if((DrawX - (duck_counter_init_x + (22*2)))*(DrawX - (duck_counter_init_x + (22*2))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count3
 				duck_counter_on_3 = (duck_killed[2]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_3 = 2'b00;
-			if((DrawX - duck_counter_init_x + (14*1))**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count2
+			if((DrawX - (duck_counter_init_x + (22*1)))*(DrawX - (duck_counter_init_x + (22*1))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count2
 				duck_counter_on_2 = (duck_killed[1]) ? 2'b10 : 2'b01;
 			else
 				duck_counter_on_2 = 2'b00;
-			if((DrawX - duck_counter_init_x)**2 + (DrawY - duck_counter_init_y)**2 <= 2'b11)	//Duck_Count1
+			if((DrawX - duck_counter_init_x)*(DrawX - duck_counter_init_x) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count1
 				duck_counter_on_1 = (duck_killed[0]) ? 2'b10 : 2'b01;
 			else 
 				duck_counter_on_1 = 2'b00;
 		end
-	assign count_enable = aaa & ~aaa_delayed; //positive edge trigger for bullet removal
+		else 
+		begin
+		duck_counter_on_10 = 2'b00;
+		duck_counter_on_9 = 2'b00;
+		duck_counter_on_8 = 2'b00;
+		duck_counter_on_7 = 2'b00;
+		duck_counter_on_6 = 2'b00;
+		duck_counter_on_5 = 2'b00;
+		duck_counter_on_4 = 2'b00;
+		duck_counter_on_3 = 2'b00;
+		duck_counter_on_2 = 2'b00;
+		duck_counter_on_1 = 2'b00;
+		end
+	end
 
 	//Bullet counter drawing
 	 always_ff @ (posedge vga_clk or posedge Reset)
@@ -240,7 +257,7 @@ if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) /
 	//Duck Killed logic
 	always_comb 
 	begin:Duck_Killed
-		if(BallX < Duck_X + 53 && BallX > Duck_X + 12 && BallY > Duck_Y + 12 && BallY < Duck_Y + 53 && shot_on)
+		if(BallX < Duck_X + 63 && BallX > Duck_X + 2 && BallY > Duck_Y + 2 && BallY < Duck_Y + 63 && shot_on)
 			duck_kill_signal = 1'b1;
 
 		else 
@@ -303,17 +320,17 @@ if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) /
 									Red <= ducks_pink_palette_red;
 									Green <= ducks_pink_palette_green;
 									Blue <= ducks_pink_palette_blue;
+								end
 								default: begin
 									Red <= ducks_black_palette_red;
 									Green <= ducks_black_palette_green;
 									Blue <= ducks_black_palette_blue;
 								end
-								end
 							endcase
 						end
 						else
 						begin
-							if(square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1) //COLORING SHOT COUNTER
+							if((square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1) && start_game_signal_int) //COLORING SHOT COUNTER
 							begin
 								Red <= 4'hA;
 								Green <= 4'hA;
@@ -321,205 +338,161 @@ if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) /
 							end
 							else 
 							begin
-								if(duck_counter_on_10 > 2'b00)
+								if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
 								begin
-									if(duck_counter_on_10 == 2'b01)
-									begin
+									case(duck_counter_on_1)
+										2'b01:begin
 										Red <= 4'hF;
-										Green <= 4'hF;
 										Blue <= 4'hF;
-									end
-									if(duck_counter_on_10 == 2'b10)
-									begin
+										Green <= 4'hF;
+										end
+										2'b10:begin
 										Red <= 4'hD;
-										Green <= 4'h0;
 										Blue <= 4'h0;
-									end
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_2)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_3)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_4)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_5)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_6)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_7)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_8)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_9)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
+									case(duck_counter_on_10)
+										2'b01:begin
+										Red <= 4'hF;
+										Blue <= 4'hF;
+										Green <= 4'hF;
+										end
+										2'b10:begin
+										Red <= 4'hD;
+										Blue <= 4'h0;
+										Green <= 4'h0;
+										end
+										default: ;
+									endcase
 								end
-							end
-							else
-							begin
-								if(duck_counter_on_9 > 2'b00)
+								else
 								begin
-									if(duck_counter_on_9 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_9 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
+									case(background)
+										2'b00: begin
+											Red <= mainmenu_palette_red;
+											Green <= mainmenu_palette_green;
+											Blue <= mainmenu_palette_blue;
+										end
+										2'b01: begin
+											Red <= bg_palette_red;
+											Green <= bg_palette_green;
+											Blue <= bg_palette_blue;
+										end
+										2'b10: begin
+											Red <= bg1_palette_red;
+											Green <= bg1_palette_green;
+											Blue <= bg_palette_blue;
+										end
+										default: ;
+									endcase
 								end
-							end
-							else
-							begin
-								if(duck_counter_on_8 > 2'b00)
-								begin
-									if(duck_counter_on_8 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_8 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_7 > 2'b00)
-								begin
-									if(duck_counter_on_7 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_7 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_6 > 2'b00)
-								begin
-									if(duck_counter_on_6 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_6 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_5 > 2'b00)
-								begin
-									if(duck_counter_on_5 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_5 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_4 > 2'b00)
-								begin
-									if(duck_counter_on_4 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_4 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_3 > 2'b00)
-								begin
-									if(duck_counter_on_3 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_3 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_2 > 2'b00)
-								begin
-									if(duck_counter_on_2 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_2 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else
-							begin
-								if(duck_counter_on_1 > 2'b00)
-								begin
-									if(duck_counter_on_1 == 2'b01)
-									begin
-										Red <= 4'hF;
-										Green <= 4'hF;
-										Blue <= 4'hF;
-									end
-									if(duck_counter_on_1 == 2'b10)
-									begin
-										Red <= 4'hD;
-										Green <= 4'h0;
-										Blue <= 4'h0;
-									end
-								end
-							end
-							else 
-							begin
-								case(background)
-									2'b00: begin
-										Red <= mainmenu_palette_red;
-										Green <= mainmenu_palette_green;
-										Blue <= mainmenu_palette_blue;
-									end
-									2'b01: begin
-										Red <= bg_palette_red;
-										Green <= bg_palette_green;
-										Blue <= bg_palette_blue;
-									end
-									2'b10: begin
-										Red <= bg1_palette_red;
-										Green <= bg1_palette_green;
-										Blue <= bg_palette_blue;
-									end
-									default: ;
-								endcase
-							end 
+							end	
 						end
 					end
 				end
@@ -545,6 +518,13 @@ if ( DistXabs + DistYabs/*(DistX*DistX) + (DistY*DistY)*/ <= (Size/**Size*/) ) /
 	.red   (bg_palette_red),
 	.green (bg_palette_green),
 	.blue  (bg_palette_blue)
+	);
+	
+	bgs1_palette bgs1_palette (
+	.index (bg_rom_q),
+	.red   (bg1_palette_red),
+	.green (bg1_palette_green),
+	.blue  (bg1_palette_blue)
 	);
 
 logic negedge_vga_clk;
@@ -600,7 +580,7 @@ assign negedge_vga_clk = ~vga_clk;
 	);
 
 	mainmenu_rom mainmenu_rom (
-		.clock   (negedge_vga_clk),
+		.clock   (vga_clk),
 		.address (mainmenu_rom_address),
 		.q       (mainmenu_rom_q)
 	);
@@ -611,5 +591,193 @@ assign negedge_vga_clk = ~vga_clk;
 		.green (mainmenu_palette_green),
 		.blue  (mainmenu_palette_blue)
 	);
+	
     
 endmodule
+
+
+//
+//else 
+//							begin
+//								if(duck_counter_on_10 > 2'b00)
+//								begin
+//									if(duck_counter_on_10 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_10 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_9 > 2'b00)
+//								begin
+//									if(duck_counter_on_9 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_9 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_8 > 2'b00)
+//								begin
+//									if(duck_counter_on_8 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_8 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_7 > 2'b00)
+//								begin
+//									if(duck_counter_on_7 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_7 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_6 > 2'b00)
+//								begin
+//									if(duck_counter_on_6 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_6 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_5 > 2'b00)
+//								begin
+//									if(duck_counter_on_5 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_5 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_4 > 2'b00)
+//								begin
+//									if(duck_counter_on_4 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_4 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_3 > 2'b00)
+//								begin
+//									if(duck_counter_on_3 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_3 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_2 > 2'b00)
+//								begin
+//									if(duck_counter_on_2 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_2 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+//							else
+//							begin
+//								if(duck_counter_on_1 > 2'b00)
+//								begin
+//									if(duck_counter_on_1 == 2'b01)
+//									begin
+//										Red <= 4'hF;
+//										Green <= 4'hF;
+//										Blue <= 4'hF;
+//									end
+//									if(duck_counter_on_1 == 2'b10)
+//									begin
+//										Red <= 4'hD;
+//										Green <= 4'h0;
+//										Blue <= 4'h0;
+//									end
+//								end
+//							end
+
+
+
+
