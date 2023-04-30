@@ -162,14 +162,17 @@ assign LEDR[7:0] = shotcount;
 			end
 			 else 
 				begin
-					count <= count;
+					if(duck_kill_signal)
+						count <= 2'b00;
+					else
+						count <= count;
 				end
 			end
 	 end
 	
 always_comb 
 begin
-	if(BallX < Duck_X + 53 && BallX > Duck_X + 12 && BallY > Duck_Y + 12 && BallY < Duck_Y + 53 && MouseButtons == 8'd2)
+	if(BallX < Duck_X + 53 && BallX > Duck_X + 12 && BallY > Duck_Y + 12 && BallY < Duck_Y + 53 && shot_on)
 		duck_kill_signal = 1'b1;
 	else 
 		duck_kill_signal = 1'b0;
@@ -214,7 +217,7 @@ end
 					end  		  
 					else //draw bg
 					begin
-						if((duck_on ==1'b1))
+						if((duck_on == 1'b1))
 						begin
 							case(Duck_color)
 								2'b00: begin
