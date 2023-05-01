@@ -14,10 +14,11 @@
 
 //nColor is the color of the pixel at that coordinate
 
-module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, Duck_X, Duck_Y, duck_killed,
+module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size, Dog_X, Dog_Y, duck_killed,
+						input logic signed [10:0] Duck_X, Duck_Y,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
-						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,  start_game_signal_int,
+						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,  start_game_signal_int, duck_kill_signal_int,
 						output logic duck_kill_signal, start_game_signal,
 						input signed [7:0] MouseButtons,
 						output logic [9:0] LEDR,
@@ -125,7 +126,12 @@ assign LEDR[7:0] = shotcount;
 	always_comb
 	begin:Duck_on_proc
 			if (duck_distX < 64 && duck_distY < 64 && ~((/*(ducks_black_palette_red == 4'hA)  || */(ducks_red_palette_red == 4'hA) /*|| (ducks_pink_palette_red == 4'hA)*/) && (/*(ducks_black_palette_blue == 4'hA) || */(ducks_red_palette_blue == 4'hA)/* || (ducks_pink_palette_blue == 4'hA)*/) && (/*(ducks_black_palette_green  == 4'hE) || */(ducks_red_palette_green  == 4'hE) /*|| (ducks_pink_palette_green == 4'hE)*/)) && (duckresetSignal == 1'b0))
-				duck_on = 1'b1;
+			begin
+				if(Duck_Y < 237)
+					duck_on = 1'b1;
+				else
+					duck_on = 1'b0;
+			end
 			else
 				duck_on = 1'b0;
     end 
@@ -151,7 +157,7 @@ assign LEDR[7:0] = shotcount;
 	//duck counter drawing
 	 always_comb
 	 begin:Duck_Counter_on_proc	//duck_counter_on is red when the duck has been hit, white when it hasnt, and isnt drawn if beam isnt on it
-		if(DrawX >= 200 && DrawX < 434 && DrawY >= 417 && DrawY < 432)
+		if(DrawX >= 200 && DrawX < 434 && DrawY >= 417 && DrawY < 432 && start_game_signal_int)
 		begin
 			if((DrawX - (duck_counter_init_x + (22*9)))*(DrawX - (duck_counter_init_x + (22*9))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count10
 				duck_counter_on_10 = (duck_killed[9]) ? 2'b10 : 2'b01;	//red or white
@@ -246,7 +252,7 @@ assign LEDR[7:0] = shotcount;
 			end
 			 else 
 				begin
-					if(duck_kill_signal)
+					if(duck_kill_signal_int)
 						count <= 2'b00;
 					else
 						count <= count;
