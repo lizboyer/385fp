@@ -481,19 +481,19 @@ assign LEDR[7:0] = shotcount;
 								begin
 									case(background)
 										2'b00: begin
-											Red <= mainmenu_palette_red;
-											Green <= mainmenu_palette_green;
-											Blue <= mainmenu_palette_blue;
+											Red <= 4'hB;//mainmenu_palette_red;
+											Green <= 4'hB;//mainmenu_palette_green;
+											Blue <= 4'hB;//mainmenu_palette_blue;
 										end
 										2'b01: begin
-											Red <= bg_palette_red;
-											Green <= bg_palette_green;
-											Blue <= bg_palette_blue;
+											Red <= 4'hB;//bg_palette_red;
+											Green <= 4'hB;//bg_palette_green;
+											Blue <= 4'hB;//bg_palette_blue;
 										end
 										2'b10: begin
-											Red <= bg1_palette_red;
-											Green <= bg1_palette_green;
-											Blue <= bg_palette_blue;
+											Red <= 4'hB;//bg1_palette_red;
+											Green <= 4'hB;//bg1_palette_green;
+											Blue <= 4'hB;//bg_palette_blue;
 										end
 										default: ;
 									endcase

@@ -258,28 +258,30 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd2: begin
-							if(Duck_X >= 576)
+							
+							if(Duck_Y <= 0)
+							begin
+								Duck_direction <= 3'd5;
+								Duck_Y <= 20;
+							end
+							else
 							begin
 								Duck_direction <= 3'd0;
 								Duck_X <= 556;
 							end
-							if(Duck_Y <= 0)
-							begin
-								Duck_direction <= 3'd5;
-								Duck_Y <= 20;
-							end
 							
 						end
 						3'd3: begin
-							if(Duck_X >= 576)
-							begin
-								Duck_direction <= 3'd1;
-								Duck_X <= 556;
-							end
+							
 							if(Duck_Y <= 0)
 							begin
 								Duck_direction <= 3'd5;
 								Duck_Y <= 20;
+							end
+							else
+							begin
+								Duck_direction <= 3'd1;
+								Duck_X <= 556;
 							end
 							
 						end
@@ -296,15 +298,16 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 							end
 						end
 						3'd5: begin
-							if(Duck_X >= 576)
-							begin
-								Duck_direction <= 3'd4;
-								Duck_X <= 556;
-							end
+							
 							if(Duck_Y >= 236)
 							begin
 								Duck_direction <= 3'd2;
 								Duck_Y <= 216;
+							end
+							else
+							begin
+								Duck_direction <= 3'd4;
+								Duck_X <= 556;
 							end
 							
 						end
