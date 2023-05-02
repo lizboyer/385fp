@@ -63,3 +63,31 @@ duck file organization:
 
 Duck motion:
 	300/(335-158) 
+
+Round Number position
+RoundNumber1
+- Original: 80, 384
+- Scaled:
+RoundNumber2
+- Original: 96, 384
+- Scaled:
+
+BUG NOTES:
+	randomization
+		duck direction and color not being randomized
+	duck on screen when they shouldn't be (top left)
+	duck frames not changing
+	duck transparency
+
+
+BUG NOTES:
+	duck counter equation
+	- change radius to 15
+	duck mifs
+	- left facing blue shot, left facing blue down, right facing blue, right facing blue down
+	- red left and right, red down
+	-29, 30, 48, 50, 59
+	shot counter not decreasing
+	duck sensitive
+	duck should not be drawn past 300
+
