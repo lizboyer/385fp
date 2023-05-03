@@ -611,7 +611,52 @@
 	always_ff @ (posedge vga_clk)
 	begin
 		if((RoundNumber >= 8'd1) && (RoundNumber < 8'd11))
-			if()
+		begin
+			if(duck_killed_total < 6)
+				gameoversignal <= 1'b1;
+			else
+				gameoversignal <= 1'b0;
+		end
+		else
+		begin
+			if((RoundNumber >= 8'd11) && (RoundNumber < 8'd13))
+			begin
+				if(duck_killed_total < 7)
+					gameoversignal <= 1'b1;
+				else
+					gameoversignal <= 1'b0;
+			end
+			else
+			begin
+				if((RoundNumber >= 8'd13) && (RoundNumber < 8'd15))
+				begin
+					if(duck_killed_total < 8)
+						gameoversignal <= 1'b1;
+					else
+						gameoversignal <= 1'b0;
+				end
+				else
+				begin
+					if((RoundNumber >= 8'd15) && (RoundNumber < 8'd20))
+					begin
+						if(duck_killed_total < 9)
+							gameoversignal <= 1'b1;
+						else
+							gameoversignal <= 1'b0;
+					end
+					else
+					begin
+						if((RoundNumber >= 8'd20) && (RoundNumber < 8'd99))
+						begin
+							if(duck_killed_total < 10)
+								gameoversignal <= 1'b1;
+							else
+								gameoversignal <= 1'b0;
+						end
+					end
+				end
+			end
+		end
 	end
 
 
