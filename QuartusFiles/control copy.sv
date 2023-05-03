@@ -1,12 +1,13 @@
 // module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_game_signal,
 // 					input logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand,	//NEW
 // 					input logic [9:0] Dog_rand_X, Duck_start_rand_X,	//NEW
-
+					input logic [2:0] flyaway_timer;
 //                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR, duck_killed,
  					output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int, new_duck,
 // 					output logic [4:0] Frame,
 // 					output logic [5:0] DuckFrame,
 // 					output logic [1:0] Duck_color,
+					output logic [7:0] RoundNumber,
 // 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1, duck_shocked
 // 					 );
 					
@@ -23,7 +24,7 @@
 
 //     // Declare signals curr_state, next_state of type enum
 //     // with enum values for states
-    enum logic [4:0] {R, MainMenu, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit, Bounce1, Bounce2, DuckFall, DogUp, DogStay, DogDown}   curr_state, next_state; 
+    enum logic [4:0] {R, MainMenu, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit, Bounce1, Bounce2, DuckFall, DogUp, DogStay, DogDown, DogLaugh1, DogLaugh2, FlyOff}   curr_state, next_state; 
 // 	logic [3:0] Step_size_lg_x = 4'd15;
 // 	logic [3:0] Step_size_sm_x = 4'd12;
 // 	logic [3:0] Step_size_sm_y = 4'd2;
@@ -33,6 +34,7 @@
 	logic [4:0] dogup_count;
 	logic [4:0] dogstay_count;
 	logic [4:0] dogdown_count;
+	
 
 // 	logic [9:0] Duck_start, Duck_X_step, Duck_Y_step;
 // 	logic [2:0] Duck_direction, Duck_direction_int;
@@ -62,10 +64,13 @@
 			dogup_count <= 0;
 			dogstay_count <= 0;
 			dogdown_count <= 0;
+			RoundNumber <= 0;
 
 // 			end
 //         else 
 // 		  begin
+			if(curr_state) == Walk1
+				RoundNumber <= RoundNumber + 1;
 // 		  	if(curr_state == Walk4) 
 // 				begin
 // 				end_walk <= end_walk + 4'b0001;
@@ -135,6 +140,60 @@
 // 				duck_number <= duck_number + 1;
 				
 // 			end
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//	THIS IS NOT FINISHED. FLY OFF SHOULD MAKE THE DUCK GO UP AND OFF THE SCREEN			//
+//////////////////////////////////////////////////////////////////////////////////////////
+		if(curr_state == FlyOff)											
+		begin
+			case(Duck_direction) //case statement for frame via direction
+					3'b000: 	case(Duck_color) //NW
+								2'b00: DuckFrame <= 6'd10;//Black
+								2'b01: DuckFrame <= 6'd29;//Red
+								2'b10: DuckFrame <= 6'd50;//Pink
+								2'b11: DuckFrame <= 6'd10;//Black
+								default: ;
+							endcase
+					3'b001: case(Duck_color)	//W
+								2'b00: DuckFrame <= 6'd10; //Black
+								2'b01: DuckFrame <= 6'd29;
+								2'b10: DuckFrame <= 6'd50;
+								2'b11: DuckFrame <= 6'd10;//Black
+								default: ;
+							endcase
+					3'b010: case(Duck_color) //NE
+								2'b00: DuckFrame <= 6'd9; //Black
+								2'b01: DuckFrame <= 6'd30;
+								2'b10: DuckFrame <= 6'd49;
+								2'b11: DuckFrame <= 6'd9;//Black
+								default: ;
+							endcase
+					3'b011: case(Duck_color)	//E
+								2'b00: DuckFrame <= 6'd9; //Black
+								2'b01: DuckFrame <= 6'd30;
+								2'b10: DuckFrame <= 6'd49;
+								2'b11: DuckFrame <= 6'd9;//Black
+								default: ;
+							endcase
+					3'b100: case(Duck_color)  //SW
+								2'b00: DuckFrame <= 6'd10;//Black
+								2'b01: DuckFrame <= 6'd29;//Red
+								2'b10: DuckFrame <= 6'd50;//Pink
+								2'b11: DuckFrame <= 6'd10;//Black
+								default: ;
+							endcase
+					3'b101: case(Duck_color)  //SE
+								2'b00: DuckFrame <= 6'd9; //Black
+								2'b01: DuckFrame <= 6'd30;
+								2'b10: DuckFrame <= 6'd49;
+								2'b11: DuckFrame <= 6'd9;//Black
+								default: ;
+							endcase
+					default: ;
+				endcase
+		end
+
+
 // 			if(curr_state == DuckStart2)
 // 				begin
 // 				case(Duck_direction) //case statement for frame via direction
@@ -556,54 +615,89 @@
 // 			Jump2:   	if(end_jump_2 == 9)
 // 							next_state = Wait1;
 // 			Wait1:		if(waitcount1 == 6)
-// 							next_state = DuckStart1; //initializes direction + color
-// 			DuckStart1:	next_state = DuckStart2; // 
-// 			DuckStart2: next_state = Duck1;
-// 			Duck1: 	if(duck_kill_signal == 1)
-// 						next_state = DuckHit;
-// 						else
-// 						begin
-// 							if(duck_bounce_signal == 1 && bounce_cooldown == 0)
-// 								next_state = Bounce1;
-// 							else 
-// 								next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
-// 						end
-// 			Duck2: if(duck_kill_signal == 1)
-// 						next_state = DuckHit;
-// 					 else
-// 					 begin
-// 						 if(duck_bounce_signal == 1 && bounce_cooldown == 0)
-// 							next_state = Bounce1;
-// 						 else
-// 							next_state = Duck3;
-// 					 end
-// 			Duck3: if(duck_kill_signal == 1)
-// 						next_state = DuckHit;
-// 					 else
-// 					 begin
-// 						 if(duck_bounce_signal == 1 && bounce_cooldown == 0)
-// 							next_state = Bounce1;
-// 						else
-// 							next_state = Duck4;
-// 					 end
-// 			Duck4: 	if(duck_kill_signal == 1)
-// 						next_state = DuckHit;
-// 						else
-// 						begin
-// 							if(duck_bounce_signal == 1 && bounce_cooldown == 0)
-// 								next_state = Bounce1;
-// 							else
-// 							begin
-// 								if ((flycounter1 == Num_repeats))
-// 									next_state = DuckStart2;
-// 								else
-// 									next_state = Duck1;
-// 							end
-// 						end
-// 			Bounce1:	next_state = Bounce2;
-// 			Bounce2: next_state = Duck1;
-// 			DuckHit: if(duck_shocked == 15)
-// 							next_state = DuckFall;
+// 							next_state = DuckStart1; //initializes direction + color  
+
+//ADDED THE FLY AWAY TIMER//
+
+			DuckStart1:	if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						next_state = DuckStart2; 
+			DuckStart2: if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						next_state = Duck1;
+			Duck1: 	if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						if(duck_kill_signal == 1)
+						begin
+							next_state = DuckHit;
+							else
+							begin
+								if(duck_bounce_signal == 1 && bounce_cooldown == 0)
+									next_state = Bounce1;
+								else 
+									next_state = Duck2;							//ADD FLY AWAY COUNTERS/LOGIC
+							end
+						end
+			Duck2: if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						begin
+							if(duck_kill_signal == 1)
+								next_state = DuckHit;
+							else
+							begin
+								if(duck_bounce_signal == 1 && bounce_cooldown == 0)
+									next_state = Bounce1;
+								else
+									next_state = Duck3;
+							end
+						end
+			Duck3: if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						begin
+							if(duck_kill_signal == 1)
+								next_state = DuckHit;
+							else
+							begin
+								if(duck_bounce_signal == 1 && bounce_cooldown == 0)
+									next_state = Bounce1;
+								else
+									next_state = Duck4;
+							end
+						end
+			Duck4: 	if(flyaway_timer >= 6)
+							next_state = FlyOff;
+						else
+						begin
+							if(duck_kill_signal == 1)
+							next_state = DuckHit;
+							else
+								begin
+									if(duck_bounce_signal == 1 && bounce_cooldown == 0)
+										next_state = Bounce1;
+									else
+									begin
+										if ((flycounter1 == Num_repeats))
+											next_state = DuckStart2;
+										else
+											next_state = Duck1;
+									end
+								end
+						end
+			Bounce1: if(flyaway_timer >= 6)
+							next_state = FlyOff;
+					 else
+						next_state = Bounce2;
+			Bounce2: if(flyaway_timer >= 6)
+						next_state = FlyOff;
+					 else
+						next_state = Duck1;
+			DuckHit: if(duck_shocked == 15)
+							next_state = DuckFall;
 			DuckFall: if(Duck_Y > 300)
 							next_state = DogUp;
 			DogUp: if(dogup_count > 5)
@@ -843,14 +937,31 @@
 			DogUp: begin
 				resetSignal = 1'b0;
 				duckresetSignal = 1'b1;
+				Frame = 5'b01010;
 			end
 			DogStay: begin
 				resetSignal = 1'b0;
 				duckresetSignal = 1'b1;
+				Frame = 5'b01010;
 			end
 			DogDown: begin
 				resetSignal = 1'b0;
 				duckresetSignal = 1'b1;
+				Frame = 5'b01010;
+			end
+			FlyOff: begin
+				resetSignal = 1'b1;
+				duckresetSignal = 1'b0;
+			end
+			DogLaugh1: begin
+				resetSignal = 1'b0;
+				duckresetSignal = 1'b1;
+				Frame = 5'b01010;
+			end
+			DogLaugh2: begin
+				resetSignal = 1'b0;
+				duckresetSignal = 1'b1;
+				Frame = 5'b01010;
 			end
 
 // //GAME LOGIC STATES WIP

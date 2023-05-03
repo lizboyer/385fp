@@ -18,6 +18,8 @@
 // 					   input logic [5:0] Frame, DuckFrame,
 // 						input logic [1:0] Duck_color,
 						input logic [7:0] RoundNumber,
+						output logic [2:0] flyaway_timer;
+
 /*						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,  start_game_signal_int,*/ , new_duck
 // 						output logic duck_kill_signal, start_game_signal,
 // 						input signed [7:0] MouseButtons,
@@ -79,7 +81,6 @@ assign LEDR[7:0] = shotcount;
 	logic [3:0] flyaway_rom_q;
 	logic [3:0] flyaway_palette_red, flyaway_palette_green, flyaway_palette_blue;
 	logic fly_away_on;
-	logic [2:0] flyaway_timer;
 	assign flyaway_distX = DrawX - 250;
 	assign flyaway_distY = DrawY - 200;
 	assign flyaway_rom_address = (flyaway_distX + flyaway_distY * 146);
@@ -90,7 +91,6 @@ assign LEDR[7:0] = shotcount;
 	logic [3:0] RoundNumber1_rom_q;
 	logic [3:0] RoundNumber1_palette_red, RoundNumber1_palette_green, RoundNumber1_palette_blue;
 
-		//RoundNumber internal signals
 	logic [7:0] RoundNumber2_rom_address;
 	logic [3:0] RoundNumber2_rom_q;
 	logic [3:0] RoundNumber2_palette_red, RoundNumber2_palette_green, RoundNumber2_palette_blue;
