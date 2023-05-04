@@ -5,7 +5,7 @@
 //                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR, duck_killed,
  					// output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int, new_duck, 
 					output logic gameoversignal,
-					output logic [20:0] score,
+					output logic [20:0] score, 
 					output logic [20:0] highscore,
 // 					output logic [4:0] Frame,
 // 					output logic [5:0] DuckFrame,
