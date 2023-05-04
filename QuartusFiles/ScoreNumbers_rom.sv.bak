@@ -17,7 +17,7 @@ Score6_rom Score6_rom0(.clock, .address, .q(q6));
 Score7_rom Score7_rom0(.clock, .address, .q(q7));
 Score8_rom Score8_rom0(.clock, .address, .q(q8));
 Score9_rom Score9_rom0(.clock, .address, .q(q9));
-//ScoreBlank_rom ScoreBlank_rom0(.clock, .address, .q(q10));
+ScoreBlank_rom ScoreBlank_rom0(.clock, .address, .q(q10));
 
 always_comb
 begin
