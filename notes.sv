@@ -105,4 +105,11 @@ BUG NOTES:
 
 BUG NOTES:
 	losing by shots should cause dog to pop up
-	goes
+
+LAST MINUTE FIXES:
+	- Dog popping up and down
+	- duck killed circles
+	- new round showing up before going back to main menu
+	- clean up dog walk
+	- mif files
+	- blue min duck kill counter

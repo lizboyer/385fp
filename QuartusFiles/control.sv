@@ -1,63 +1,54 @@
 module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_game_signal, 
-					input logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand,	//NEW
-					input logic [9:0] Dog_rand_X, Duck_start_rand_X,	//NEW
-					input logic [1:0] count,
+					input logic [1:0] Duck_color_rand, Duck_direction_rand, Num_repeats_rand, count,
+					input logic [9:0] Dog_rand_X, Duck_start_rand_X,
 
                 	output logic [9:0] Dog_X, Dog_Y, LEDR, duck_killed, Dog_Y_int,
-						output logic signed [10:0] Duck_X, Duck_Y,
+					output logic signed [10:0] Duck_X, Duck_Y,
 					output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int, duck_kill_signal_int, gameoversignal, fly_away, shoot_enable, out_of_shots,
 					output logic [4:0] Frame,
-					output logic [5:0] DuckFrame,
+					output logic [5:0] DuckFrame, flyaway_timer,
 					output logic [7:0] RoundNumber,
 					output logic [1:0] Duck_color,
-					output logic [5:0] flyaway_timer,
 					output logic [3:0] end_walk, end_sniff, startjump, end_surprised, go_to_jump_2, end_jump_2, waitcount1, flycounter1, duck_shocked
 					 );
 					
 
-				assign LEDR[3:0] = duck_number;
-				assign LEDR[7:4] = duck_killed_total;
-				assign LEDR[8] = (curr_state == NewRound);
-				assign LEDR[9] = (curr_state == GameOver);
+				// assign LEDR[3:0] = duck_number;
+				// assign LEDR[7:4] = duck_killed_total;
+				// assign LEDR[8] = (curr_state == NewRound);
+				// assign LEDR[9] = (curr_state == GameOver);
 				
-				
-				
-				
-
+	
     // Declare signals curr_state, next_state of type enum
     // with enum values for states
     enum logic [5:0] {R, MainMenu, Walk1, Walk2, Walk3, Walk4, Sniff1, Sniff2, Surprised1, Jump1, Jump2, Wait1, DuckStart1, DuckStart2, Duck1, Duck2, Duck3, Duck4, H, DuckHit, Bounce1, Bounce2, DuckFall, DogUp, DogStay, DogDown, FlyOff, DogLaugh1, DogLaugh1_Up, DogLaugh1_Down, DogLaugh2, EndRound, GameOver, NewRound}   curr_state, next_state; 
-	logic [3:0] Step_size_lg_x = 4'd15;
+	//amount of pixels the duck flies in each frame//
+	logic [3:0] Step_size_lg_x = 4'd15;	
 	logic [3:0] Step_size_sm_x = 4'd12;
 	logic [3:0] Step_size_sm_y = 4'd2;
 	logic [3:0] Step_size_lg_y = 4'd10;
-	logic [3:0] duck_number;
-	logic [5:0] DuckFrameInit;
-	logic [9:0] Dog_rand_x_int;
-	logic [9:0] Dog_Up_Step, Dog_Down_Step, Dog_Up_Step_int;
-	logic [3:0] duck_killed_total;
-	logic [4:0] doglaugh1_up_count;
-	logic [4:0] doglaugh1_down_count; 	
-	logic [4:0] flyoff_count;
-	logic [4:0] stoplaugh_count;
-	logic [4:0] gameover_count;
-	logic [4:0] newround_count;
-
+	logic [3:0] duck_number; //the n-th duck, increments at state = DuckStart1
+	logic [5:0] DuckFrameInit; //The next frame to be loaded onto the duck
+	logic [9:0] Dog_rand_x_int; //intermediate value for Dog_rand_X to be loaded into
+	logic [9:0] Dog_Up_Step, Dog_Down_Step, Dog_Up_Step_int; //always_ff value for the amount of pixels the dog should move
+	logic [3:0] duck_killed_total;	//added total of ducks killed in each round
+	//counters//
+	logic [4:0] doglaugh1_up_count, doglaugh1_down_count, flyoff_count, stoplaugh_count, gameover_count, newround_count, dogup_count, dogstay_count, dogdown_count;
 
 	logic signed [9:0] Duck_start, Duck_X_step, Duck_Y_step;
-	logic [2:0] Duck_direction, Duck_direction_int;
-	logic [2:0] Num_repeats;
-	logic [4:0] dogup_count;
-	logic [4:0] dogstay_count;
-	logic [4:0] dogdown_count;
+	logic [2:0] Duck_direction, Duck_direction_int, Num_repeats;
+	
 	
 	//updates flip flop, current state is the only one
-     always_ff @ (posedge ANIM_Clk or posedge Reset)  
+    always_ff @ (posedge ANIM_Clk or posedge Reset)  
     begin
+		////////////////////////////////////////
+		// Reset all signals if Reset pressed //
+		////////////////////////////////////////
        if (Reset)
 			begin
 			flyaway_timer <= 0;
-         curr_state <= R;
+        	curr_state <= R;
 			end_walk <=  4'b0000;
 			end_sniff <= 4'b0000;
 			startjump <= 4'b0000;
@@ -83,6 +74,11 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			end
         else 
 		  begin
+
+		//////////////////////////////////////////////
+		// Incrementing and Limiting Counter Events //
+		//////////////////////////////////////////////
+		
 		  	if(curr_state == Walk4) 
 				begin
 				end_walk <= end_walk + 4'b0001;
@@ -214,9 +210,14 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				end
 			end
 			
+		///////////////////////////////////////////////////////////////////
+		// Change duck frames and position based on Bounce1 and Bounce2  //
+		//////////////////////////////////////////////////////////////////
+
 			if(curr_state == Bounce2)
 			begin	
-				flyaway_timer <= flyaway_timer + 6'd1;
+			// Increment and reset flyaway timer //
+				flyaway_timer <= flyaway_timer + 6'd1;	
 				if(flyaway_timer >= 60)
 					flyaway_timer <= 0;
 				case(Duck_direction) //case statement for frame via direction
@@ -265,12 +266,12 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 						
 						default: ;
 				endcase
-//				Num_repeats <= 3'd5;
 				duck_bounce_signal <= 1'b0;
 			end
 			
 			if(curr_state == Bounce1)
 			begin
+			// Increment and reset flyaway timer //
 				flyaway_timer <= flyaway_timer + 6'd1;
 				if(flyaway_timer >= 60)
 					flyaway_timer <= 0;
@@ -357,6 +358,10 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				endcase
 			end
 			
+		///////////////////////////////////////////////////
+		// Reset relevant values to 0 at main menu state //
+		///////////////////////////////////////////////////
+
 			if(curr_state == MainMenu)
 			begin
 				gameoversignal <= 1'b0;
@@ -366,6 +371,10 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				duck_killed_total <= 0;
 			end
 				
+		//////////////////////////////////////////////////////
+		// Change duck frames based on DuckHit and DuckFall //
+		//////////////////////////////////////////////////////
+
 			if(curr_state == DuckHit)
 			begin
 				if(duck_shocked == 14)
@@ -469,6 +478,10 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 					endcase
 			end
 			
+//////////////////////////////////////////////
+// Incrementing and Limiting Counter Events //
+//////////////////////////////////////////////
+
 			if(curr_state == DogUp)
 			begin
 //				Dog_X <= Dog_rand_X;
@@ -688,17 +701,13 @@ end
 			endcase
 		end
 	end
-
-
-	
-	
-	
 	
 	///////////////////////////////////
     //		 State Machine Flow 	 //
 	///////////////////////////////////
 	always_comb
     begin
+	//initializes all always_comb values to 0 if they do not fall within a case statement//
 		Frame = 5'd0;
 		Dog_X = 0;
 		Dog_Y = 0;
@@ -707,14 +716,13 @@ end
 		duckresetSignal = 1'b1;
 		start_game_signal_int = 1'b1;
 		duck_kill_signal_int = 1'b0;
-	
+		next_state  = curr_state;
 
-		next_state  = curr_state;	//required because I haven't enumerated all possibilities below
         unique case (curr_state) 
 
             R :    
 							if(Run)
-                       next_state = /*Walk1*/ MainMenu; //change depending on what you are testing
+                       next_state = MainMenu; //change depending on what you are testing
 							else 
 								next_state = R;
 			MainMenu: if(start_game_signal)

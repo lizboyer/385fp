@@ -4,13 +4,13 @@ module AssetsDucks25_palette (
 );
 
 localparam [0:15][11:0] palette = {
-	{4'hF, 4'h7, 4'h6},//0, should be 4
-	{4'hA, 4'hE, 4'hA},//1, should be 0
-	{4'hA, 4'h0, 4'h1},//2, should be 1
-	{4'hF, 4'hF, 4'hF},//3
-	{4'h0, 4'h0, 4'h0},//4, should be 2
-	{4'h0, 4'h5, 4'h0},//5
-	{4'h0, 4'h5, 4'h0},//6, should be 5
+	{4'hA, 4'hE, 4'hA},
+	{4'hA, 4'h0, 4'h1},
+	{4'hF, 4'hF, 4'hF},
+	{4'h0, 4'h0, 4'h0},
+	{4'hF, 4'h7, 4'h6},
+	{4'h0, 4'h5, 4'h0},
+	{4'h0, 4'h5, 4'h0},
 	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA},
 	{4'hA, 4'hE, 4'hA},
