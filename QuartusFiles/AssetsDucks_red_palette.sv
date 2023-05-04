@@ -6,8 +6,8 @@ module AssetsDucks_red_palette (
 localparam [0:15][11:0] palette = {
 	{4'hA, 4'hE, 4'hA},//0 BACKGROUND
 	{4'hA, 4'h0, 4'h1},//1 red
-	{4'hF, 4'hF, 4'hF},//3 black
-	{4'h0, 4'h0, 4'h0},//2 white
+	{4'hF, 4'hF, 4'hF},//2 white
+	{4'h0, 4'h0, 4'h0},//3 black
 	{4'hF, 4'h7, 4'h6},//4 orange
 	{4'h0, 4'h5, 4'h0},//5 green
 	{4'hA, 4'hE, 4'hA},//6
