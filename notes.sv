@@ -91,3 +91,18 @@ BUG NOTES:
 	duck sensitive
 	duck should not be drawn past 300
 
+BUG NOTES:
+	lose via shot counter
+	dog position
+	fix round counter
+	go to main menu
+
+BUG NOTES:
+	Game over pops up even when we go to a new round
+	game over state not visted at correct times
+	can lose by shot at start of game
+	goes straight to duck start 1 if we lose by shot
+
+BUG NOTES:
+	losing by shots should cause dog to pop up
+	goes

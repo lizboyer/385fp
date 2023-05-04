@@ -5,6 +5,8 @@
 //                 	output logic [9:0] Dog_X, Dog_Y, Duck_X, Duck_Y, LEDR, duck_killed,
  					// output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int, new_duck, 
 					output logic gameoversignal,
+					output logic [20:0] score,
+					output logic [20:0] highscore,
 // 					output logic [4:0] Frame,
 // 					output logic [5:0] DuckFrame,
 // 					output logic [1:0] Duck_color,
@@ -71,6 +73,8 @@
 			// dogstay_count <= 0;
 			// dogdown_count <= 0;
 			// RoundNumber <= 0;
+			score <= 0;
+			highscore <= 0;
 
 			// doglaugh1_up_count <= 0;
 			// doglaugh1_down_count <= 0; 	
@@ -125,7 +129,69 @@
 // 			end
 // 			if(curr_state == DuckHit)
 // 				begin
-// 					duck_shocked <= duck_shocked + 4'b0001;
+					case(Duck_color)
+					4'd0: begin		//BLACK
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6))
+							begin
+								score <= score + 500;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10))
+								begin
+									score <= score + 800;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99))
+									begin
+										score <= score + 1000;
+									end
+								end
+							end
+					end
+					4'd1: begin		//RED
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6))
+							begin
+								score <= score + 1500;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10))
+								begin
+									score <= score + 2400;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99))
+									begin
+										score <= score + 3000;
+									end
+								end
+							end
+					end
+					4'd2: begin	//PINK
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6))
+							begin
+								score <= score + 1000;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10))
+								begin
+									score <= score + 1600;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99))
+									begin
+										score <= score + 2000;
+									end
+								end
+							end
+					end
+					endcase
+	// 					duck_shocked <= duck_shocked + 4'b0001;
 // 					duck_killed[duck_number-1] = 1'b1;
 // //					duck_killed <= duck_killed + (2** (duck_number - 1); //duck_killed = {duck_killed[9-duck_number],  rv
 // 					if(duck_shocked == 15)
@@ -611,6 +677,8 @@
 
 	// always_ff @ (posedge vga_clk)
 	// begin
+		if(score > highscore)
+			highscore <= score;
 	// 	if((RoundNumber >= 8'd1) && (RoundNumber < 8'd11))
 	// 	begin
 	// 		if(duck_killed_total < 6)
