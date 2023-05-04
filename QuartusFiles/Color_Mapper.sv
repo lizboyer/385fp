@@ -172,7 +172,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber1_rom_address = (HighScorenumber1_distX + HighScorenumber1_distY * 16);
 	assign HighScorenumber1_distX = DrawX - 445;
-	assign HighScorenumber1_distY = DrawY - 406;
+	assign HighScorenumber1_distY = DrawY - 394;
 	logic [3:0] HighScoreNumber1, HighScoreNumber2, HighScoreNumber3, HighScoreNumber4, HighScoreNumber5, HighScoreNumber6; 
 	logic [7:0] HighScorenumber2_rom_address;
 	logic [3:0] HighScorenumber2_rom_q;
@@ -181,7 +181,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber2_rom_address = (HighScorenumber2_distX + HighScorenumber2_distY * 16);
 	assign HighScorenumber2_distX = DrawX - 429;
-	assign HighScorenumber2_distY = DrawY - 406;
+	assign HighScorenumber2_distY = DrawY - 394;
 
 	logic [7:0] HighScorenumber3_rom_address;
 	logic [3:0] HighScorenumber3_rom_q;
@@ -190,7 +190,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber3_rom_address = (HighScorenumber3_distX + HighScorenumber3_distY * 16);
 	assign HighScorenumber3_distX = DrawX - 413;
-	assign HighScorenumber3_distY = DrawY - 406;
+	assign HighScorenumber3_distY = DrawY - 394;
 
 	logic [7:0] HighScorenumber4_rom_address;
 	logic [3:0] HighScorenumber4_rom_q;
@@ -199,7 +199,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber4_rom_address = (HighScorenumber4_distX + HighScorenumber4_distY * 16);
 	assign HighScorenumber4_distX = DrawX - 397;
-	assign HighScorenumber4_distY = DrawY - 406;
+	assign HighScorenumber4_distY = DrawY - 394;
 
 	logic [7:0] HighScorenumber5_rom_address;
 	logic [3:0] HighScorenumber5_rom_q;
@@ -208,7 +208,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber5_rom_address = (HighScorenumber5_distX + HighScorenumber5_distY * 16);
 	assign HighScorenumber5_distX = DrawX - 381;
-	assign HighScorenumber5_distY = DrawY - 406;
+	assign HighScorenumber5_distY = DrawY - 394;
 
 	logic [7:0] HighScorenumber6_rom_address;
 	logic [3:0] HighScorenumber6_rom_q;
@@ -217,7 +217,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber6_rom_address = (HighScorenumber6_distX + HighScorenumber6_distY * 16);
 	assign HighScorenumber6_distX = DrawX - 365;
-	assign HighScorenumber6_distY = DrawY - 406;
+	assign HighScorenumber6_distY = DrawY - 394;
 	
 	
 	
@@ -284,27 +284,27 @@ assign LEDR[7:0] = shotcount;
 	always_comb
 	begin: Round_Logic
 		RoundNumber1 = RoundNumber % 10; //RIGHT NUMBER
-		RoundNumber2 = (RoundNumber / 10); //LEFT NUMBER
+		RoundNumber2 = (RoundNumber / 10) % 10; //LEFT NUMBER
 	end
 	
 	always_comb
 	begin: Score_Logic
 		ScoreNumber1 = score % 10; //RIGHT NUMBER
-		ScoreNumber2 = (score / 10); //LEFT NUMBER
-		ScoreNumber3 = (score / 100); //LEFT NUMBER
-		ScoreNumber4 = (score / 100); //LEFT NUMBER
-		ScoreNumber5 = (score / 1000); //LEFT NUMBER
-		ScoreNumber6 = (score / 10000); //LEFT NUMBER
+		ScoreNumber2 = (score / 10) % 10; //LEFT NUMBER
+		ScoreNumber3 = (score / 100) % 10; //LEFT NUMBER
+		ScoreNumber4 = (score / 1000) % 10; //LEFT NUMBER
+		ScoreNumber5 = (score / 10000) % 10; //LEFT NUMBER
+		ScoreNumber6 = (score / 100000) % 10; //LEFT NUMBER
 	end
 
 	always_comb
 	begin: HighScore_Logic
 		HighScoreNumber1 = highscore % 10; //RIGHT NUMBER
-		HighScoreNumber2 = (highscore / 10); //LEFT NUMBER
-		HighScoreNumber3 = (highscore / 100); //LEFT NUMBER
-		HighScoreNumber4 = (highscore / 100); //LEFT NUMBER
-		HighScoreNumber5 = (highscore / 1000); //LEFT NUMBER
-		HighScoreNumber6 = (highscore / 10000); //LEFT NUMBER
+		HighScoreNumber2 = (highscore / 10) % 10; //LEFT NUMBER
+		HighScoreNumber3 = (highscore / 100) % 10; //LEFT NUMBER
+		HighScoreNumber4 = (highscore / 1000) % 10; //LEFT NUMBER
+		HighScoreNumber5 = (highscore / 10000) % 10; //LEFT NUMBER
+		HighScoreNumber6 = (highscore / 100000) % 10; //LEFT NUMBER
 	end
 	
 	always_comb
@@ -469,7 +469,7 @@ assign LEDR[7:0] = shotcount;
 	  
 	 always_comb 
 	begin:BlueBar_on_proc
-		if(DrawY >= 436 && DrawX < 451 && DrawX >= 217 && DrawX < (217 + (22*min_ducks_to_pass)) && start_game_signal_int)
+		if(DrawY >= 436 && DrawY < 448 && DrawX >= 217 && DrawX < (217 + (22*min_ducks_to_pass)) && start_game_signal_int)
 			BlueBar_on = 1'b1;
 		else
 			BlueBar_on = 1'b0;
@@ -495,7 +495,7 @@ assign LEDR[7:0] = shotcount;
 	//duck counter drawing
 	 always_comb
 	 begin:Duck_Counter_on_proc	//duck_counter_on is red when the duck has been hit, white when it hasnt, and isnt drawn if beam isnt on it
-		if(((DrawX >= 222 && DrawX < 234) || (DrawX >= 244 && DrawX < 256) || (DrawX >= 266 && DrawX < 278) || (DrawX >= 288 && DrawX < 300) || (DrawX >= 310 && DrawX < 322) || (DrawX >= 332 && DrawX < 344) || (DrawX >= 354 && DrawX < 366) || (DrawX >= 376 && DrawX < 388) || (DrawX >= 398 && DrawX < 410) || (DrawX >= 420 && DrawX < 432)) && DrawY >= 417 && DrawY < 432 && start_game_signal_int)
+		if(((DrawX >= 222 && DrawX < 234) || (DrawX >= 244 && DrawX < 256) || (DrawX >= 266 && DrawX < 278) || (DrawX >= 288 && DrawX < 300) || (DrawX >= 310 && DrawX < 322) || (DrawX >= 332 && DrawX < 344) || (DrawX >= 354 && DrawX < 366) || (DrawX >= 376 && DrawX < 388) || (DrawX >= 398 && DrawX < 409) || (DrawX >= 421 && DrawX < 432)) && DrawY >= 417 && DrawY < 432 && start_game_signal_int)
 		begin
 			if((DrawX - (duck_counter_init_x + (22*9)))*(DrawX - (duck_counter_init_x + (22*9))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count10
 				duck_counter_on_10 = (duck_killed[9]) ? 2'b10 : 2'b01;	//red or white
@@ -774,8 +774,14 @@ assign LEDR[7:0] = shotcount;
 										end
 										else
 										begin
-											 if((RoundNumber1_on) || (RoundNumber2_on))
+											 if(((RoundNumber1_on) || (RoundNumber2_on) || (gameover_on)) && start_game_signal_int)
 											 begin
+												if(gameover_on)
+												begin	
+													Red <= gameover_palette_red;
+													Blue <= gameover_palette_blue;
+													Green <= gameover_palette_green;
+												end
 												if(RoundNumber1_on == 1)
 												begin
 													Red <= RoundNumber1_palette_red;
@@ -795,9 +801,9 @@ assign LEDR[7:0] = shotcount;
 												begin
 													if(BlueBar_on)
 													begin
-														Red <= 4'h0;
-														Blue <= 4'hA;
-														Green <= 4'h0;
+														Red <= 4'h3;
+														Blue <= 4'hF;
+														Green <= 4'hA;
 													end
 													else
 													begin
