@@ -19,6 +19,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 						input logic [5:0] flyaway_timer,
 					   input logic [5:0] Frame, DuckFrame,
 						input logic [1:0] Duck_color,
+						input logic [20:0] score, highscore,
 						input blank, vga_clk, Reset, jump2Signal, resetSignal, duckresetSignal, ANIM_Clk,  start_game_signal_int, duck_kill_signal_int, gameoversignal, fly_away, shoot_enable, out_of_shots,
 						output logic duck_kill_signal, start_game_signal,
 						input signed [7:0] MouseButtons,
@@ -87,7 +88,7 @@ assign LEDR[7:0] = shotcount;
 	logic [7:0] RoundNumber1_rom_address;
 	logic [3:0] RoundNumber1_rom_q;
 	logic [3:0] RoundNumber1_palette_red, RoundNumber1_palette_green, RoundNumber1_palette_blue;
-
+	logic [3:0] ScoreNumber1, ScoreNumber2, ScoreNumber3, ScoreNumber4, ScoreNumber5, ScoreNumber6;
 	logic [7:0] RoundNumber2_rom_address;
 	logic [3:0] RoundNumber2_rom_q;
 	logic [3:0] RoundNumber2_palette_red, RoundNumber2_palette_green, RoundNumber2_palette_blue;
@@ -104,6 +105,122 @@ assign LEDR[7:0] = shotcount;
 	assign RoundNumber2_distX = DrawX - 101;
 	assign RoundNumber2_distY = DrawY - 386;
 
+	// Score Number internal signals
+
+	logic [7:0] scorenumber1_rom_address;
+	logic [3:0] scorenumber1_rom_q;
+	logic [3:0] scorenumber1_palette_red, scorenumber1_palette_green, scorenumber1_palette_blue;
+	logic [9:0] scorenumber1_distX, scorenumber1_distY;
+
+	assign scorenumber1_rom_address = (scorenumber1_distX + scorenumber1_distY * 16);
+	assign scorenumber1_distX = DrawX - 560;
+	assign scorenumber1_distY = DrawY - 414;
+
+	logic [7:0] scorenumber2_rom_address;
+	logic [3:0] scorenumber2_rom_q;
+	logic [3:0] scorenumber2_palette_red, scorenumber2_palette_green, scorenumber2_palette_blue;
+	logic [9:0] scorenumber2_distX, scorenumber2_distY;
+	logic ScoreNumber1_on, ScoreNumber2_on, ScoreNumber3_on, ScoreNumber4_on, ScoreNumber5_on, ScoreNumber6_on;
+	logic HighScoreNumber1_on, HighScoreNumber2_on, HighScoreNumber3_on, HighScoreNumber4_on, HighScoreNumber5_on, HighScoreNumber6_on;
+	assign scorenumber2_rom_address = (scorenumber2_distX + scorenumber2_distY * 16);
+	assign scorenumber2_distX = DrawX - 544;
+	assign scorenumber2_distY = DrawY - 414;
+
+	logic [7:0] scorenumber3_rom_address;
+	logic [3:0] scorenumber3_rom_q;
+	logic [3:0] scorenumber3_palette_red, scorenumber3_palette_green, scorenumber3_palette_blue;
+	logic [9:0] scorenumber3_distX, scorenumber3_distY;
+
+	assign scorenumber3_rom_address = (scorenumber3_distX + scorenumber3_distY * 16);
+	assign scorenumber3_distX = DrawX - 528;
+	assign scorenumber3_distY = DrawY - 414;
+
+	logic [7:0] scorenumber4_rom_address;
+	logic [3:0] scorenumber4_rom_q;
+	logic [3:0] scorenumber4_palette_red, scorenumber4_palette_green, scorenumber4_palette_blue;
+	logic [9:0] scorenumber4_distX, scorenumber4_distY;
+
+	assign scorenumber4_rom_address = (scorenumber4_distX + scorenumber4_distY * 16);
+	assign scorenumber4_distX = DrawX - 512;
+	assign scorenumber4_distY = DrawY - 414;
+
+	logic [7:0] scorenumber5_rom_address;
+	logic [3:0] scorenumber5_rom_q;
+	logic [3:0] scorenumber5_palette_red, scorenumber5_palette_green, scorenumber5_palette_blue;
+	logic [9:0] scorenumber5_distX, scorenumber5_distY;
+
+	assign scorenumber5_rom_address = (scorenumber5_distX + scorenumber5_distY * 16);
+	assign scorenumber5_distX = DrawX - 496;
+	assign scorenumber5_distY = DrawY - 414;
+
+	logic [7:0] scorenumber6_rom_address;
+	logic [3:0] scorenumber6_rom_q;
+	logic [3:0] scorenumber6_palette_red, scorenumber6_palette_green, scorenumber6_palette_blue;
+	logic [9:0] scorenumber6_distX, scorenumber6_distY;
+
+	assign scorenumber6_rom_address = (scorenumber6_distX + scorenumber6_distY * 16);
+	assign scorenumber6_distX = DrawX - 480;
+	assign scorenumber6_distY = DrawY - 414;
+
+
+	//high score internal signals
+	logic [7:0] HighScorenumber1_rom_address;
+	logic [3:0] HighScorenumber1_rom_q;
+	logic [3:0] HighScorenumber1_palette_red, HighScorenumber1_palette_green, HighScorenumber1_palette_blue;
+	logic [9:0] HighScorenumber1_distX, HighScorenumber1_distY;
+
+	assign HighScorenumber1_rom_address = (HighScorenumber1_distX + HighScorenumber1_distY * 16);
+	assign HighScorenumber1_distX = DrawX - 445;
+	assign HighScorenumber1_distY = DrawY - 416;
+	logic [3:0] HighScoreNumber1, HighScoreNumber2, HighScoreNumber3, HighScoreNumber4, HighScoreNumber5, HighScoreNumber6; 
+	logic [7:0] HighScorenumber2_rom_address;
+	logic [3:0] HighScorenumber2_rom_q;
+	logic [3:0] HighScorenumber2_palette_red, HighScorenumber2_palette_green, HighScorenumber2_palette_blue;
+	logic [9:0] HighScorenumber2_distX, HighScorenumber2_distY;
+
+	assign HighScorenumber2_rom_address = (HighScorenumber2_distX + HighScorenumber2_distY * 16);
+	assign HighScorenumber2_distX = DrawX - 429;
+	assign HighScorenumber2_distY = DrawY - 416;
+
+	logic [7:0] HighScorenumber3_rom_address;
+	logic [3:0] HighScorenumber3_rom_q;
+	logic [3:0] HighScorenumber3_palette_red, HighScorenumber3_palette_green, HighScorenumber3_palette_blue;
+	logic [9:0] HighScorenumber3_distX, HighScorenumber3_distY;
+
+	assign HighScorenumber3_rom_address = (HighScorenumber3_distX + HighScorenumber3_distY * 16);
+	assign HighScorenumber3_distX = DrawX - 413;
+	assign HighScorenumber3_distY = DrawY - 416;
+
+	logic [7:0] HighScorenumber4_rom_address;
+	logic [3:0] HighScorenumber4_rom_q;
+	logic [3:0] HighScorenumber4_palette_red, HighScorenumber4_palette_green, HighScorenumber4_palette_blue;
+	logic [9:0] HighScorenumber4_distX, HighScorenumber4_distY;
+
+	assign HighScorenumber4_rom_address = (HighScorenumber4_distX + HighScorenumber4_distY * 16);
+	assign HighScorenumber4_distX = DrawX - 397;
+	assign HighScorenumber4_distY = DrawY - 416;
+
+	logic [7:0] HighScorenumber5_rom_address;
+	logic [3:0] HighScorenumber5_rom_q;
+	logic [3:0] HighScorenumber5_palette_red, HighScorenumber5_palette_green, HighScorenumber5_palette_blue;
+	logic [9:0] HighScorenumber5_distX, HighScorenumber5_distY;
+
+	assign HighScorenumber5_rom_address = (HighScorenumber5_distX + HighScorenumber5_distY * 16);
+	assign HighScorenumber5_distX = DrawX - 381;
+	assign HighScorenumber5_distY = DrawY - 416;
+
+	logic [7:0] HighScorenumber6_rom_address;
+	logic [3:0] HighScorenumber6_rom_q;
+	logic [3:0] HighScorenumber6_palette_red, HighScorenumber6_palette_green, HighScorenumber6_palette_blue;
+	logic [9:0] HighScorenumber6_distX, HighScorenumber6_distY;
+
+	assign HighScorenumber6_rom_address = (HighScorenumber6_distX + HighScorenumber6_distY * 16);
+	assign HighScorenumber6_distX = DrawX - 365;
+	assign HighScorenumber6_distY = DrawY - 416;
+	
+	
+	
+	
 	//duck internal signals
 	logic [12:0] ducks_rom_address;
 	logic [3:0] ducks_rom_q;
@@ -133,9 +250,29 @@ assign LEDR[7:0] = shotcount;
 
 
 	always_comb
-	begin: Score_Logic
+	begin: Round_Logic
 		RoundNumber1 = RoundNumber % 10; //RIGHT NUMBER
 		RoundNumber2 = (RoundNumber / 10); //LEFT NUMBER
+	end
+	
+	always_comb
+	begin: Score_Logic
+		ScoreNumber1 = score % 10; //RIGHT NUMBER
+		ScoreNumber2 = (score / 10); //LEFT NUMBER
+		ScoreNumber3 = (score / 100); //LEFT NUMBER
+		ScoreNumber4 = (score / 100); //LEFT NUMBER
+		ScoreNumber5 = (score / 1000); //LEFT NUMBER
+		ScoreNumber6 = (score / 10000); //LEFT NUMBER
+	end
+
+	always_comb
+	begin: HighScore_Logic
+		HighScoreNumber1 = highscore % 10; //RIGHT NUMBER
+		HighScoreNumber2 = (highscore / 10); //LEFT NUMBER
+		HighScoreNumber3 = (highscore / 100); //LEFT NUMBER
+		HighScoreNumber4 = (highscore / 100); //LEFT NUMBER
+		HighScoreNumber5 = (highscore / 1000); //LEFT NUMBER
+		HighScoreNumber6 = (highscore / 10000); //LEFT NUMBER
 	end
 	
 	always_comb
@@ -202,6 +339,89 @@ assign LEDR[7:0] = shotcount;
 			else
 				duck_on = 1'b0;
     end 
+	 
+	 
+	 always_comb
+	 begin:ScoreNumber_on_proc
+		if(start_game_signal_int)
+			begin
+			if(scorenumber1_distX < 16 & scorenumber1_distY < 16)
+				ScoreNumber1_on = 1'b1;
+			else
+				ScoreNumber1_on = 1'b0;
+			if(scorenumber2_distX < 16 & scorenumber2_distY < 16)
+				ScoreNumber2_on = 1'b1;
+			else 
+				ScoreNumber2_on = 1'b0;
+			if(scorenumber3_distX < 16 & scorenumber3_distY < 16)
+				ScoreNumber3_on = 1'b1;
+			else
+				ScoreNumber3_on = 1'b0;
+			if(scorenumber4_distX < 16 & scorenumber4_distY < 16)
+				ScoreNumber4_on = 1'b1;
+			else 
+				ScoreNumber4_on = 1'b0;
+			if(scorenumber5_distX < 16 & scorenumber5_distY < 16)
+				ScoreNumber5_on = 1'b1;
+			else
+				ScoreNumber5_on = 1'b0;
+			if(scorenumber6_distX < 16 & scorenumber6_distY < 16)
+				ScoreNumber6_on = 1'b1;
+			else 
+				ScoreNumber6_on = 1'b0;
+			end
+		else
+		begin
+			ScoreNumber1_on = 1'b0;
+			ScoreNumber2_on = 1'b0;
+			ScoreNumber3_on = 1'b0;
+			ScoreNumber4_on = 1'b0;
+			ScoreNumber5_on = 1'b0;
+			ScoreNumber6_on = 1'b0;
+		end
+			
+	end
+		
+		 always_comb
+	 begin:HighScoreNumber_on_proc
+	 	if(~start_game_signal_int)
+		begin
+			if(HighScorenumber1_distX < 16 & HighScorenumber1_distY < 16)
+				HighScoreNumber1_on = 1'b1;
+			else
+				HighScoreNumber1_on = 1'b0;
+			if(HighScorenumber2_distX < 16 & HighScorenumber2_distY < 16)
+				HighScoreNumber2_on = 1'b1;
+			else 
+				HighScoreNumber2_on = 1'b0;
+			if(HighScorenumber3_distX < 16 & HighScorenumber3_distY < 16)
+				HighScoreNumber3_on = 1'b1;
+			else
+				HighScoreNumber3_on = 1'b0;
+			if(HighScorenumber4_distX < 16 & HighScorenumber4_distY < 16)
+				HighScoreNumber4_on = 1'b1;
+			else 
+				HighScoreNumber4_on = 1'b0;
+			if(HighScorenumber5_distX < 16 & HighScorenumber5_distY < 16)
+				HighScoreNumber5_on = 1'b1;
+			else
+				HighScoreNumber5_on = 1'b0;
+			if(HighScorenumber6_distX < 16 & HighScorenumber6_distY < 16)
+				HighScoreNumber6_on = 1'b1;
+			else 
+				HighScoreNumber6_on = 1'b0;
+		end
+		else
+		begin
+			HighScoreNumber1_on = 1'b0;
+			HighScoreNumber2_on = 1'b0;
+			HighScoreNumber3_on = 1'b0;
+			HighScoreNumber4_on = 1'b0;
+			HighScoreNumber5_on = 1'b0;
+			HighScoreNumber6_on = 1'b0;
+		end
+			
+	end
 	  
 	 always_comb
 	 begin:RoundNumber_on_proc
@@ -353,282 +573,358 @@ assign LEDR[7:0] = shotcount;
 	end
 			
 
-//drawing hierarchy
-	always_ff @ (posedge vga_clk)
-	begin:RGB_Display2
-	if(blank) //added blank signal
-		begin
-			if(shot_on)
-			begin
-				if(DrawX >= BallX - 5'd25 && DrawX < BallX + 5'd26 && DrawY >= BallY - 5'd25 && DrawY < BallY + 5'd26)
-				begin
-					Red <= 4'hF;
-					Green <= 4'hF;
-					Blue <= 4'hF;
-				end
-				else 
-				begin
-					Red <= 4'h0;
-					Green <= 4'h0;
-					Blue <= 4'h0;
-				end
-			end
-			else
-			begin
-				if ((ball_on == 1'b1)) 	//COLORING MOUSE
-				begin 
-					Red <= 4'hF; 		//color changed to white to more closely match color of game cursor...original orange color commented out.
-					Green <= 4'hF/*55*/;
-					Blue <= 4'hF/*00*/;
-				end
-				else
-				begin
-					if (fly_away_on == 1'b1)
-					begin
-						Red <= flyaway_palette_red;
-						Green <= flyaway_palette_green;
-						Blue <= flyaway_palette_blue;
-					end
-					else
-					begin
-						if (gameover_on)
-						begin
-							Red <= gameover_palette_red;
-							Green <= gameover_palette_green;
-							Blue <= gameover_palette_blue;
-						end
-						else
-						begin
-							if ((dog_on == 1'b1)) 	//COLORING DOG
-							begin 
-								Red <= dog_palette_red;
-								Green <= dog_palette_green;
-								Blue <= dog_palette_blue;
-							end  		  
-							else 
-							begin
-								if((duck_on == 1'b1))
-								begin
-									case(Duck_color)	//COLORING DUCKS
-										2'b00: begin
-											Red <= ducks_black_palette_red;
-											Green <= ducks_black_palette_green;
-											Blue <= ducks_black_palette_blue;
-										end
-										2'b01: begin
-											Red <= ducks_red_palette_red;
-											Green <= ducks_red_palette_green;
-											Blue <= ducks_red_palette_blue;
-										end
-										2'b10: begin
-											Red <= ducks_pink_palette_red;
-											Green <= ducks_pink_palette_green;
-											Blue <= ducks_pink_palette_blue;
-										end
-										default: begin
-											Red <= ducks_black_palette_red;
-											Green <= ducks_black_palette_green;
-											Blue <= ducks_black_palette_blue;
-										end
-									endcase
-								end
-								else
-								begin
-									if((square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1) && start_game_signal_int) //COLORING SHOT COUNTER
+ //		drawing hierarchy
+ 		 always_ff @ (posedge vga_clk)
+ 		 begin:RGB_Display2
+ 			if(blank) //added blank signal
+ 			begin
+ 				if(shot_on)
+ 				begin
+ 					if(DrawX >= BallX - 5'd25 && DrawX < BallX + 5'd26 && DrawY >= BallY - 5'd25 && DrawY < BallY + 5'd26)
+ 					begin
+ 						Red <= 4'hF;
+ 						Green <= 4'hF;
+ 						Blue <= 4'hF;
+ 					end
+ 					else 
+ 					begin
+ 						Red <= 4'h0;
+ 						Green <= 4'h0;
+ 						Blue <= 4'h0;
+ 					end
+ 				end
+ 				else
+ 				begin
+ 	 			if ((ball_on == 1'b1)) 	//COLORING MOUSE
+ 	 			begin 
+ 	 				Red <= 4'hF; 		//color changed to white to more closely match color of game cursor...original orange color commented out.
+ 	 				Green <= 4'hF/*55*/;
+ 	 				Blue <= 4'hF/*00*/;
+ 	 			end
+ 				else
+ 				begin
+ 					if (fly_away_on == 1'b1)
+ 					begin
+ 						Red <= flyaway_palette_red;
+ 						Green <= flyaway_palette_green;
+ 						Blue <= flyaway_palette_blue;
+ 					end
+ 					else
+ 					begin
+ 						if ((dog_on == 1'b1)) 	//COLORING DOG
+ 						begin 
+ 							Red <= dog_palette_red;
+ 							Green <= dog_palette_green;
+ 							Blue <= dog_palette_blue;
+ 						end  		  
+ 						else 
+ 						begin
+ 							if((duck_on == 1'b1))
+ 							begin
+ 								case(Duck_color)	//COLORING DUCKS
+ 									2'b00: begin
+ 										Red <= ducks_black_palette_red;
+ 										Green <= ducks_black_palette_green;
+ 										Blue <= ducks_black_palette_blue;
+ 									end
+ 									2'b01: begin
+ 										Red <= ducks_red_palette_red;
+ 										Green <= ducks_red_palette_green;
+ 										Blue <= ducks_red_palette_blue;
+ 									end
+ 									2'b10: begin
+ 										Red <= ducks_pink_palette_red;
+ 										Green <= ducks_pink_palette_green;
+ 										Blue <= ducks_pink_palette_blue;
+ 									end
+ 									default: begin
+ 										Red <= ducks_black_palette_red;
+ 										Green <= ducks_black_palette_green;
+ 										Blue <= ducks_black_palette_blue;
+ 									end
+ 								endcase
+ 							end
+ 							else
+ 							begin
+ 								if((square_on1 == 1'b1 || square_on2 == 1'b1 || square_on3 == 1'b1) && start_game_signal_int) //COLORING SHOT COUNTER
+ 								begin
+ 									Red <= 4'hA;
+ 									Green <= 4'hA;
+ 									Blue <= 4'hA;
+ 								end
+ 								else 
+ 								begin
+									if((HighScoreNumber1_on) || (HighScoreNumber2_on) || (HighScoreNumber3_on) || (HighScoreNumber4_on) || (HighScoreNumber5_on) || (HighScoreNumber6_on) && ~start_game_signal_int)
 									begin
-										Red <= 4'hA;
-										Green <= 4'hA;
-										Blue <= 4'hA;
-									end
-									else 
-									begin
-										if((RoundNumber1_on) || (RoundNumber2_on))
+										if(HighScoreNumber1_on == 1)
 										begin
-											if(RoundNumber1_on == 1)
+											Red <= HighScorenumber1_palette_red;
+											Green <= HighScorenumber1_palette_green;
+											Blue <= HighScorenumber1_palette_blue;
+										end
+										if(HighScoreNumber2_on == 1)
+										begin
+											Red <= HighScorenumber2_palette_red;
+											Green <= HighScorenumber2_palette_green;
+											Blue <= HighScorenumber2_palette_blue;
+										end
+										if(HighScoreNumber3_on == 1)
+										begin
+											Red <= HighScorenumber3_palette_red;
+											Green <= HighScorenumber3_palette_green;
+											Blue <= HighScorenumber3_palette_blue;
+										end
+										if(HighScoreNumber4_on == 1)
+										begin
+											Red <= HighScorenumber4_palette_red;
+											Green <= HighScorenumber4_palette_green;
+											Blue <= HighScorenumber4_palette_blue;
+										end
+										if(HighScoreNumber5_on == 1)
+										begin
+											Red <= HighScorenumber5_palette_red;
+											Green <= HighScorenumber5_palette_green;
+											Blue <= HighScorenumber5_palette_blue;
+										end
+										if(HighScoreNumber6_on == 1)
+										begin
+											Red <= HighScorenumber6_palette_red;
+											Green <= HighScorenumber6_palette_green;
+											Blue <= HighScorenumber6_palette_blue;
+										end
+									end
+									else
+									begin
+										if((ScoreNumber1_on) || (ScoreNumber2_on) || (ScoreNumber3_on) || (ScoreNumber4_on) || (ScoreNumber5_on) || (ScoreNumber6_on) && start_game_signal_int)
+										begin
+											if(ScoreNumber1_on == 1)
 											begin
-												Red <= RoundNumber1_palette_red;
-												Green <= RoundNumber1_palette_green;
-												Blue <= RoundNumber1_palette_blue;
+												Red <= scorenumber1_palette_red;
+												Green <= scorenumber1_palette_green;
+												Blue <= scorenumber1_palette_blue;
 											end
-											if(RoundNumber2_on == 1)
+											if(ScoreNumber2_on == 1)
 											begin
-												Red <= RoundNumber2_palette_red;
-												Green <= RoundNumber2_palette_green;
-												Blue <= RoundNumber2_palette_blue;
+												Red <= scorenumber2_palette_red;
+												Green <= scorenumber2_palette_green;
+												Blue <= scorenumber2_palette_blue;
+											end
+											if(ScoreNumber3_on == 1)
+											begin
+												Red <= scorenumber3_palette_red;
+												Green <= scorenumber3_palette_green;
+												Blue <= scorenumber3_palette_blue;
+											end
+											if(ScoreNumber4_on == 1)
+											begin
+												Red <= scorenumber4_palette_red;
+												Green <= scorenumber4_palette_green;
+												Blue <= scorenumber4_palette_blue;
+											end
+											if(ScoreNumber5_on == 1)
+											begin
+												Red <= scorenumber5_palette_red;
+												Green <= scorenumber5_palette_green;
+												Blue <= scorenumber5_palette_blue;
+											end
+											if(ScoreNumber6_on == 1)
+											begin
+												Red <= scorenumber6_palette_red;
+												Green <= scorenumber6_palette_green;
+												Blue <= scorenumber6_palette_blue;
 											end
 										end
 										else
 										begin
-											if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
-											begin
-												case(duck_counter_on_1)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_2)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_3)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_4)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_5)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_6)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_7)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_8)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_9)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-												case(duck_counter_on_10)
-													2'b01:begin
-													Red <= 4'hF;
-													Blue <= 4'hF;
-													Green <= 4'hF;
-													end
-													2'b10:begin
-													Red <= 4'hD;
-													Blue <= 4'h0;
-													Green <= 4'h0;
-													end
-													default: ;
-												endcase
-											end
+											 if((RoundNumber1_on) || (RoundNumber2_on))
+											 begin
+												if(RoundNumber1_on == 1)
+												begin
+													Red <= RoundNumber1_palette_red;
+													Green <= RoundNumber1_palette_green;
+													Blue <= RoundNumber1_palette_blue;
+												end
+												if(RoundNumber2_on == 1)
+												begin
+													Red <= RoundNumber2_palette_red;
+													Green <= RoundNumber2_palette_green;
+													Blue <= RoundNumber2_palette_blue;
+												end
+											end											
 											else
 											begin
-												case(background)
-													2'b00: begin
-														Red <= 4'hB;//mainmenu_palette_red;
-														Green <= 4'hB;//mainmenu_palette_green;
-														Blue <= 4'hB;//mainmenu_palette_blue;
-													end
-													2'b01: begin
-														Red <= 4'hB;//bg_palette_red;
-														Green <= 4'hB;//bg_palette_green;
-														Blue <= 4'hB;//bg_palette_blue;
-													end
-													2'b10: begin
-														Red <= 4'hB;//bg1_palette_red;
-														Green <= 4'hB;//bg1_palette_green;
-														Blue <= 4'hB;//bg_palette_blue;
-													end
-													default: ;
-												endcase
+												if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
+												begin
+													case(duck_counter_on_1)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_2)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_3)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_4)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_5)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_6)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_7)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_8)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_9)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+													case(duck_counter_on_10)
+														2'b01:begin
+														Red <= 4'hF;
+														Blue <= 4'hF;
+														Green <= 4'hF;
+														end
+														2'b10:begin
+														Red <= 4'hD;
+														Blue <= 4'h0;
+														Green <= 4'h0;
+														end
+														default: ;
+													endcase
+												end
+												else
+												begin
+													case(background)
+														2'b00: begin
+															Red <= mainmenu_palette_red;
+															Green <= mainmenu_palette_green;
+															Blue <= mainmenu_palette_blue;
+														end
+														2'b01: begin
+															Red <= bg_palette_red;
+															Green <= bg_palette_green;
+															Blue <= bg_palette_blue;
+														end
+														2'b10: begin
+															Red <= bg1_palette_red;
+															Green <= bg1_palette_green;
+															Blue <= bg_palette_blue;
+														end
+														default: ;
+													endcase
+												end
 											end
-										end	
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-	 	else //blanking
-	 	begin
-	 		Red <= 4'h0;
-         	Green <= 4'h0;
-         	Blue <= 4'h0;
-	 	end	
-    end 
+										end
+ 									end	
+ 								end
+ 							end
+ 						end
+ 					end
+ 				end
+ 			end
+ 		end
+ 		else //blanking
+ 		begin
+ 	 		Red <= 4'h0;
+         Green <= 4'h0;
+         Blue <= 4'h0;
+ 	 	end
+			
+     end 
 
 	bgs0_rom bgs0_rom (
 	.clock   (vga_clk),
@@ -770,4 +1066,172 @@ assign negedge_vga_clk = ~vga_clk;
 		.blue  (gameover_palette_blue)
 	);
     
+	 ScoreNumbers_rom Score1_rom (
+	.clock   (negedge_vga_clk),
+	.address (scorenumber1_rom_address),
+	.q       (scorenumber1_rom_q),
+	.insert_number (ScoreNumber1)
+);
+
+	ScoreNumbers_palette Score1_palette (
+		.index (scorenumber1_rom_q),
+		.red   (scorenumber1_palette_red),
+		.green (scorenumber1_palette_green),
+		.blue  (scorenumber1_palette_blue)
+);
+
+	ScoreNumbers_rom Score2_rom (
+		.clock   (negedge_vga_clk),
+		.address (scorenumber2_rom_address),
+		.q       (scorenumber2_rom_q),
+		.insert_number (ScoreNumber2)
+);
+
+	ScoreNumbers_palette Score2_palette (
+		.index (scorenumber2_rom_q),
+		.red   (scorenumber2_palette_red),
+		.green (scorenumber2_palette_green),
+		.blue  (scorenumber2_palette_blue)
+);
+
+	ScoreNumbers_rom Score3_rom (
+		.clock   (negedge_vga_clk),
+		.address (scorenumber3_rom_address),
+		.q       (scorenumber3_rom_q),
+		.insert_number (ScoreNumber3)
+);
+
+	ScoreNumbers_palette Score3_palette (
+		.index (scorenumber3_rom_q),
+		.red   (scorenumber3_palette_red),
+		.green (scorenumber3_palette_green),
+		.blue  (scorenumber3_palette_blue)
+);
+
+	ScoreNumbers_rom Score4_rom (
+		.clock   (negedge_vga_clk),
+		.address (scorenumber4_rom_address),
+		.q       (scorenumber4_rom_q),
+		.insert_number (ScoreNumber4)
+);
+
+	ScoreNumbers_palette Score4_palette (
+		.index (scorenumber4_rom_q),
+		.red   (scorenumber4_palette_red),
+		.green (scorenumber4_palette_green),
+		.blue  (scorenumber4_palette_blue)
+);
+
+	ScoreNumbers_rom Score5_rom (
+		.clock   (negedge_vga_clk),
+		.address (scorenumber5_rom_address),
+		.q       (scorenumber5_rom_q),
+		.insert_number (ScoreNumber5)
+);
+
+	ScoreNumbers_palette Score5_palette (
+		.index (scorenumber5_rom_q),
+		.red   (scorenumber5_palette_red),
+		.green (scorenumber5_palette_green),
+		.blue  (scorenumber5_palette_blue)
+);
+
+	ScoreNumbers_rom Score6_rom (
+		.clock   (negedge_vga_clk),
+		.address (scorenumber6_rom_address),
+		.q       (scorenumber6_rom_q),
+		.insert_number (ScoreNumber6)
+);
+
+	ScoreNumbers_palette Score6_palette (
+		.index (scorenumber6_rom_q),
+		.red   (scorenumber6_palette_red),
+		.green (scorenumber6_palette_green),
+		.blue  (scorenumber6_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore1_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber1_rom_address),
+		.q       (HighScorenumber1_rom_q),
+		.insert_number (HighScoreNumber1)
+);
+
+	ScoreNumbers_palette HighScore1_palette (
+		.index (HighScorenumber1_rom_q),
+		.red   (HighScorenumber1_palette_red),
+		.green (HighScorenumber1_palette_green),
+		.blue  (HighScorenumber1_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore2_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber2_rom_address),
+		.q       (HighScorenumber2_rom_q),
+		.insert_number (HighScoreNumber2)
+);
+
+	ScoreNumbers_palette HighScore2_palette (
+		.index (HighScorenumber2_rom_q),
+		.red   (HighScorenumber2_palette_red),
+		.green (HighScorenumber2_palette_green),
+		.blue  (HighScorenumber2_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore3_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber3_rom_address),
+		.q       (HighScorenumber3_rom_q),
+		.insert_number (HighScoreNumber3)
+);
+
+	ScoreNumbers_palette HighScore3_palette (
+		.index (HighScorenumber3_rom_q),
+		.red   (HighScorenumber3_palette_red),
+		.green (HighScorenumber3_palette_green),
+		.blue  (HighScorenumber3_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore4_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber4_rom_address),
+		.q       (HighScorenumber4_rom_q),
+		.insert_number (HighScoreNumber4)
+);
+
+	ScoreNumbers_palette HighScore4_palette (
+		.index (HighScorenumber4_rom_q),
+		.red   (HighScorenumber4_palette_red),
+		.green (HighScorenumber4_palette_green),
+		.blue  (HighScorenumber4_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore5_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber5_rom_address),
+		.q       (HighScorenumber5_rom_q),
+		.insert_number (HighScoreNumber5)
+);
+
+	ScoreNumbers_palette HighScore5_palette (
+		.index (HighScorenumber5_rom_q),
+		.red   (HighScorenumber5_palette_red),
+		.green (HighScorenumber5_palette_green),
+		.blue  (HighScorenumber5_palette_blue)
+);
+
+	ScoreNumbers_rom HighScore6_rom (
+		.clock   (negedge_vga_clk),
+		.address (HighScorenumber6_rom_address),
+		.q       (HighScorenumber6_rom_q),
+		.insert_number (HighScoreNumber6)
+);
+
+	ScoreNumbers_palette HighScore6_palette (
+		.index (HighScorenumber6_rom_q),
+		.red   (HighScorenumber6_palette_red),
+		.green (HighScorenumber6_palette_green),
+		.blue  (HighScorenumber6_palette_blue)
+);
+
 endmodule

@@ -6,6 +6,8 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
                 	output logic [9:0] Dog_X, Dog_Y, LEDR, duck_killed, Dog_Y_int,
 						output logic signed [10:0] Duck_X, Duck_Y,
 					output logic jump2Signal, resetSignal, duckresetSignal, duck_bounce_signal, start_game_signal_int, duck_kill_signal_int, gameoversignal, fly_away, shoot_enable, out_of_shots,
+					output logic [20:0] score, 
+					output logic [20:0] highscore,
 					output logic [4:0] Frame,
 					output logic [5:0] DuckFrame,
 					output logic [7:0] RoundNumber,
@@ -57,7 +59,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
        if (Reset)
 			begin
 			flyaway_timer <= 0;
-         curr_state <= R;
+         curr_state <= MainMenu;
 			end_walk <=  4'b0000;
 			end_sniff <= 4'b0000;
 			startjump <= 4'b0000;
@@ -126,9 +128,70 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				begin
 					duck_shocked <= duck_shocked + 4'b0001;
 					duck_killed[duck_number-1] = 1'b1;
-//					duck_killed <= duck_killed + (2** (duck_number - 1); //duck_killed = {duck_killed[9-duck_number],  rv
 					if(duck_shocked == 15)
 						duck_shocked <= 0;
+					case(Duck_color)
+					4'd0: begin		//BLACK
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6) && duck_shocked == 1)
+							begin
+								score <= score + 500;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10) && duck_shocked == 1)
+								begin
+									score <= score + 800;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99) && duck_shocked == 1)
+									begin
+										score <= score + 1000;
+									end
+								end
+							end
+					end
+					4'd1: begin		//RED
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6) && duck_shocked == 1)
+							begin
+								score <= score + 1500;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10) && duck_shocked == 1)
+								begin
+									score <= score + 2400;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99) && duck_shocked == 1)
+									begin
+										score <= score + 3000;
+									end
+								end
+							end
+					end
+					4'd2: begin	//PINK
+							if((RoundNumber >= 8'd1) && (RoundNumber < 8'd6) && duck_shocked == 1)
+							begin
+								score <= score + 1000;
+							end
+							else
+							begin
+								if((RoundNumber >= 8'd6) && (RoundNumber < 8'd10) && duck_shocked == 1)
+								begin
+									score <= score + 1600;
+								end
+								else
+								begin
+									if((RoundNumber >= 8'd11) && (RoundNumber < 8'd99) && duck_shocked == 1)
+									begin
+										score <= score + 2000;
+									end
+								end
+							end
+					end
+					endcase
 				end
 			if(curr_state == DuckStart1)
 			begin
@@ -364,6 +427,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 				RoundNumber <= 1;
 				duck_number <= 0;
 				duck_killed_total <= 0;
+				score <= 0;
 			end
 				
 			if(curr_state == DuckHit)
@@ -530,6 +594,8 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			
 			if(curr_state == EndRound)
 			begin
+				if(score > highscore)
+					highscore <= score;
 				if((RoundNumber >= 8'd1) && (RoundNumber < 8'd11))
 				begin
 					if(duck_killed_total < 6)
