@@ -17,7 +17,7 @@ Round6_rom Round6_rom0(.clock, .address, .q(q6));
 Round7_rom Round7_rom0(.clock, .address, .q(q7));
 Round8_rom Round8_rom0(.clock, .address, .q(q8));
 Round9_rom Round9_rom0(.clock, .address, .q(q9));
-RoundBlank_rom RoundBlank_rom0(.clock, .address, .q(q10));
+//RoundBlank_rom RoundBlank_rom0(.clock, .address, .q(q10));
 
 always_comb
 begin
@@ -178,17 +178,18 @@ always_ff @ (posedge clock) begin
 end
 
 endmodule
+//
+//module RoundBlank_rom (
+//	input logic clock,
+//	input logic [7:0] address,
+//	output logic [3:0] q
+//);
+//
+//logic [3:0] memory [0:255] /* synthesis ram_init_file = "./RoundBlank/RoundBlank.mif" */;
+//
+//always_ff @ (posedge clock) begin
+//	q <= memory[address];
+//end
+//
+//endmodule
 
-module RoundBlank_rom (
-	input logic clock,
-	input logic [7:0] address,
-	output logic [3:0] q
-);
-
-logic [3:0] memory [0:255] /* synthesis ram_init_file = "./RoundBlank/RoundBlank.mif" */;
-
-always_ff @ (posedge clock) begin
-	q <= memory[address];
-end
-
-endmodule
