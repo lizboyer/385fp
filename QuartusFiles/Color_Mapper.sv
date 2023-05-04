@@ -36,7 +36,7 @@ assign LEDR[7:0] = shotcount;
 	 
 	 
 //internal signals
-    logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on, mouse_flag, fly_away_on, RoundNumber1_on, RoundNumber2_on;
+    logic dog_on, bg_on, ball_on, square_on1, square_on2, intermed, square_on3, count_enable, aaa_delayed, aaa, shot_on, duck_on, mouse_flag, fly_away_on, RoundNumber1_on, RoundNumber2_on, BlueBar_on;
 	
 	logic [1:0] background;
 	logic [6:0] DogSizeY, DogSizeX, DuckSizeX, DuckSizeY;
@@ -92,6 +92,7 @@ assign LEDR[7:0] = shotcount;
 	logic [7:0] RoundNumber2_rom_address;
 	logic [3:0] RoundNumber2_rom_q;
 	logic [3:0] RoundNumber2_palette_red, RoundNumber2_palette_green, RoundNumber2_palette_blue;
+	logic [3:0] min_ducks_to_pass;
 
 	logic [3:0] RoundNumber1; //RIGHT NUMBER
 	logic [3:0] RoundNumber2; //LEFT NUMBER
@@ -171,7 +172,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber1_rom_address = (HighScorenumber1_distX + HighScorenumber1_distY * 16);
 	assign HighScorenumber1_distX = DrawX - 445;
-	assign HighScorenumber1_distY = DrawY - 416;
+	assign HighScorenumber1_distY = DrawY - 406;
 	logic [3:0] HighScoreNumber1, HighScoreNumber2, HighScoreNumber3, HighScoreNumber4, HighScoreNumber5, HighScoreNumber6; 
 	logic [7:0] HighScorenumber2_rom_address;
 	logic [3:0] HighScorenumber2_rom_q;
@@ -180,7 +181,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber2_rom_address = (HighScorenumber2_distX + HighScorenumber2_distY * 16);
 	assign HighScorenumber2_distX = DrawX - 429;
-	assign HighScorenumber2_distY = DrawY - 416;
+	assign HighScorenumber2_distY = DrawY - 406;
 
 	logic [7:0] HighScorenumber3_rom_address;
 	logic [3:0] HighScorenumber3_rom_q;
@@ -189,7 +190,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber3_rom_address = (HighScorenumber3_distX + HighScorenumber3_distY * 16);
 	assign HighScorenumber3_distX = DrawX - 413;
-	assign HighScorenumber3_distY = DrawY - 416;
+	assign HighScorenumber3_distY = DrawY - 406;
 
 	logic [7:0] HighScorenumber4_rom_address;
 	logic [3:0] HighScorenumber4_rom_q;
@@ -198,7 +199,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber4_rom_address = (HighScorenumber4_distX + HighScorenumber4_distY * 16);
 	assign HighScorenumber4_distX = DrawX - 397;
-	assign HighScorenumber4_distY = DrawY - 416;
+	assign HighScorenumber4_distY = DrawY - 406;
 
 	logic [7:0] HighScorenumber5_rom_address;
 	logic [3:0] HighScorenumber5_rom_q;
@@ -207,7 +208,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber5_rom_address = (HighScorenumber5_distX + HighScorenumber5_distY * 16);
 	assign HighScorenumber5_distX = DrawX - 381;
-	assign HighScorenumber5_distY = DrawY - 416;
+	assign HighScorenumber5_distY = DrawY - 406;
 
 	logic [7:0] HighScorenumber6_rom_address;
 	logic [3:0] HighScorenumber6_rom_q;
@@ -216,7 +217,7 @@ assign LEDR[7:0] = shotcount;
 
 	assign HighScorenumber6_rom_address = (HighScorenumber6_distX + HighScorenumber6_distY * 16);
 	assign HighScorenumber6_distX = DrawX - 365;
-	assign HighScorenumber6_distY = DrawY - 416;
+	assign HighScorenumber6_distY = DrawY - 406;
 	
 	
 	
@@ -248,7 +249,38 @@ assign LEDR[7:0] = shotcount;
 	
 //PROCS
 
-
+	always_comb
+	begin: min_ducks_to_pass_proc
+		if(RoundNumber >= 8'd1 && RoundNumber < 8'd99)
+		begin
+			if((RoundNumber >= 8'd1) && (RoundNumber < 8'd11))
+				min_ducks_to_pass = 4'd6;
+			else 
+			begin
+				if((RoundNumber >= 8'd11) && (RoundNumber < 8'd13))
+					min_ducks_to_pass = 4'd7;
+				else
+				begin
+					if((RoundNumber >= 8'd13) && (RoundNumber < 8'd15))
+						min_ducks_to_pass = 4'd8;
+					else
+					begin
+						if((RoundNumber >= 8'd15) && (RoundNumber < 8'd20))
+							min_ducks_to_pass = 4'd9;
+						else
+						begin
+							if((RoundNumber >= 8'd20) && (RoundNumber < 8'd99))
+								min_ducks_to_pass = 4'd10;
+							else
+								min_ducks_to_pass = 4'd0;
+						end
+					end
+				end
+			end				
+		end	
+		else
+			min_ducks_to_pass = 4'd0;
+	end
 	always_comb
 	begin: Round_Logic
 		RoundNumber1 = RoundNumber % 10; //RIGHT NUMBER
@@ -435,7 +467,13 @@ assign LEDR[7:0] = shotcount;
 				RoundNumber2_on = 1'b0;
 		end
 	  
-	  
+	 always_comb 
+	begin:BlueBar_on_proc
+		if(DrawY >= 436 && DrawX < 451 && DrawX >= 217 && DrawX < (217 + (22*min_ducks_to_pass)) && start_game_signal_int)
+			BlueBar_on = 1'b1;
+		else
+			BlueBar_on = 1'b0;
+	end
 	//shot counter drawing
 	 always_comb
 	 begin:Shot_Square_on_proc
@@ -457,7 +495,7 @@ assign LEDR[7:0] = shotcount;
 	//duck counter drawing
 	 always_comb
 	 begin:Duck_Counter_on_proc	//duck_counter_on is red when the duck has been hit, white when it hasnt, and isnt drawn if beam isnt on it
-		if(DrawX >= 200 && DrawX < 434 && DrawY >= 417 && DrawY < 432 && start_game_signal_int)
+		if(((DrawX >= 222 && DrawX < 234) || (DrawX >= 244 && DrawX < 256) || (DrawX >= 266 && DrawX < 278) || (DrawX >= 288 && DrawX < 300) || (DrawX >= 310 && DrawX < 322) || (DrawX >= 332 && DrawX < 344) || (DrawX >= 354 && DrawX < 366) || (DrawX >= 376 && DrawX < 388) || (DrawX >= 398 && DrawX < 410) || (DrawX >= 420 && DrawX < 432)) && DrawY >= 417 && DrawY < 432 && start_game_signal_int)
 		begin
 			if((DrawX - (duck_counter_init_x + (22*9)))*(DrawX - (duck_counter_init_x + (22*9))) + (DrawY - duck_counter_init_y)*(DrawY - duck_counter_init_y) <= 6'b100100)	//Duck_Count10
 				duck_counter_on_10 = (duck_killed[9]) ? 2'b10 : 2'b01;	//red or white
@@ -753,138 +791,147 @@ assign LEDR[7:0] = shotcount;
 											end											
 											else
 											begin
-												if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
+												if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00 || BlueBar_on)
 												begin
-													case(duck_counter_on_1)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
+													if(BlueBar_on)
+													begin
+														Red <= 4'h0;
+														Blue <= 4'hA;
 														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_2)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_3)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_4)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_5)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_6)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_7)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_8)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_9)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
-													case(duck_counter_on_10)
-														2'b01:begin
-														Red <= 4'hF;
-														Blue <= 4'hF;
-														Green <= 4'hF;
-														end
-														2'b10:begin
-														Red <= 4'hD;
-														Blue <= 4'h0;
-														Green <= 4'h0;
-														end
-														default: ;
-													endcase
+													end
+													else
+													begin
+														case(duck_counter_on_1)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_2)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_3)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_4)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_5)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_6)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_7)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_8)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_9)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+														case(duck_counter_on_10)
+															2'b01:begin
+															Red <= 4'hF;
+															Blue <= 4'hF;
+															Green <= 4'hF;
+															end
+															2'b10:begin
+															Red <= 4'hD;
+															Blue <= 4'h0;
+															Green <= 4'h0;
+															end
+															default: ;
+														endcase
+													end
 												end
 												else
 												begin

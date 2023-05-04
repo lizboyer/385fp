@@ -44,6 +44,7 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 	logic [4:0] stoplaugh_count;
 	logic [4:0] gameover_count;
 	logic [4:0] newround_count;
+	logic [4:0] endround_count;
 
 
 	logic signed [9:0] Duck_start, Duck_X_step, Duck_Y_step;
@@ -594,6 +595,9 @@ module control (input  logic Clk, Reset, ANIM_Clk, Run, duck_kill_signal, start_
 			
 			if(curr_state == EndRound)
 			begin
+				endround_count <= endround_count + 5'd1;
+				if(endround_count > 10)
+					endround_count <= 0;
 				if(score > highscore)
 					highscore <= score;
 				if((RoundNumber >= 8'd1) && (RoundNumber < 8'd11))
@@ -949,7 +953,10 @@ end
 			EndRound: 	if(gameoversignal)
 							next_state = GameOver;
 						else
-							next_state = NewRound;
+						begin
+							if(endround_count >= 10)
+								next_state = NewRound;
+						end
 			GameOver:	if(gameover_count >= 10)
 								next_state = MainMenu;
 			NewRound:	if(newround_count >= 5)
@@ -1191,7 +1198,7 @@ end
 			DogStay: begin
 				Frame = 5'b01001;
 				Dog_X = Dog_rand_x_int;
-				Dog_Y = 300;
+				Dog_Y = 270;
 			end
 			DogDown: begin
 				Frame = 5'b01001;
@@ -1220,7 +1227,7 @@ end
 				resetSignal = 1'b0;
 				duckresetSignal = 1'b1;
 				Dog_X = Dog_rand_x_int;
-				Dog_Y = 300;
+				Dog_Y = 270;
 				Frame = 5'b01010; // 10
 			end
 			DogLaugh1_Down: begin
