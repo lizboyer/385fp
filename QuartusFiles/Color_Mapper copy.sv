@@ -151,6 +151,59 @@ assign scorenumber6_distY = DrawY - 400;
 
 
 //high score internal signals
+logic [7:0] highscorenumber1_rom_address;
+logic [3:0] highscorenumber1_rom_q;
+logic [3:0] highscorenumber1_palette_red, highscorenumber1_palette_green, highscorenumber1_palette_blue;
+logic [9:0] highscorenumber1_distX, highscorenumber1_distY;
+
+assign highscorenumber1_rom_address = (highscorenumber1_distX + highscorenumber1_distY * 16);
+assign highscorenumber1_distX = DrawX - 420;
+assign highscorenumber1_distY = DrawY - 350;
+
+logic [7:0] highscorenumber2_rom_address;
+logic [3:0] highscorenumber2_rom_q;
+logic [3:0] highscorenumber2_palette_red, highscorenumber2_palette_green, highscorenumber2_palette_blue;
+logic [9:0] highscorenumber2_distX, highscorenumber2_distY;
+
+assign highscorenumber2_rom_address = (highscorenumber2_distX + highscorenumber2_distY * 16);
+assign highscorenumber2_distX = DrawX - 404;
+assign highscorenumber2_distY = DrawY - 350;
+
+logic [7:0] highscorenumber3_rom_address;
+logic [3:0] highscorenumber3_rom_q;
+logic [3:0] highscorenumber3_palette_red, highscorenumber3_palette_green, highscorenumber3_palette_blue;
+logic [9:0] highscorenumber3_distX, highscorenumber3_distY;
+
+assign highscorenumber3_rom_address = (highscorenumber3_distX + highscorenumber3_distY * 16);
+assign highscorenumber3_distX = DrawX - 388;
+assign highscorenumber3_distY = DrawY - 350;
+
+logic [7:0] highscorenumber4_rom_address;
+logic [3:0] highscorenumber4_rom_q;
+logic [3:0] highscorenumber4_palette_red, highscorenumber4_palette_green, highscorenumber4_palette_blue;
+logic [9:0] highscorenumber4_distX, highscorenumber4_distY;
+
+assign highscorenumber4_rom_address = (highscorenumber4_distX + highscorenumber4_distY * 16);
+assign highscorenumber4_distX = DrawX - 372;
+assign highscorenumber4_distY = DrawY - 350;
+
+logic [7:0] highscorenumber5_rom_address;
+logic [3:0] highscorenumber5_rom_q;
+logic [3:0] highscorenumber5_palette_red, highscorenumber5_palette_green, highscorenumber5_palette_blue;
+logic [9:0] highscorenumber5_distX, highscorenumber5_distY;
+
+assign highscorenumber5_rom_address = (highscorenumber5_distX + highscorenumber5_distY * 16);
+assign highscorenumber5_distX = DrawX - 356;
+assign highscorenumber5_distY = DrawY - 350;
+
+logic [7:0] highscorenumber6_rom_address;
+logic [3:0] highscorenumber6_rom_q;
+logic [3:0] highscorenumber6_palette_red, highscorenumber6_palette_green, highscorenumber6_palette_blue;
+logic [9:0] highscorenumber6_distX, highscorenumber6_distY;
+
+assign highscorenumber6_rom_address = (highscorenumber6_distX + highscorenumber6_distY * 16);
+assign highscorenumber6_distX = DrawX - 340;
+assign highscorenumber6_distY = DrawY - 350;
 
 // 	//duck internal signals
 // 	logic [12:0] ducks_rom_address;
@@ -196,6 +249,16 @@ assign scorenumber6_distY = DrawY - 400;
 		ScoreNumber4 = (score / 100); //LEFT NUMBER
 		ScoreNumber5 = (score / 1000); //LEFT NUMBER
 		ScoreNumber6 = (score / 10000); //LEFT NUMBER
+	end
+
+	always_comb
+	begin: HighScore_Logic
+		HighScoreNumber1 = highscore % 10; //RIGHT NUMBER
+		HighScoreNumber2 = (highscore / 10); //LEFT NUMBER
+		HighScoreNumber3 = (highscore / 100); //LEFT NUMBER
+		HighScoreNumber4 = (highscore / 100); //LEFT NUMBER
+		HighScoreNumber5 = (highscore / 1000); //LEFT NUMBER
+		HighScoreNumber6 = (highscore / 10000); //LEFT NUMBER
 	end
 	
 // 	always_comb
@@ -269,6 +332,36 @@ assign scorenumber6_distY = DrawY - 400;
 
 	 always_comb
 	 begin:ScoreNumber_on_proc
+	//  if(start_game_signal) (???)
+			if(scorenumber1_distX < 16 & scorenumber1_distY < 16)
+				ScoreNumber1_on = 1'b1;
+			else
+				ScoreNumber1_on = 1'b0;
+			if(scorenumber2_distX < 16 & scorenumber2_distY < 16)
+				ScoreNumber2_on = 1'b1;
+			else 
+				ScoreNumber2_on = 1'b0;
+			if(scorenumber3_distX < 16 & scorenumber3_distY < 16)
+				ScoreNumber3_on = 1'b1;
+			else
+				ScoreNumber3_on = 1'b0;
+			if(scorenumber4_distX < 16 & scorenumber4_distY < 16)
+				ScoreNumber4_on = 1'b1;
+			else 
+				ScoreNumber4_on = 1'b0;
+			if(scorenumber5_distX < 16 & scorenumber5_distY < 16)
+				ScoreNumber5_on = 1'b1;
+			else
+				ScoreNumber5_on = 1'b0;
+			if(scorenumber6_distX < 16 & scorenumber6_distY < 16)
+				ScoreNumber6_on = 1'b1;
+			else 
+				ScoreNumber6_on = 1'b0;
+		end
+	
+	 always_comb
+	 begin:HighScoreNumber_on_proc
+	 	if(start_game_signal == 0) (??)
 			if(scorenumber1_distX < 16 & scorenumber1_distY < 16)
 				ScoreNumber1_on = 1'b1;
 			else
@@ -512,218 +605,260 @@ assign scorenumber6_distY = DrawY - 400;
 // 								end
 // 								else 
 // 								begin
-									if((ScoreNumber1_on) || (ScoreNumber2_on) || (ScoreNumber3_on) || (ScoreNumber4_on) || (ScoreNumber5_on) || (ScoreNumber6_on))
+									if((HighScoreNumber1_on) || (HighScoreNumber2_on) || (HighScoreNumber3_on) || (HighScoreNumber4_on) || (HighScoreNumber5_on) || (HighScoreNumber6_on))
 									begin
-										if(ScoreNumber1_on == 1)
+										if(HighScoreNumber1_on == 1)
 										begin
-											Red <= scorenumber1_palette_red;
-											Green <= scorenumber1_palette_green;
-											Blue <= scorenumber1_palette_blue;
+											Red <= HighScorenumber1_palette_red;
+											Green <= HighScorenumber1_palette_green;
+											Blue <= HighScorenumber1_palette_blue;
 										end
-										if(ScoreNumber2_on == 1)
+										if(HighScoreNumber2_on == 1)
 										begin
-											Red <= scorenumber2_palette_red;
-											Green <= scorenumber2_palette_green;
-											Blue <= scorenumber2_palette_blue;
+											Red <= HighScorenumber2_palette_red;
+											Green <= HighScorenumber2_palette_green;
+											Blue <= HighScorenumber2_palette_blue;
 										end
-										if(ScoreNumber3_on == 1)
+										if(HighScoreNumber3_on == 1)
 										begin
-											Red <= scorenumber3_palette_red;
-											Green <= scorenumber3_palette_green;
-											Blue <= scorenumber3_palette_blue;
+											Red <= HighScorenumber3_palette_red;
+											Green <= HighScorenumber3_palette_green;
+											Blue <= HighScorenumber3_palette_blue;
 										end
-										if(ScoreNumber4_on == 1)
+										if(HighScoreNumber4_on == 1)
 										begin
-											Red <= scorenumber4_palette_red;
-											Green <= scorenumber4_palette_green;
-											Blue <= scorenumber4_palette_blue;
+											Red <= HighScorenumber4_palette_red;
+											Green <= HighScorenumber4_palette_green;
+											Blue <= HighScorenumber4_palette_blue;
 										end
-										if(ScoreNumber5_on == 1)
+										if(HighScoreNumber5_on == 1)
 										begin
-											Red <= scorenumber5_palette_red;
-											Green <= scorenumber5_palette_green;
-											Blue <= scorenumber5_palette_blue;
+											Red <= HighScorenumber5_palette_red;
+											Green <= HighScorenumber5_palette_green;
+											Blue <= HighScorenumber5_palette_blue;
 										end
-										if(ScoreNumber6_on == 1)
+										if(HighScoreNumber6_on == 1)
 										begin
-											Red <= scorenumber6_palette_red;
-											Green <= scorenumber6_palette_green;
-											Blue <= scorenumber6_palette_blue;
+											Red <= HighScorenumber6_palette_red;
+											Green <= HighScorenumber6_palette_green;
+											Blue <= HighScorenumber6_palette_blue;
 										end
 									end
 									else
 									begin
-										// if((RoundNumber1_on) || (RoundNumber2_on))
-										// begin
-										// 	if(RoundNumber1_on == 1)
-										// 	begin
-										// 		Red <= RoundNumber1_palette_red;
-										// 		Green <= RoundNumber1_palette_green;
-										// 		Blue <= RoundNumber1_palette_blue;
-										// 	end
-										// 	if(RoundNumber2_on == 1)
-										// 	begin
-										// 		Red <= RoundNumber2_palette_red;
-										// 		Green <= RoundNumber2_palette_green;
-										// 		Blue <= RoundNumber2_palette_blue;
-										// 	end
-	// 									end
-	// 									else
-	// 									begin
-	// 										if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
-	// 										begin
-	// 											case(duck_counter_on_1)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_2)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_3)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_4)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_5)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_6)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_7)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_8)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_9)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 											case(duck_counter_on_10)
-	// 												2'b01:begin
-	// 												Red <= 4'hF;
-	// 												Blue <= 4'hF;
-	// 												Green <= 4'hF;
-	// 												end
-	// 												2'b10:begin
-	// 												Red <= 4'hD;
-	// 												Blue <= 4'h0;
-	// 												Green <= 4'h0;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 										end
-	// 										else
-	// 										begin
-	// 											case(background)
-	// 												2'b00: begin
-	// 													Red <= 4'hB;//mainmenu_palette_red;
-	// 													Green <= 4'hB;//mainmenu_palette_green;
-	// 													Blue <= 4'hB;//mainmenu_palette_blue;
-	// 												end
-	// 												2'b01: begin
-	// 													Red <= 4'hB;//bg_palette_red;
-	// 													Green <= 4'hB;//bg_palette_green;
-	// 													Blue <= 4'hB;//bg_palette_blue;
-	// 												end
-	// 												2'b10: begin
-	// 													Red <= 4'hB;//bg1_palette_red;
-	// 													Green <= 4'hB;//bg1_palette_green;
-	// 													Blue <= 4'hB;//bg_palette_blue;
-	// 												end
-	// 												default: ;
-	// 											endcase
-	// 										end
+										if((ScoreNumber1_on) || (ScoreNumber2_on) || (ScoreNumber3_on) || (ScoreNumber4_on) || (ScoreNumber5_on) || (ScoreNumber6_on))
+										begin
+											if(ScoreNumber1_on == 1)
+											begin
+												Red <= scorenumber1_palette_red;
+												Green <= scorenumber1_palette_green;
+												Blue <= scorenumber1_palette_blue;
+											end
+											if(ScoreNumber2_on == 1)
+											begin
+												Red <= scorenumber2_palette_red;
+												Green <= scorenumber2_palette_green;
+												Blue <= scorenumber2_palette_blue;
+											end
+											if(ScoreNumber3_on == 1)
+											begin
+												Red <= scorenumber3_palette_red;
+												Green <= scorenumber3_palette_green;
+												Blue <= scorenumber3_palette_blue;
+											end
+											if(ScoreNumber4_on == 1)
+											begin
+												Red <= scorenumber4_palette_red;
+												Green <= scorenumber4_palette_green;
+												Blue <= scorenumber4_palette_blue;
+											end
+											if(ScoreNumber5_on == 1)
+											begin
+												Red <= scorenumber5_palette_red;
+												Green <= scorenumber5_palette_green;
+												Blue <= scorenumber5_palette_blue;
+											end
+											if(ScoreNumber6_on == 1)
+											begin
+												Red <= scorenumber6_palette_red;
+												Green <= scorenumber6_palette_green;
+												Blue <= scorenumber6_palette_blue;
+											end
+										end
+										else
+										begin
+											// if((RoundNumber1_on) || (RoundNumber2_on))
+											// begin
+											// 	if(RoundNumber1_on == 1)
+											// 	begin
+											// 		Red <= RoundNumber1_palette_red;
+											// 		Green <= RoundNumber1_palette_green;
+											// 		Blue <= RoundNumber1_palette_blue;
+											// 	end
+											// 	if(RoundNumber2_on == 1)
+											// 	begin
+											// 		Red <= RoundNumber2_palette_red;
+											// 		Green <= RoundNumber2_palette_green;
+											// 		Blue <= RoundNumber2_palette_blue;
+											// 	end
+		// 									end
+		// 									else
+		// 									begin
+		// 										if(duck_counter_on_1 > 2'b00 || duck_counter_on_2 > 2'b00 || duck_counter_on_3 > 2'b00 || duck_counter_on_4 > 2'b00 || duck_counter_on_5 > 2'b00 || duck_counter_on_6 > 2'b00 || duck_counter_on_7 > 2'b00 || duck_counter_on_8 > 2'b00 || duck_counter_on_9 > 2'b00 || duck_counter_on_10 > 2'b00)
+		// 										begin
+		// 											case(duck_counter_on_1)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_2)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_3)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_4)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_5)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_6)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_7)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_8)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_9)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 											case(duck_counter_on_10)
+		// 												2'b01:begin
+		// 												Red <= 4'hF;
+		// 												Blue <= 4'hF;
+		// 												Green <= 4'hF;
+		// 												end
+		// 												2'b10:begin
+		// 												Red <= 4'hD;
+		// 												Blue <= 4'h0;
+		// 												Green <= 4'h0;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 										end
+		// 										else
+		// 										begin
+		// 											case(background)
+		// 												2'b00: begin
+		// 													Red <= 4'hB;//mainmenu_palette_red;
+		// 													Green <= 4'hB;//mainmenu_palette_green;
+		// 													Blue <= 4'hB;//mainmenu_palette_blue;
+		// 												end
+		// 												2'b01: begin
+		// 													Red <= 4'hB;//bg_palette_red;
+		// 													Green <= 4'hB;//bg_palette_green;
+		// 													Blue <= 4'hB;//bg_palette_blue;
+		// 												end
+		// 												2'b10: begin
+		// 													Red <= 4'hB;//bg1_palette_red;
+		// 													Green <= 4'hB;//bg1_palette_green;
+		// 													Blue <= 4'hB;//bg_palette_blue;
+		// 												end
+		// 												default: ;
+		// 											endcase
+		// 										end
+											end
 										end
 // 									end	
 // 								end
@@ -951,6 +1086,90 @@ ScoreNumbers_palette Score6_palette (
 	.red   (scorenumber6_palette_red),
 	.green (scorenumber6_palette_green),
 	.blue  (scorenumber6_palette_blue)
+);
+
+HighScoreNumbers_rom HighScore1_rom (
+	.clock   (HighScorenumber1_negedge_vga_clk),
+	.address (HighScorenumber1_rom_address),
+	.q       (HighScorenumber1_rom_q)
+	.input_number (HighScoreNumber1)
+);
+
+HighScoreNumbers_palette HighScore1_palette (
+	.index (HighScorenumber1_rom_q),
+	.red   (HighScorenumber1_palette_red),
+	.green (HighScorenumber1_palette_green),
+	.blue  (HighScorenumber1_palette_blue)
+);
+
+HighScoreNumbers_rom HighScore2_rom (
+	.clock   (HighScorenumber2_negedge_vga_clk),
+	.address (HighScorenumber2_rom_address),
+	.q       (HighScorenumber2_rom_q)
+	.input_number (HighScoreNumber2)
+);
+
+HighScoreNumbers_palette HighScore2_palette (
+	.index (HighScorenumber2_rom_q),
+	.red   (HighScorenumber2_palette_red),
+	.green (HighScorenumber2_palette_green),
+	.blue  (HighScorenumber2_palette_blue)
+);
+
+HighScoreNumbers_rom HighScore3_rom (
+	.clock   (HighScorenumber3_negedge_vga_clk),
+	.address (HighScorenumber3_rom_address),
+	.q       (HighScorenumber3_rom_q)
+	.input_number (HighScoreNumber3)
+);
+
+HighScoreNumbers_palette HighScore3_palette (
+	.index (HighScorenumber3_rom_q),
+	.red   (HighScorenumber3_palette_red),
+	.green (HighScorenumber3_palette_green),
+	.blue  (HighScorenumber3_palette_blue)
+);
+
+HighScoreNumbers_rom HighScore4_rom (
+	.clock   (HighScorenumber4_negedge_vga_clk),
+	.address (HighScoreumber4_rom_address),
+	.q       (HighScorenumber4_rom_q)
+	.input_number (HighScoreNumber4)
+);
+
+HighScoreumbers_palette HighScore4_palette (
+	.index (HighScorenumber4_rom_q),
+	.red   (HighScorenumber4_palette_red),
+	.green (HighScorenumber4_palette_green),
+	.blue  (HighScorenumber4_palette_blue)
+);
+
+HighScoreumbers_rom HighScore5_rom (
+	.clock   (HighScorenumber5_negedge_vga_clk),
+	.address (HighScorenumber5_rom_address),
+	.q       (HighScorenumber5_rom_q)
+	.input_number (HighScoreNumber5)
+);
+
+HighScoreNumbers_palette HighScore5_palette (
+	.index (HighScorenumber5_rom_q),
+	.red   (HighScorenumber5_palette_red),
+	.green (HighScorenumber5_palette_green),
+	.blue  (HighScorenumber5_palette_blue)
+);
+
+HighScoreNumbers_rom HighScore6_rom (
+	.clock   (HighScorenumber6_negedge_vga_clk),
+	.address (HighScorenumber6_rom_address),
+	.q       (HighScorenumber6_rom_q)
+	.input_number (HighScoreNumber6)
+);
+
+HighScoreNumbers_palette HighScore6_palette (
+	.index (HighScorenumber6_rom_q),
+	.red   (HighScorenumber6_palette_red),
+	.green (HighScorenumber6_palette_green),
+	.blue  (HighScorenumber6_palette_blue)
 );
     
 // endmodule
